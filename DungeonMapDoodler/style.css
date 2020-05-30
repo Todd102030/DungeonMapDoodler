@@ -1,0 +1,74 @@
+*{
+	box-sizing: border-box;
+}
+
+html {
+	margin:0;
+	padding:0;
+	
+}
+
+body{
+	margin:0;
+	padding: 0;
+}
+
+.floatingModes{
+	position: fixed;
+	left: calc( 100vw - 154px );
+	top:65px;
+	background-color: ghostwhite;
+	width:auto;
+	height:auto;
+	text-align: center;
+	box-shadow: 0 0 8px black;
+}
+
+.floatingBtns {
+	width: 150px;
+	/*resize:horizontal;
+	overflow: auto;*/
+}
+
+.floatingModeTitle{
+	height: 40px;
+}
+
+.modeBtn{
+	width:2rem;
+	height:2rem;
+	display: inline-block;
+	border: 2px outset darkgray;
+	cursor:pointer;
+	box-sizing: content-box;
+}
+
+.modeBtn:active{
+	border: 2px inset darkgray;
+}
+
+.modeBtn > img{
+	//width:20px;
+	//height:20px;
+}
+
+.paramBox{
+	margin-top:20px;
+	border: 1px solid black;
+	max-width: 200px;
+}
+
+.paramBox > label {
+	font-size:8pt;
+	
+}
+
+.paramTitle{
+	font-size:10pt;
+	display: inline-block;
+}
+
+.topBar{
+	height: 60px;
+	background-color: rgb(133, 212, 222);
+}

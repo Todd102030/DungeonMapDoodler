@@ -1,0 +1,3 @@
+Todo Bugfixes:
+Add cursor outline to line draw tool - not lining up on zoom
+Right click acts as draw as well
