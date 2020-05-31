@@ -144,6 +144,7 @@
 				<label for="imageSaveColorWhite">Coloured <input type='color' value='#ffffff' id='imageSaveColorColor'></label><br>
 				<input type="radio" id="imageSaveColorTrans" name="imageSaveColor" value="rgba(0,0,0,0)" >
 				<label for="imageSaveColorTrans">Transparent</label><br>
+				<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
 			</td>
 		</tr>
 	</table>
@@ -234,6 +235,24 @@
   }
   </script>
 
+	
+<!-- Start Open Web Analytics Tracker -->
+<script type="text/javascript">
+//<![CDATA[
+var owa_baseUrl = 'https://uncon.ca/openwebanalytics/';
+var owa_cmds = owa_cmds || [];
+owa_cmds.push(['setSiteId', 'ffb87c343d5de595b88243c63a1ca70d']);
+owa_cmds.push(['trackPageView']);
+owa_cmds.push(['trackClicks']);
+
+(function() {
+	var _owa = document.createElement('script'); _owa.type = 'text/javascript'; _owa.async = true;
+	owa_baseUrl = ('https:' == document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl );
+	_owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
+	var _owa_s = document.getElementsByTagName('script')[0]; _owa_s.parentNode.insertBefore(_owa, _owa_s);
+}());
+//]]>
+</script>
 
 </body>
 </html>

@@ -1798,6 +1798,7 @@ var pgWarehouseMap = (function(){
 		var fileName = ir.v("imageSaveName");
 		var background = ir.v("imageSaveColor");
 		var color = ir.v("imageSaveColorColor");
+		self.isIsometric = ir.bool("imageSaveIsometric");
 		if(background=='color'){
 			self.backgroundColor = color;
 		}else{
@@ -1842,9 +1843,32 @@ var pgWarehouseMap = (function(){
     	canvas.height = self.gridImg.height*sY;//ir.vn("saveImagePopupHeight");    	
     	//self.canvas = canvas;
     	//self.ctx = ctx;    	
+		
+		var xAxis  = {x : 1, y: 0.5};
+    	var yAxis  = {x : -1, y: 0.5};
+		var origin = {x : 0, y : 0};
+		var area = (xAxis.x * ( xAxis.y + yAxis.y ) + ( xAxis.x + yAxis.x ) * yAxis.y) - (xAxis.y * ( xAxis.x + yAxis.x ) + ( xAxis.y + yAxis.y ) * yAxis.x);
+		var scaleBy = 1 / Math.sqrt(area);
+		
+		if(self.isIsometric){
+			canvas.width *= 1.15;
+			canvas.height *= 1.15;
+			ctx.save();
+			xAxis.x *= scaleBy;
+			xAxis.y *= scaleBy;
+			yAxis.x *= scaleBy;
+			yAxis.y *= scaleBy;
+			//ctx.setTransform(xAxis.x, xAxis.y, yAxis.x, yAxis.y, origin.x, origin.y);
+			ctx.setTransform(xAxis.x, xAxis.y, yAxis.x, yAxis.y, canvas.width/3, origin.y);
+		}
+		
     	self.scaleForImage();
     	self.drawCanvas(true, canvas, ctx);
     	//ctx.imageSmoothingEnabled = false;
+		if(self.isIsometric){
+			ctx.restore();
+		}
+		
 		
 		ctx.save();
 		ctx.globalCompositeOperation = 'destination-over';
