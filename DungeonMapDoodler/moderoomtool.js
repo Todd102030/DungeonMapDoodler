@@ -1,0 +1,227 @@
+"use strict";
+
+var RoomTool = (function(){
+	var self={
+		borderSize: 3,
+		hatchSize: 30,
+		id:8,
+		inset:0,
+		size:30,
+		fillColor: "#ffffff",
+		outlineColor: "#000000",
+		hatchSize: 30,
+		shape: Shape.Square,
+		isSnapping: true,
+		isSubtractive: false,
+		title: "Room Tool Settings",
+		changeColor: function(evt, type){
+			if(type=='fill'){
+				self.fillColor = evt.target.value;
+			}else{
+				self.outlineColor = evt.target.value;
+			}
+		},
+		changeInset: function(evt){
+			self.inset = parseInt(evt.target.value);
+			ir.set("roomToolInsetLabel", self.inset);
+		},
+		changeShape: function(evt){
+			self.shape = Shape[evt.target.value];
+		},
+		changeSnapping: function(evt){
+			self.isSnapping = ir.bool("roomToolIsSnapping");
+		},
+		changeSubtractive: function(evt){
+			self.isSubtractive = ir.bool("roomToolIsSubtractive");
+		},
+		draw: function(xpos, ypos, data){
+			//TODO: Add square/circle funcitonality
+			//data.doodleCtx.strokeStyle = "black";
+			//data.doodleCtx.fillRect(self.doodleStartX, self.doodleStartY, self.doodleEndX, self.doodleEndY);
+			
+			var wh = pgWarehouseMap;
+            var offX = wh.globalOffsetX;
+            var offY = wh.globalOffsetY;
+            var zoom = wh.zoomLevel;
+			var size = self.size;
+			var border=self.borderSize;
+			var ctx = data.hatchCtx;
+			var hatchSize = self.hatchSize*5;
+			// Radii of the white glow.
+			var innerRadius = self.size * 0.15;
+			var outerRadius = self.size*2+hatchSize;
+			// Radius of the entire circle.
+			var radius = self.size*2.1+hatchSize;
+			var inset=self.inset;
+
+		
+			//Hatch
+			var xmid = Math.min(self.doodleStartX,self.doodleEndX) + Math.abs(self.doodleStartX-self.doodleEndX)/2
+			var ymid = Math.min(self.doodleStartY,self.doodleEndY) + Math.abs(self.doodleStartY-self.doodleEndY)/2
+
+			ctx = data.hatchCtx;
+			ctx.fillStyle = "black";
+			if(self.isSubtractive || data.event.shiftKey){
+				/*ctx.save();
+				ctx.globalCompositeOperation = "destination-out";
+				ctx.fillStyle = 'black';
+				ctx.drawImage(ir.get("squarefuzzImg"),Math.min(self.doodleStartX,self.doodleEndX)-border-hatchSize, Math.min(self.doodleStartY,self.doodleEndY)-border-hatchSize, 
+					   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2+hatchSize*2), Math.abs(self.doodleStartY-self.doodleEndY)+(border*2+hatchSize*2))
+				ctx.restore();*/
+
+				//Path Drawing
+				ctx = data.doodleCtx;
+				ctx.save();
+				ctx.globalCompositeOperation = "destination-out";
+				ctx.fillStyle = 'black';
+				ctx.fillStyle = self.fillColor;
+				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
+				ctx.restore();
+				
+				//Outline Drawing
+				ctx = data.outlineCtx;
+				ctx.save();
+				ctx.globalCompositeOperation = "destination-out";
+				ctx.fillStyle = 'black';
+				ctx.fillStyle = self.outlineColor;
+				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
+				ctx.restore();
+			}else{
+				ctx.drawImage(ir.get("squarefuzzImg"),Math.min(self.doodleStartX,self.doodleEndX)-border-hatchSize, Math.min(self.doodleStartY,self.doodleEndY)-border-hatchSize, 
+					   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2+hatchSize*2), Math.abs(self.doodleStartY-self.doodleEndY)+(border*2+hatchSize*2))
+
+				//Path Drawing
+				ctx = data.doodleCtx;
+				ctx.fillStyle = self.fillColor;
+				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
+				//Outline Drawing
+				ctx = data.outlineCtx;
+				ctx.fillStyle = self.outlineColor;
+				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
+			}
+			
+				
+		},
+		drawCursor : function(ctx, xpos, ypos, data){
+			if(self.mouseIsDown){
+				self.drawOutlineBox(ctx, xpos, ypos, data);
+			}else{
+				if(self.isSubtractive /*|| data.event.shiftKey*/){
+					ctx.strokeStyle = "rgb(55, 222, 126)";
+				}else{
+					ctx.strokeStyle = "rgb(240,60,60)";
+				}
+				var gridxy = getGridXY(xpos, ypos);
+				var offx = pgWarehouseMap.globalOffsetX;
+				var offy = pgWarehouseMap.globalOffsetY;
+				var zoom = pgWarehouseMap.zoomLevel;
+				if(self.isSnapping){
+					ctx.strokeRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
+				}else{
+					ctx.strokeRect(xpos, ypos, 2, 2);
+				}
+			}
+		},
+		drawOutlineBox: function(ctx, xpos, ypos, data){
+			if(self.isSubtractive /*|| data.event.shiftKey*/){
+				ctx.strokeStyle = "rgb(55, 222, 126)";
+			}else{
+				ctx.strokeStyle = "rgb(240,60,60)";
+			}
+			var offx = pgWarehouseMap.globalOffsetX;
+			var offy = pgWarehouseMap.globalOffsetY;
+			var zoom = pgWarehouseMap.zoomLevel;
+			if(self.isSnapping){
+				var grid1 = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
+				var grid2 = getGridXY2(Math.max(self.doodleStartX,self.doodleEndX), Math.max(self.doodleStartY,self.doodleEndY));
+				ctx.strokeRect(grid1.xpos*zoom+offx, grid1.ypos*zoom+offy, 
+						   Math.abs(grid1.xpos-grid2.xpos)*zoom, Math.abs(grid1.ypos-grid2.ypos)*zoom);
+			}
+			else{
+				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX))/zoom, (Math.min(self.doodleStartY,self.doodleEndY))/zoom, 
+						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
+			}
+		},
+		/**
+		 * Draws a rectangle using given dimensions and clips all drawings contained
+		 * within it
+		 */
+		drawClipRec : function(ctx,dim) {
+			ctx.save();
+			ctx.beginPath();
+			ctx.globalAlpha = 0;
+			ctx.rect(dim.x + 0.25, dim.y + 0.25, dim.w - 0.6, dim.h - 0.6);
+			ctx.stroke();
+			ctx.clip();
+			ctx.globalAlpha = 1;
+		},
+		endMode: function(){
+			pgWarehouseMap.canvas.style.cursor = "unset";
+		},
+		mouseDown: function(xpos, ypos, data){
+            
+			var gridxy = getGridXY2(xpos, ypos);
+			
+            self.mouseIsDown = true;
+			
+			if(self.isSnapping){
+				self.doodleStartX = gridxy.xpos;
+				self.doodleStartY = gridxy.ypos;
+				self.doodleEndX = gridxy.xpos;
+				self.doodleEndY = gridxy.ypos;
+			}else{
+				self.doodleStartX = xpos;
+				self.doodleStartY = ypos;
+				self.doodleEndX = xpos;
+				self.doodleEndY = ypos;
+			}
+            
+		},
+		mouseMove: function(xpos, ypos, data){
+            var wh = pgWarehouseMap;
+			var gridxy = getGridXY2(xpos, ypos);
+			if(self.isSnapping){
+				self.doodleEndX = gridxy.xpos+gridxy.step;
+				self.doodleEndY = gridxy.ypos+gridxy.step;
+			}else{
+				self.doodleEndX = xpos;
+				self.doodleEndY = ypos;
+			}
+		},
+		mouseUp: function(xpos, ypos,data){
+            self.mouseIsDown = false;
+			self.draw(xpos, ypos,data);
+            self.doodleStartX = 0;
+            self.doodleStartY = 0;
+            self.doodleEndX = 0;
+            self.doodleEndY = 0;
+		},
+		setParameterBox: function(container){
+			var htm = `<div class='paramTitle'>${self.title}</div><br>
+						<div class='paramTitle'>In/Outset: </div><label for='roomToolInset' id='roomToolInsetLabel'>${self.inset}</label><br>
+						<input style='width:78px' type="range" id="roomToolInset" name="roomToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
+						<input type='checkbox' id='roomToolIsSnapping' onclick='Modes.RoomTool.changeSnapping(event)'><label for='roomToolIsSnapping'>Snap To Grid</label><br>
+						<input type='checkbox' id='roomToolIsSubtractive' } onclick='Modes.RoomTool.changeSubtractive(event)'><label for='roomToolIsSubtractive' >Subtractive</label><br>
+						<input type='color' value='${self.fillColor}' id='roomToolFillColor' onchange="Modes.RoomTool.changeColor(event, 'fill')">
+						<label for="roomToolFillColor">Fill Color</label><br>
+						<input type='color' value='${self.outlineColor}' id='roomToolOutlineColor' onchange="Modes.RoomTool.changeColor(event, 'outline')">
+						<label for="roomToolOutlineColor">Outline Color</label><br>
+						`;
+			/*<input type="radio" id="roomToolSquare" name="roomToolShape" value="Square" onchange='Modes.RoomTool.changeShape(event)'>
+			<label for="roomToolSquare">Square</label><br>
+			<input type="radio" id="roomToolCircle" name="roomToolShape" value="Circle" onchange='Modes.RoomTool.changeShape(event)'>
+			<label for="roomToolCircle">Circle</label><br>*/
+			
+			container.innerHTML = htm;
+
+			ir.set("roomToolIsSnapping", self.isSnapping);
+			ir.set("roomToolIsSubtractive", self.isSubtractive);
+			
+			
+		},
+	}; return self;
+})()

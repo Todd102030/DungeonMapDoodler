@@ -8,7 +8,7 @@
 		<link rel="manifest" href="manifest.json">
     </head>
 <body onload='pgWarehouseMap.show()'>
-	<div class='topBar' style='text-align: right'><button id="whBtnSave" type="button" class="canvBtn" name="mode" onclick="return ir.show('dimensionPopup')">Change Grid Size</button> &nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" value="8" onclick="return pgWarehouseMap.saveImage()">Save Map Image</button>&nbsp;&nbsp;<button id="whBtnSaveFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.saveFile()">Save</button>&nbsp;&nbsp;<button id="whBtnLoadFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.showFileLoad()">Load</button></div>
+	<div class='topBar' style='text-align: right'><button id="whBtnGridDraw" type="button" class="canvBtn" name="mode" onclick="return pgWarehouseMap.toggleGridOutside()">Toggle Grid Outside</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" onclick="return ir.show('dimensionPopup')">Change Grid Size</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" value="8" onclick="return pgWarehouseMap.saveImage()">Save Map Image</button>&nbsp;&nbsp;<button id="whBtnSaveFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.saveFile()">Save</button>&nbsp;&nbsp;<button id="whBtnLoadFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.showFileLoad()">Load</button></div>
 <div id='pgWarehouseMap'>
 	<canvas id="warehouseCanvas" width="800" height="800" style='border-style:double'></canvas>  
 	<div style='display:none'><br>
@@ -35,7 +35,11 @@
 	<img id='squarefuzzImg' src='images/squarefuzz.png'>
 	<img id='circlefuzzImg' src='images/circlefuzz.png'>
 	<img id='hatchingImg' src='hatching.png'>
-
+	<!--<img id='hatchingImg' src='hatches/dots.svg'>-->
+	
+	
+				<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
+	
 </div>	
 	
 
@@ -144,7 +148,6 @@
 				<label for="imageSaveColorWhite">Coloured <input type='color' value='#ffffff' id='imageSaveColorColor'></label><br>
 				<input type="radio" id="imageSaveColorTrans" name="imageSaveColor" value="rgba(0,0,0,0)" >
 				<label for="imageSaveColorTrans">Transparent</label><br>
-				<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
 			</td>
 		</tr>
 	</table>
@@ -182,10 +185,16 @@
 	<input type='file' id="stampUpload" accept="image/gif, image/jpeg, image/png"/>
 </div>
 	
+<div class='floatingControlsLeft'>
+	<div class='floatBtn' onclick="pgWarehouseMap.zoom(1, true)"><img src='images/plus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="pgWarehouseMap.zoom(-1, true)"><img src='images/minus.svg' width='40px' height='40px'></div>
+	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
+</div>	
+	
 	
 <div class="floatingModes popup">
 	<div class='floatingBtns'>
-	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStamps' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStamps' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div>
+	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
 	</div>
 	<div class='paramBox' id='paramBox'></div>
 </div>	
@@ -214,6 +223,17 @@
 <script src='irstore.js'></script>
 <script src='keyedarray.js'></script>
 <script src='smoothpopup.js'></script>
+<script src='dmd.js'></script>
+<script src='stamps.js'></script>
+<script src='modedoodle.js'></script>
+<script src='modeerase.js'></script>
+<script src='modehatching.js'></script>
+<script src='modeline.js'></script>
+<script src='modemove.js'></script>
+<script src='moderoomtool.js'></script>
+<script src='modesnaptogrid.js'></script>
+<script src='modeshapetool.js'></script>
+<script src='modestamps.js'></script>
 <script src='modes.js'></script>
 <script src="warehouseMap.js"></script>  
 <script src="warehouseMap2.js"></script>

@@ -30,6 +30,21 @@ body{
 	overflow: auto;*/
 }
 
+.floatingControlsLeft{
+	background-color: white;
+	position: fixed;
+	left: 0;
+	top: 60px;
+	width: 50px;
+	text-align: center;
+}
+
+.floatBtn{
+	cursor: pointer;
+	user-select: none;
+	
+}
+
 .floatingModeTitle{
 	height: 40px;
 }

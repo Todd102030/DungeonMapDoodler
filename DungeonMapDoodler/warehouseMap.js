@@ -24,6 +24,7 @@ var pgWarehouseMap = (function(){
 		w: 10,
 		wf: 10},
     dimensionsOld: null,
+	drawGridOutside: true,
     editMode:false,
     fontSizes: [],
     globalOffsetX: 0,
@@ -319,6 +320,17 @@ var pgWarehouseMap = (function(){
 		console.log("clicked", modeName);
 		self.mouseMode = Modes[modeName];
 		self.mouseMode.setParameterBox(ir.get("paramBox"));
+		
+		var btns = document.getElementsByClassName("modeBtn");
+		for(var i=0;i<btns.length;i++){
+			btns[i].style.border = "";
+			btns[i].style.backgroundColor = "";
+			
+			//#f8f8ff
+		}
+		var myBtn = ir.get("mode"+modeName);
+		myBtn.style.border = "2px inset darkred";
+		myBtn.style.backgroundColor = "#ddd";
 	},
     close:function() {
       view.showPrevious();
@@ -388,7 +400,7 @@ var pgWarehouseMap = (function(){
     
         self.drawWalls();
         self.drawTextFields();
-		self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY);
+		self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
 		
 		
         if(self.mode == Mode.LOCATION){
@@ -430,8 +442,8 @@ var pgWarehouseMap = (function(){
         /// draw the image to be clipped
         //ctx.drawImage(img, 0, 0, 500, 500);
         //////
-        var iw = 512;
-		var ih = 512;
+        var iw = img.naturalWidth;
+		var ih = img.naturalHeight;
 		var xplus = iw*(1/sX);//*self.zoomLevel;
         var yplus = ih*(1/sY);//*self.zoomLevel;
         
@@ -571,14 +583,37 @@ var pgWarehouseMap = (function(){
 		var sY =self.dimensions.scaleY;
     	var img = self.gridImg;
     	if(img != null){
-			//ctx.fillStyle = "#fff";
-			//ctx.fillRect(0,0,img.width,img.height)
-	        ctx.drawImage(img,
-            self.globalOffsetX, 
-            self.globalOffsetY, 
-            img.width*self.zoomLevel*(1/sX),
-            img.height*self.zoomLevel*(1/sY));
-    	}
+			
+			if(!self.drawGridOutside){
+				self.gridCtx.mozImageSmoothingEnabled = false;
+				self.gridCtx.webkitImageSmoothingEnabled = false;
+				self.gridCtx.msImageSmoothingEnabled = false;
+				self.gridCtx.imageSmoothingEnabled = false;
+				
+				self.gridCtx.fillStyle = "#fff";
+				self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height)
+	        	self.gridCtx.drawImage(img,0,0,img.width*(1/sX),img.height*(1/sY));
+				self.gridCtx.globalCompositeOperation = "destination-atop";
+				self.gridCtx.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width*(1/sX), self.doodleCanvas.height*(1/sY));
+    			self.gridCtx.globalCompositeOperation = "source-over";
+				ctx.drawImage(self.gridCanvas,
+					self.globalOffsetX, 
+					self.globalOffsetY, 
+					self.gridCanvas.width*self.zoomLevel*(1/sX),
+					self.gridCanvas.height*self.zoomLevel*(1/sY));
+				self.gridCtx.mozImageSmoothingEnabled = true;
+				self.gridCtx.webkitImageSmoothingEnabled = true;
+				self.gridCtx.msImageSmoothingEnabled = true;
+				self.gridCtx.imageSmoothingEnabled = true;
+			}else{
+				ctx.drawImage(img,
+				self.globalOffsetX, 
+				self.globalOffsetY, 
+				self.gridCanvas.width*self.zoomLevel*(1/sX),
+				self.gridCanvas.height*self.zoomLevel*(1/sY));
+			}
+			
+		}
     	ctx.globalAlpha = 1;
     	ctx.mozImageSmoothingEnabled = true;
     	ctx.webkitImageSmoothingEnabled = true;
@@ -697,7 +732,7 @@ var pgWarehouseMap = (function(){
 				st.img = new Image();
 				st.img.src = st.path;
 			}
-			Modes.Stamps.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
+			Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
         }
     },
     drawTextFields: function(){
@@ -866,9 +901,11 @@ var pgWarehouseMap = (function(){
     	var img = new Image();
     	var dataurl = canv.toDataURL();
     	img.onload = function() {
-            img.width = xfeet*dim.footPixel;;
-            img.height = yfeet*dim.footPixel;;
+            img.width = xfeet*dim.footPixel;
+            img.height = yfeet*dim.footPixel;
             self.gridImg = img;
+			self.gridCanvas.width = img.width;
+			self.gridCanvas.height = img.height;
 			console.log("gridimg width and height are ", img.width, img.height);
 			if(callback && pgWarehouseMap.loadingSave){
 				pgWarehouseMap.loadingSave = false;
@@ -1014,6 +1051,8 @@ var pgWarehouseMap = (function(){
 			
 			self.applyDimensions();
 			
+			self.zoom(0,true);
+			
 			xsize = self.dimensions.footPixel * self.dimensions.wf;
 			ysize = self.dimensions.footPixel * self.dimensions.hf;
             
@@ -1036,8 +1075,16 @@ var pgWarehouseMap = (function(){
             self.outlineCtx.fillStyle = "rgba(0,0,0,0)";
             self.outlineCtx.fillRect(0,0,self.outlineCanvas.width,self.outlineCanvas.height);
 			
+			self.gridCanvas = document.createElement("canvas");
+			self.gridCanvas.width = xsize;
+			self.gridCanvas.height = ysize;
+			self.gridCtx = self.gridCanvas.getContext("2d");
+			self.gridCtx.fillStyle = "rgba(0,0,0,0)";
+            self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height);
+			
+			
 	        document.getElementById("imageUpload").addEventListener("change", self.readImage, false);
-			document.getElementById("stampUpload").addEventListener("change", Modes.Stamps.readAddStamp, false);
+			document.getElementById("stampUpload").addEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.addEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.addEventListener("DOMMouseScroll", self.handleMouseScroll);	        
 	        self.canvas.addEventListener("mousemove", self.onMouseMove, false);
@@ -1094,6 +1141,13 @@ var pgWarehouseMap = (function(){
 			var obj = JSON.parse(data);
 			pgWarehouseMap.loadingSave = true;
 			self.dimensions = obj.dimensions;
+			console.log("Save file dimensions are ", self.dimensions);
+			ir.set("dimensionPopupX", self.dimensions.wf);
+    		ir.set("dimensionPopupY", self.dimensions.hf);
+    		ir.set("dimensionPopupStep", self.dimensions.stepSize);
+    		ir.set("dimensionPopupBoxSize", self.dimensions.footPixel * self.dimensions.stepSize);
+			
+			
 			self.applyDimensions(function(){
 				self.gridImg.src = obj.grid;
 				console.log("Drawing data from save file to canvases");
@@ -1129,7 +1183,9 @@ var pgWarehouseMap = (function(){
 						console.log("Setting stamp img to ", st.path);
 						st.img = new Image();
 						st.img.src = st.path;
+						
 					}
+					st.ratio = st.ratio || 1;
 				})
 			});
 			
@@ -1301,11 +1357,11 @@ var pgWarehouseMap = (function(){
 
 		//if(evt.button != 0){
 		//	evt.preventDefault();
-		//	evt.stopPropagation();
+			//evt.stopPropagation();
 		//	return;
 		//}
 		if(self.touchMouseDown == true && evt.changedTouches){
-			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		self.touchMouseDown = true;
         var mode = self.mode;
@@ -1315,7 +1371,7 @@ var pgWarehouseMap = (function(){
 		var isTwoFinger = false;
 		if(evt.changedTouches){
 			evt.preventDefault();
-			
+			console.log("Touch Start")
 			
 			var touch = evt.changedTouches[0];
 			self.mouseX = touch.clientX - self.canvX;
@@ -1400,11 +1456,11 @@ var pgWarehouseMap = (function(){
             self.doodleEndY = ypos;
         }*/
 		
-		if (evt.shiftKey || isTwoFinger){
-			Modes.Move.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+		if (evt.ctrlKey || isTwoFinger){
+			Modes.Move.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
     },
 	onKeyUp: function(evt){
@@ -1432,7 +1488,6 @@ var pgWarehouseMap = (function(){
 			var touch = evt.changedTouches[0];
 			self.mouseX = touch.clientX - self.canvX;
         	self.mouseY = touch.clientY - self.canvY;
-			console.log("Fingers touching", evt.changedTouches)
 			isTwoFinger = evt.changedTouches > 1;
 			//for(var i=0;i<evt.changedTouches;i++){
 			//	var t = evt.changedTouches[i];
@@ -1503,11 +1558,11 @@ var pgWarehouseMap = (function(){
 			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
 		}*/
 		
-		if (evt.shiftKey || isTwoFinger){
-			Modes.Move.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+		if (evt.ctrlKey || isTwoFinger){
+			Modes.Move.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+			self.mouseMode.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
         
     },
@@ -1518,6 +1573,10 @@ var pgWarehouseMap = (function(){
 			evt.stopPropagation();
 			return;
 		}*/
+		if(evt.changedTouches){
+			console.log("Touch End")
+		}
+		
         var mode = self.mode;
         self.mouseIsDown = false;
         if(mode == Mode.MOVE){
@@ -1567,12 +1626,12 @@ var pgWarehouseMap = (function(){
         }
         
 		
-		if (evt.shiftKey){
-			Modes.Move.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+		if (evt.ctrlKey){
+			Modes.Move.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 			Modes.Move.endMode();
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
+			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
         
     },
@@ -2114,7 +2173,7 @@ var pgWarehouseMap = (function(){
     	//Clear out all listeners on canvas
     	if(self.isRunning){
 	    	document.getElementById("imageUpload").removeEventListener("change", self.readImage, false);
-			document.getElementById("stampUpload").removeEventListener("change", Modes.Stamps.readAddStamp, false);
+			document.getElementById("stampUpload").removeEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.removeEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.removeEventListener("DOMMouseScroll", self.handleMouseScroll);
 	        self.canvas.removeEventListener("mousemove", self.onMouseMove, false);
@@ -2170,6 +2229,9 @@ var pgWarehouseMap = (function(){
         }
         return lines;
     },
+	toggleGridOutside: function(){
+		self.drawGridOutside = !self.drawGridOutside;
+	},
     undo: function(){
         if(self.mode == Mode.LOCATION){
             self.locations.splice(self.locations.length-1,1);
@@ -2177,11 +2239,11 @@ var pgWarehouseMap = (function(){
             self.walls.splice(self.walls.length-1,1);
         }
     },
-    zoom: function(zoom){
+    zoom: function(zoom, suppressOffset){
     	//if(!self.isPlacingText && self.mode != Mode.DIMENSIONS){
 	        var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
 	        var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel;
-	        self.zoomLevel += zoom/4;
+	        self.zoomLevel += zoom/8;
 	        
 	        if(self.zoomLevel < 0.125){
 	            self.zoomLevel = 0.125;
@@ -2189,11 +2251,21 @@ var pgWarehouseMap = (function(){
 	        	//Some math to adjust the global offsets so that you zoom in directly 
 	        	//to where your mouse cursor is, rather than zooming on the origin (top left of image)
 	        	var z = self.zoomLevel;
-		        var mx = self.mouseX;
-		        var my = self.mouseY;
-	        	self.globalOffsetX = ((xpos*z)-mx)*-1;
-		        self.globalOffsetY = ((ypos*z)-my)*-1;
+		        
+				if(!suppressOffset){
+					var mx = self.mouseX;
+		        	var my = self.mouseY;
+	        		self.globalOffsetX = ((xpos*z)-mx)*-1;
+		        	self.globalOffsetY = ((ypos*z)-my)*-1;
+				}else{
+					//xpos = (self.canvas.width/2-self.globalOffsetX)/self.zoomLevel;
+	        		//ypos = (self.canvas.height/2-self.globalOffsetY)/self.zoomLevel;
+	        		//self.globalOffsetX = ((xpos*z))*-1;
+		        	//self.globalOffsetY = ((ypos*z))*-1;
+				}
+				
 	        }
+			ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%")
     	//}
     },
     zz_warehouseMap: 0};
