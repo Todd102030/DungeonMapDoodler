@@ -41,12 +41,13 @@ function StampObj(x, y, w, h, img, imgPath, angle) {
     return this;
 };
 
-function TextField(text, x, y, isVertical, fontSize){
+function TextField(text, x, y, isVertical, fontSize, font){
 	this.text = text;
 	this.x = x;
 	this.y = y;
 	this.vert = isVertical;
 	this.f = fontSize;
+	this.font = font;
 	return this;
 }
 //MODE LIST:

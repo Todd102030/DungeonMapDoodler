@@ -240,6 +240,7 @@ var Erase = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
+			pgWarehouseMap.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

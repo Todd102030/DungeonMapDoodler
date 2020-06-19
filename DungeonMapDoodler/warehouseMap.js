@@ -30,6 +30,7 @@ var pgWarehouseMap = (function(){
     globalOffsetX: 0,
     globalOffsetY: 0,
     gridImg: null,
+	hatchStyleImage: "hatchingImg",
     imageScaleX:1,
     imageScaleY:1,
     isPlacingText: false,
@@ -83,6 +84,16 @@ var pgWarehouseMap = (function(){
     //Holds all text displayed on screen
     textFields: [],
     textId: null,
+	undoStack: { /* holds arrays of canvas.toDataUrl() calls, in most cases on mouseup event when a drawing tool is used */
+		hatch: [],
+		outline: [],
+		doodle: []
+	},
+	redoStack: { /* holds arrays of canvas.toDataUrl() calls, in most cases on mouseup event when a drawing tool is used */
+		hatch: [],
+		outline: [],
+		doodle: []
+	},
     uploadedNewImage: false,
     //Holds anything to be drawn that isn't a location
     walls: [],
@@ -223,7 +234,7 @@ var pgWarehouseMap = (function(){
     },
     applyCancelTextPopup: function(){
     	ir.hide("textEditPopup");
-    	self.enableButtons(true);
+    	//self.enableButtons(true);
     },
     applyDeleteTextPopup: function(){
     	ir.hide("textEditPopup");
@@ -287,7 +298,9 @@ var pgWarehouseMap = (function(){
     		self.isPlacingText = true;
 	    	var isVert = ir.get("drawVerticalText").checked;
 	    	var fontSize = ir.vn("textPopupFontSize");
-	    	self.textFields.push(new TextField(text, self.mouseX+self.globalOffsetX, self.mouseX+self.globalOffsetY, isVert, fontSize));
+	    	var font = ir.v("textPopupFont");
+		
+	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font));
 	    	self.textId = self.textFields.length-1;
 	    	self.enableButtons(true);
     	}
@@ -304,8 +317,8 @@ var pgWarehouseMap = (function(){
     },
     cancelTextPopup: function(){
     	ir.hide("textPopup");
-    	self.setMode(Mode.MOVE);
-    	self.enableButtons(true);
+    	//self.setMode(Mode.MOVE);
+    	//self.enableButtons(true);
     },
     clear: function(){
     	if(self.ctx){
@@ -437,15 +450,6 @@ var pgWarehouseMap = (function(){
         /// change composite mode to use that shape
         //ctx.globalCompositeOperation = 'xor';
         
-        var img = new Image();
-        img.src = ir.get("hatchingImg").src;
-        /// draw the image to be clipped
-        //ctx.drawImage(img, 0, 0, 500, 500);
-        //////
-        var iw = img.naturalWidth;
-		var ih = img.naturalHeight;
-		var xplus = iw*(1/sX);//*self.zoomLevel;
-        var yplus = ih*(1/sY);//*self.zoomLevel;
         
 		/*for(var x=0;x<canv.width;x+=xplus){
 			for(var y=0;y<canv.height;y+=yplus){
@@ -457,6 +461,17 @@ var pgWarehouseMap = (function(){
 		}*/
 		
 		if(!self.hatchGenerated){
+			
+			
+			var img = new Image();
+			img.src = ir.get(self.hatchStyleImage).src;
+			/// draw the image to be clipped
+			//ctx.drawImage(img, 0, 0, 500, 500);
+			//////
+			var iw = img.naturalWidth;
+			var ih = img.naturalHeight;
+			var xplus = iw*(1/sX);//*self.zoomLevel;
+			var yplus = ih*(1/sY);//*self.zoomLevel;
 			
 			
 			self.hatchGenerated = true;
@@ -740,13 +755,16 @@ var pgWarehouseMap = (function(){
       for(var i=0;i<self.textFields.length;i++){
         var textField = self.textFields[i];            
         self.ctx.fillStyle = "#000";
-        self.setFont(textField.f * self.zoomLevel);
+        self.setFont(textField.f * self.zoomLevel, textField.font);
         var text = textField.text;
         var textLines = text.split(/\r?\n/g);
         var id = self.textId;
-        var offx = id==i?0:self.globalOffsetX;
-      	var offy = id==i?0:self.globalOffsetY;
-      	var zoom = id==i?1:self.zoomLevel;
+        //var offx = id==i?0:self.globalOffsetX;
+      	//var offy = id==i?0:self.globalOffsetY;
+      	//var zoom = id==i?1:self.zoomLevel;
+		var offx = self.globalOffsetX;
+		var offy = self.globalOffsetY;
+		var zoom = self.zoomLevel;
         if(textField.vert){
             self.ctx.save();
             self.ctx.rotate(-Math.PI/2);
@@ -1111,7 +1129,10 @@ var pgWarehouseMap = (function(){
 	        	self.generateGrid();
 	        }
 			
+			//Things to call once everything is all loaded
 			self.clickMode({target:ir.get("modeSnapToGrid")});
+			self.updateUndoStack();
+			
 	        //Set up animation, using requestAnimationFrame is the smoothest option, works a lot better than a setTimeout/setInterval
 	        window.requestAnimFrame = function(){
 	            return (
@@ -1704,9 +1725,11 @@ var pgWarehouseMap = (function(){
     	ir.show("saveImagePopup");
     	self.enableButtons(false);
     },
-    popupTextInput: function(){
+    popupTextInput: function(xpos, ypos){
     	ir.show("textPopup");
-    	self.enableButtons(false);
+		self.tempTextX = xpos;
+		self.tempTextY = ypos;
+    	//self.enableButtons(false);
     },
     popupTextEdit: function(id){
     	var text = self.textFields[id];
@@ -2011,7 +2034,8 @@ var pgWarehouseMap = (function(){
     	}
     },
     setFont:function(pixelSize,other) {
-    	self.ctx.font = Math.min(40,Math.max(self.minFontPx,Math.round(pixelSize))) + "px Arial " + (other||"");
+		self.ctx.font = Math.round(pixelSize) + "px '" + (other||"" + "' 'Arial'");
+    	//self.ctx.font = Math.min(40,Math.max(self.minFontPx,Math.round(pixelSize))) + "px Arial " + (other||"");
     },
     setFontToFit: function(text, width, startFont){
     	if(isNaN(startFont)){
@@ -2133,11 +2157,7 @@ var pgWarehouseMap = (function(){
         }
         self.lots = res.lots;
         self.seeds = [];
-        if (ir.bool("WarehouseSeeds")) {
-          for (var i=0,z=res.seeds.length;i<z;i++) {
-            self.seeds.push(SeedPickup.wrap(res.seeds[i]));
-          }
-        }
+       
       }
       if (self.editMode) {
         self.init();
@@ -2232,13 +2252,138 @@ var pgWarehouseMap = (function(){
 	toggleGridOutside: function(){
 		self.drawGridOutside = !self.drawGridOutside;
 	},
-    undo: function(){
+    /*undo: function(){
         if(self.mode == Mode.LOCATION){
             self.locations.splice(self.locations.length-1,1);
         }else if(self.mode == Mode.WALLS){
             self.walls.splice(self.walls.length-1,1);
         }
-    },
+    },*/
+	updateCurrentImage: function(updateRedo){
+		var hImg = new Image();
+		var oImg = new Image();
+		var dImg = new Image();
+		hImg.onload = function(){
+			if(updateRedo){
+				pgWarehouseMap.redoStack.hatch.push(this);
+			}
+		}
+		oImg.onload = function(){
+			if(updateRedo){
+				pgWarehouseMap.redoStack.outline.push(this);
+			}
+		}
+		dImg.onload = function(){
+			if(updateRedo){
+				pgWarehouseMap.redoStack.doodle.push(this);
+			}
+		}
+		hImg.src = self.hatchCanvas.toDataURL("image/png");
+		oImg.src = self.outlineCanvas.toDataURL("image/png");
+		dImg.src = self.doodleCanvas.toDataURL("image/png");
+		self.hTempImg = hImg;
+		self.oTempImg = oImg;
+		self.dTempImg = dImg;
+	},
+	updateUndoStack: function(){
+		
+		//Wipe out redo stack if you draw something
+		self.redoStack = { 
+			hatch: [],
+			outline: [],
+			doodle: []
+		}
+		//two steps, updating current image, pushing current image to stack
+		//
+		if(self.hTempImg != null){
+			self.undoStack.hatch.push(self.hTempImg);
+			self.undoStack.outline.push(self.oTempImg);
+			self.undoStack.doodle.push(self.dTempImg);
+			
+			
+			
+		}else{
+			
+		}
+		
+		if(self.undoStack.hatch.length > 10){
+			self.undoStack.hatch.shift();
+			self.undoStack.outline.shift();
+			self.undoStack.doodle.shift();
+		}
+		
+		self.updateCurrentImage(true);
+		
+	},
+	undo: function(){
+		//self.hTempImg = null;
+		//self.oTempImg = null;
+		//self.dTempImg = null;
+		
+		//Pop the last image off each stack, clear current canvas and draw this image in its place
+		if(self.undoStack.hatch.length > 0){
+			var lastHatch = self.undoStack.hatch.pop();	
+			self.hatchCtx.clearRect(0,0,self.hatchCanvas.width, self.hatchCanvas.height);
+			self.hatchCtx.drawImage(lastHatch, 0,0,self.hatchCanvas.width, self.hatchCanvas.height)
+			self.redoStack.hatch.push(lastHatch);
+		}
+		if(self.undoStack.outline.length > 0){
+			var lastOutline = self.undoStack.outline.pop();
+			self.outlineCtx.clearRect(0,0,self.outlineCanvas.width, self.outlineCanvas.height);
+			self.outlineCtx.drawImage(lastOutline, 0,0,self.outlineCanvas.width, self.outlineCanvas.height)
+			self.redoStack.outline.push(lastOutline);
+		}
+		if(self.undoStack.doodle.length > 0){
+			var lastDoodle = self.undoStack.doodle.pop();
+			self.doodleCtx.clearRect(0,0,self.doodleCanvas.width, self.doodleCanvas.height);
+			self.doodleCtx.drawImage(lastDoodle, 0,0,self.doodleCanvas.width, self.doodleCanvas.height)		
+			self.redoStack.doodle.push(lastDoodle);
+		}
+		if(self.undoStack.hatch.length == 0){
+			//console.log("clearing out current image")
+			//self.hTempImg = null;
+			//self.oTempImg = null;
+			//self.dTempImg = null;
+		}
+		self.updateCurrentImage(false);
+		//console.log(self.undoStack, self.redoStack);
+	},
+	redo: function(){
+		//console.log("start of redo", self.redoStack);
+		//Pop the last image off each stack, clear current canvas and draw this image in its place
+		if(self.redoStack.hatch.length > 0){
+			var lastHatch = self.redoStack.hatch.pop();	
+			self.hatchCtx.clearRect(0,0,self.hatchCanvas.width, self.hatchCanvas.height);
+			self.hatchCtx.drawImage(lastHatch, 0,0,self.hatchCanvas.width, self.hatchCanvas.height)
+			self.undoStack.hatch.push(lastHatch);
+		}else{
+			//self.undoStack.hatch.push(self.hTempImg);
+		}
+		if(self.redoStack.outline.length > 0){
+			var lastOutline = self.redoStack.outline.pop();
+			self.outlineCtx.clearRect(0,0,self.outlineCanvas.width, self.outlineCanvas.height);
+			self.outlineCtx.drawImage(lastOutline, 0,0,self.outlineCanvas.width, self.outlineCanvas.height)
+			self.undoStack.outline.push(lastOutline);
+		}else{
+			//self.undoStack.outline.push(self.oTempImg);
+		}
+		if(self.redoStack.doodle.length > 0){
+			var lastDoodle = self.redoStack.doodle.pop();
+			self.doodleCtx.clearRect(0,0,self.doodleCanvas.width, self.doodleCanvas.height);
+			self.doodleCtx.drawImage(lastDoodle, 0,0,self.doodleCanvas.width, self.doodleCanvas.height)			
+			self.undoStack.doodle.push(lastDoodle);
+		}else{
+			//self.undoStack.doodle.push(self.dTempImg);
+		}
+		if(self.undoStack.hatch.length == 0){
+			//console.log("clearing out current image")
+			//self.hTempImg = null;
+			//self.oTempImg = null;
+			//self.dTempImg = null;
+		}
+		//self.updateCurrentImage();
+		//console.log("end of redo", self.redoStack);
+	},
     zoom: function(zoom, suppressOffset){
     	//if(!self.isPlacingText && self.mode != Mode.DIMENSIONS){
 	        var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;

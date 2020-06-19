@@ -209,6 +209,7 @@ var Line = (function(){
 			//}
 			
 			
+			pgWarehouseMap.updateUndoStack();
 			
 			self.isDoodling = false;
             self.doodleStartX = null;

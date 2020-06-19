@@ -164,6 +164,7 @@ var Doodle = (function(){
 		},
 		mouseDown: function(xpos, ypos, data){
 			self.isDoodling = true;
+			//pgWarehouseMap.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
@@ -181,6 +182,7 @@ var Doodle = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
+			pgWarehouseMap.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

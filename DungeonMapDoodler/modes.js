@@ -10,6 +10,7 @@ var Modes = {
 	RoomTool, 
 	StampTool, 
 	SnapToGrid,
-	ShapeTool
+	ShapeTool, 
+	TextTool
 };
 

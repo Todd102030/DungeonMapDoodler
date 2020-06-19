@@ -1,6 +1,6 @@
 "use strict";
 
-var StampTool = (function(){
+var TextTool = (function(){
 	var self={
 		angle: 0,
 		borderSize: 3,
@@ -14,7 +14,7 @@ var StampTool = (function(){
 		multiplyer:1,
 		size: 30,
 		stampRatio: 1,
-		title: "Stamps",
+		title: "Text Tool",
 		addStamp: function(){
 			ir.get("stampUpload").click();
 		},
@@ -39,7 +39,7 @@ var StampTool = (function(){
 			self.angle = evt.target.value;	
 		},
 		changeSnapping: function(evt){
-			self.isSnapping = ir.bool("stampsIsSnapping");
+			self.isSnapping = ir.bool("textIsSnapping");
 		},
 		changeSize: function(evt){
 			self.size = parseInt(evt.target.value);
@@ -64,10 +64,10 @@ var StampTool = (function(){
 			}
 		},
 		deleteFn: function(){
-			if(self.stampHit != null && self.isMovingStamp){
-				pgWarehouseMap.stamps.splice(self.stampHit,1);
-				self.stampHit = null;
-				self.isMovingStamp = null;
+			if(self.textHit != null && self.isMovingText){
+				pgWarehouseMap.textFields.splice(self.textHit,1);
+				self.textHit = null;
+				self.isMovingText = null;
 			}
 		},
 		draw: function(xpos, ypos, data){
@@ -80,7 +80,7 @@ var StampTool = (function(){
 			var newimg = new Image();
 			newimg.src = self.chosenStampImg.src;
 			var stampobj = null;
-			if(self.isSnapping){
+			/*if(self.isSnapping){
 				var gridxy = getGridXY(xpos, ypos);
 				
 				if(self.stampRatio<1){
@@ -96,7 +96,7 @@ var StampTool = (function(){
 					//ctx.drawImage(self.chosenStampImg, gridxy.xpos*zoom, gridxy.ypos*zoom, gridxy.step/zoom, gridxy.step/zoom);	
 					stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.stamps.push(stampobj);
+					pgWarehouseMap.textFields.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
@@ -116,11 +116,12 @@ var StampTool = (function(){
 				//ratioImg.onload = function(){
 					stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.stamps.push(stampobj);
+					pgWarehouseMap.textFields.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
 			}
+			*/
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			if(self.chosenStampImg==null){
@@ -133,10 +134,10 @@ var StampTool = (function(){
             var zoom = pgWarehouseMap.zoomLevel;
 			var offX = pgWarehouseMap.globalOffsetX;
 			var offY = pgWarehouseMap.globalOffsetY;
-			self.stampMoveHit = pgWarehouseMap.hitTestStamps({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+			self.stampMoveHit = pgWarehouseMap.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
-			if(self.stampMoveHit == null && !self.isMovingStamp){
+			if(self.stampMoveHit == null && !self.isMovingText){
 				if(self.isSnapping){
 					var gridxy = getGridXY(xpos, ypos);
 					if(self.stampRatio<1){
@@ -146,7 +147,7 @@ var StampTool = (function(){
 						gridxy.stepx = gridxy.step * self.stampRatio;
 						gridxy.stepy = gridxy.step;
 					}
-					self.drawImageRotated(ctx, self.chosenStampImg, gridxy.xgridmid, gridxy.ygridmid, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle);				
+					//self.drawImageRotated(ctx, self.chosenStampImg, gridxy.xgridmid, gridxy.ygridmid, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle);				
 				}
 				else{
 					if(self.stampRatio<1){
@@ -156,20 +157,21 @@ var StampTool = (function(){
 						self.stepx = self.size * self.stampRatio;
 						self.stepy = self.size;
 					}
-					self.drawImageRotated(ctx, self.chosenStampImg,xpos-(self.stepx/2*zoom), ypos-(self.stepy/2*zoom), self.stepx*zoom*self.multiplyer, self.stepy*zoom*self.multiplyer, self.angle);
+					//self.drawImageRotated(ctx, self.chosenStampImg,xpos-(self.stepx/2*zoom), ypos-(self.stepy/2*zoom), self.stepx*zoom*self.multiplyer, self.stepy*zoom*self.multiplyer, self.angle);
 				}
 				
 			}
 			else{
-				self.drawMoveHighlight(pgWarehouseMap.ctx,xpos, ypos,data);
+				//self.drawMoveHighlight(pgWarehouseMap.ctx,xpos, ypos,data);
 			}
 			ctx.stroke();
+			
 		},
 		drawMoveHighlight : function(ctx, xpos, ypos, data){
 			if(self.stampMoveHit == null){
 				return;
 			}
-			var st = pgWarehouseMap.stamps[self.stampMoveHit];
+			var st = pgWarehouseMap.textFields[self.stampMoveHit];
             var zoom = pgWarehouseMap.zoomLevel;
 			var wh = pgWarehouseMap
 			var sX =wh.dimensions.scaleX;
@@ -180,8 +182,8 @@ var StampTool = (function(){
 			
 			//ctx.fillRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
 			//ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
-			ctx.fillRect(wh.globalOffsetX +st.x * zoom, wh.globalOffsetY + st.y * zoom, st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
-			ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
+			ctx.fillRect(wh.globalOffsetX +st.x * zoom, wh.globalOffsetY + st.y * zoom, 100 * wh.zoomLevel*(1/sX), 100 * wh.zoomLevel*(1/sY));	
+			ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), 100 * wh.zoomLevel*(1/sX), 100 * wh.zoomLevel*(1/sY));	
 			
 			ctx.stroke();
 		},
@@ -210,7 +212,7 @@ var StampTool = (function(){
 			
 		},
 		moveStamp: function(id, xpos, ypos){
-			var st = pgWarehouseMap.stamps[id];
+			var st = pgWarehouseMap.textFields[id];
 			if(st==null){
 				return;
 			}
@@ -235,26 +237,29 @@ var StampTool = (function(){
 		},
 		mouseDown: function(xpos, ypos, data){
 			
+			self.moveHappened = false;
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
 			//self.draw(xpos, ypos, data);
-			self.stampHit = pgWarehouseMap.hitTestStamps({x:xpos,y:ypos,w:1,h:1});
-			if(self.stampHit != null){
-				self.offsetX = parseFloat(xpos) - parseFloat(pgWarehouseMap.stamps[self.stampHit].x); 
-            	self.offsetY = parseFloat(ypos) - parseFloat(pgWarehouseMap.stamps[self.stampHit].y); 
-				self.isMovingStamp = true;
+			self.textHit = pgWarehouseMap.hitTestText({x:xpos,y:ypos,w:1,h:1});
+			if(self.textHit != null){
+				self.offsetX = parseFloat(xpos) - parseFloat(pgWarehouseMap.textFields[self.textHit].x); 
+            	self.offsetY = parseFloat(ypos) - parseFloat(pgWarehouseMap.textFields[self.textHit].y); 
+				self.isMovingText = true;
 			}else{
-				self.isDoodling = true;
+				self.isPlacingText = true;
+				
 			}
 			
 		},
 		mouseMove: function(xpos, ypos, data){
-			if(self.isMovingStamp){
-				self.moveStamp(self.stampHit,xpos, ypos);
+			self.moveHappened = true;
+			if(self.isMovingText){
+				self.moveStamp(self.textHit,xpos, ypos);
 			}
-			else if (self.isDoodling){
+			else if (self.isPlacingText){
 				var wh = pgWarehouseMap;
 				//self.draw(xpos*wh.zoomLevel+wh.globalOffsetX, ypos*wh.zoomLevel+wh.globalOffsetY, data);
 				self.doodleEndX = xpos;
@@ -264,11 +269,19 @@ var StampTool = (function(){
 			}
 		},
 		mouseUp: function(xpos, ypos, data){
-			if(self.isDoodling){
-				self.draw(xpos, ypos, data);
+			if(!self.moveHappened && self.textHit != null){
+				pgWarehouseMap.popupTextEdit(self.textHit);
 			}
-			self.isDoodling = false;
-			self.isMovingStamp = false;
+			else if(self.isPlacingText){
+				var offX = pgWarehouseMap.globalOffsetX;
+				var offY = pgWarehouseMap.globalOffsetY;
+				var zoom = pgWarehouseMap.zoomLevel;
+				//self.draw(xpos, ypos, data);
+				pgWarehouseMap.popupTextInput((xpos-offX)/zoom, (ypos-offX)/zoom);
+			}
+			self.isPlacingText = false;
+			self.isMovingText = false;
+			self.textHit = 0;
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -277,27 +290,27 @@ var StampTool = (function(){
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Size: </div><label for='stampSize' id='stampSizeLabel'>${self.size}</label><br>
-						<input style='width:100px' type="range" id="stampSize" name="stampSize" min="1" max="200" value='${self.size}' onchange='Modes.StampTool.changeSize(event)' oninput='Modes.StampTool.changeSize(event)'><br>
+						<input style='width:100px' type="range" id="stampSize" name="stampSize" min="1" max="200" value='${self.size}' onchange='Modes.TextTool.changeSize(event)' oninput='Modes.TextTool.changeSize(event)'><br>
 						<div class='paramTitle'>Multiplyer: </div><label for='stampSizeMult' id='stampSizeMultLabel'>${self.multiplyer}</label><br>
-						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" min="1" max="5" value='${self.multiplyer}' onchange='Modes.StampTool.changeSizeMult(event)' oninput='Modes.StampTool.changeSizeMult(event)'><br>
+						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" min="1" max="5" value='${self.multiplyer}' onchange='Modes.TextTool.changeSizeMult(event)' oninput='Modes.TextTool.changeSizeMult(event)'><br>
 						<div class='paramTitle'>Rotate Degrees: </div><br>
-						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.StampTool.changeAngle(event)' oninput='Modes.StampTool.changeAngle(event)'><br>
-						<input type='checkbox' id='stampsIsSnapping' onclick='Modes.StampTool.changeSnapping(event)'><label for='stampsIsSnapping'>Snap To Grid</label><br>
+						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.TextTool.changeAngle(event)' oninput='Modes.TextTool.changeAngle(event)'><br>
+						<input type='checkbox' id='textIsSnapping' onclick='Modes.TextTool.changeSnapping(event)'><label for='textIsSnapping'>Snap To Grid</label><br>
 						`;
 			
-			htm += `<div style='max-width:150px;'>`
+			htm += `<div style='max-height:150px;max-width:150px;overflow-y:auto;'>`
 			Stamps.forEach(function(stamp, i){
-				htm += `<div class='stampBtn' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' width='40px' height='40px'></div>`;
+				htm += `<div class='modeBtn' onclick='Modes.TextTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' width='32px' height='32px'></div>`;
 			});
 			htm += `</div>`;
 			
-			htm += `<a href='#' class='' onclick='Modes.StampTool.addStamp()'>Add</a> `
+			htm += `<a href='#' class='' onclick='Modes.TextTool.addStamp()'>Add</a> `
 			
 			htm +=`	
 						`;
 			container.innerHTML = htm;
 			
-			ir.set("stampsIsSnapping", self.isSnapping);
+			ir.set("textIsSnapping", self.isSnapping);
 		},
 	}; return self;
 	})()

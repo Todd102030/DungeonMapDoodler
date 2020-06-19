@@ -142,8 +142,8 @@ var RoomTool = (function(){
 						   Math.abs(grid1.xpos-grid2.xpos)*zoom, Math.abs(grid1.ypos-grid2.ypos)*zoom);
 			}
 			else{
-				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX))/zoom, (Math.min(self.doodleStartY,self.doodleEndY))/zoom, 
-						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
+				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX))*zoom+offx, (Math.min(self.doodleStartY,self.doodleEndY))*zoom+offy, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)*zoom, Math.abs(self.doodleStartY-self.doodleEndY)*zoom);
 			}
 		},
 		/**
@@ -195,6 +195,8 @@ var RoomTool = (function(){
 		mouseUp: function(xpos, ypos,data){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
+			
+			pgWarehouseMap.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

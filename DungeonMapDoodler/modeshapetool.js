@@ -275,6 +275,8 @@ var ShapeTool = (function(){
 		mouseUp: function(xpos, ypos,data){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
+			
+			pgWarehouseMap.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

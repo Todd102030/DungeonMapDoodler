@@ -35,10 +35,12 @@
 	<img id='squarefuzzImg' src='images/squarefuzz.png'>
 	<img id='circlefuzzImg' src='images/circlefuzz.png'>
 	<img id='hatchingImg' src='hatching.png'>
-	<!--<img id='hatchingImg' src='hatches/dots.svg'>-->
+	<img id='hatchingImgDots' src='hatches/dots.svg'>
+	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
+	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
 	
 	
-				<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
+	<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
 	
 </div>	
 	
@@ -66,6 +68,22 @@
 		<tr>
 			<td class='tdr'>Font Size</td>
 			<td class='tdl'><input type='number' value=14 id='textPopupFontSize'/></td>
+		</tr>
+		<tr>
+			<td class='tdr'>Font</td>
+			<td class='tdl'><select id="textPopupFont">
+				<option value='Times New Roman'>Times New Roman</option>
+				<option value='Arial'>Arial</option>
+				<option value='Helvetica'>Helvetica</option>
+				<option value='Comic Sans'>Comic Sans</option>
+				<option value='mono'>Monospace</option>
+				<option value='Metal_Mania'>Metal Mania</option>
+				<option value='Bangers'>Bangers</option>
+				<option value='Hobbiton'>Hobbiton Brush Hand</option>
+				<option value='Tengwar'>Tengwar Annatar</option>
+				<option value='Tengwar_i'>Tengwar Annatar Italic</option>
+				<option value='Rune'>Rune</option>
+				</select></td>
 		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyTextPopup()">Okay</button>
@@ -186,15 +204,19 @@
 </div>
 	
 <div class='floatingControlsLeft'>
-	<div class='floatBtn' onclick="pgWarehouseMap.zoom(1, true)"><img src='images/plus.svg' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="pgWarehouseMap.zoom(-1, true)"><img src='images/minus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="pgWarehouseMap.zoom(1, true)"><img title="Zoom In" src='images/plus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="pgWarehouseMap.zoom(-1, true)"><img title="Zoom Out" src='images/minus.svg' width='40px' height='40px'></div>
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
+	<div class='floatBtn' onclick="pgWarehouseMap.undo()"><img title='Undo' src='images/undo.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="pgWarehouseMap.redo()"><img title="Redo" src='images/redo.svg' width='40px' height='40px'></div>
+	
+	
 </div>	
 	
 	
 <div class="floatingModes popup">
 	<div class='floatingBtns'>
-	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
+	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><!--<div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>-->
 	</div>
 	<div class='paramBox' id='paramBox'></div>
 </div>	
@@ -233,6 +255,7 @@
 <script src='moderoomtool.js'></script>
 <script src='modesnaptogrid.js'></script>
 <script src='modeshapetool.js'></script>
+<script src='modetext.js'></script>
 <script src='modestamps.js'></script>
 <script src='modes.js'></script>
 <script src="warehouseMap.js"></script>  

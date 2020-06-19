@@ -17,6 +17,12 @@ var Hatching = (function(){
 				self.outlineColor = evt.target.value;
 			}
 		},
+		changeImageStyle: function(evt){
+			self.imageStyle = ir.v("hatchImageStyle");
+			console.log("Image style is ", self.imageStyle);
+			pgWarehouseMap.hatchGenerated = false;
+			pgWarehouseMap.hatchStyleImage = self.imageStyle;
+		},
 		changeHatchSize: function(evt){
 			self.hatchSize = parseInt(evt.target.value);
 			ir.set("hatchingHatchSizeLabel", self.hatchSize);
@@ -83,6 +89,7 @@ var Hatching = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
+			pgWarehouseMap.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -92,11 +99,21 @@ var Hatching = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Hatch Size: </div><label for='hatchingHatchSize' id='hatchingHatchSizeLabel'>${self.hatchSize}</label><br>
 						<input style='width:78px' type="range" id="hatchingHatchSize" name=hatchingHatchSize" min="1" max="200" value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
-						
-						`;
+						<div class='paramTitle'>Hatch Style: </div>`;
+			
+			htm += `<select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
+			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
+			htm += "<option name='Dots' value='hatchingImgDots'>Dots</option>";
+			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
+			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "</select>";
+			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
 						//<label for="hatchingColor">Hatching Color</label><br>
 			container.innerHTML = htm;
+			
+			
+			
 		},
 	}; return self;
 })()
