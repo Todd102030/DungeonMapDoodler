@@ -55,11 +55,11 @@
 
 
 
-<div id='textPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
+<div id='textPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;max-width:600px;height:auto;position:fixed;left:35%; top:20%'>
 	<table>
 		<tr>
 			<td class='tdr'>Text:</td>
-			<td class='tdl'><textarea rows='2' id='textPopupVal' placeholder='Write your text here'></textarea></td>
+			<td class='tdl'><textarea rows='2' id='textPopupVal' style="font-family: 'Times New Roman'" placeholder='Write your text here'></textarea></td>
 		</tr>
 		<tr>
 			<td class='tdr'>Vertical Text:</td>
@@ -67,11 +67,11 @@
 		</tr>
 		<tr>
 			<td class='tdr'>Font Size</td>
-			<td class='tdl'><input type='number' value=14 id='textPopupFontSize'/></td>
+			<td class='tdl'><input type='number' value='40' id='textPopupFontSize'/></td>
 		</tr>
 		<tr>
 			<td class='tdr'>Font</td>
-			<td class='tdl'><select id="textPopupFont">
+			<td class='tdl'><select id="textPopupFont" onchange="Modes.TextTool.changeFontPopup(event, 'textPopupVal')">
 				<option value='Times New Roman'>Times New Roman</option>
 				<option value='Arial'>Arial</option>
 				<option value='Helvetica'>Helvetica</option>
@@ -83,6 +83,9 @@
 				<option value='Tengwar'>Tengwar Annatar</option>
 				<option value='Tengwar_i'>Tengwar Annatar Italic</option>
 				<option value='Rune'>Rune</option>
+				<option value='star_jedi'>Star Jedi</option>
+				<option value='star_jedi_out'>Star Jedi Outline</option>
+				<option value='neuropol_x'>Neuropol X</option>
 				</select></td>
 		</tr>
 	</table>
@@ -103,6 +106,22 @@
 		<tr>
 			<td class='tdr'>Font Size</td>
 			<td class='tdl'><input type='number' value=14 id='textEditFontSize'/></td>
+		</tr>
+		<tr>
+			<td class='tdr'>Font</td>
+			<td class='tdl'><select id="textEditFont" onchange="Modes.TextTool.changeFontPopup(event, 'textEditVal')">
+				<option value='Times New Roman'>Times New Roman</option>
+				<option value='Arial'>Arial</option>
+				<option value='Helvetica'>Helvetica</option>
+				<option value='Comic Sans'>Comic Sans</option>
+				<option value='mono'>Monospace</option>
+				<option value='Metal_Mania'>Metal Mania</option>
+				<option value='Bangers'>Bangers</option>
+				<option value='Hobbiton'>Hobbiton Brush Hand</option>
+				<option value='Tengwar'>Tengwar Annatar</option>
+				<option value='Tengwar_i'>Tengwar Annatar Italic</option>
+				<option value='Rune'>Rune</option>
+				</select></td>
 		</tr>
 	</table>
 	<input type='number' value=0 id='textEditId' style="display:none"/>
@@ -216,7 +235,7 @@
 	
 <div class="floatingModes popup">
 	<div class='floatingBtns'>
-	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><!--<div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>-->
+	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
 	</div>
 	<div class='paramBox' id='paramBox'></div>
 </div>	

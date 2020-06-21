@@ -14,12 +14,20 @@ var ShapeTool = (function(){
 		shape: Shape.Square,
 		isSnapping: true,
 		isSubtractive: false,
-		title: "Room Tool Settings",
+		title: "Shape Tool Settings",
 		changeColor: function(evt, type){
 			if(type=='fill'){
 				self.fillColor = evt.target.value;
 			}else{
 				self.outlineColor = evt.target.value;
+			}
+		},
+		changeSides: function(evt, fromInput){
+			self.numSides = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("shapeToolNumSidesLabel", self.numSides);
+			}else{
+				ir.set("shapeToolNumSides", self.numSides);
 			}
 		},
 		changeInset: function(evt){
@@ -34,10 +42,6 @@ var ShapeTool = (function(){
 		},
 		changeSubtractive: function(evt){
 			self.isSubtractive = ir.bool("shapeToolIsSubtractive");
-		},
-		changeSides: function(evt){
-			self.numSides = evt.target.value;
-			ir.set("shapeToolNumSidesLabel", self.numSides);
 		},
 		draw: function(xpos, ypos, data){
 			//TODO: Add square/circle funcitonality
@@ -286,7 +290,7 @@ var ShapeTool = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<!--<div class='paramTitle'>In/Outset: </div><label for='shapeToolInset' id='shapeToolInsetLabel'>${self.inset}</label><br>
 						<input style='width:100px' type="range" id="shapeToolInset" name="shapeToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.ShapeTool.changeInset(event)' oninput='Modes.ShapeTool.changeInset(event)'><br>-->
-						<div class='paramTitle'>Number of Sides: </div><label for='shapeToolNumSides' id='shapeToolNumSidesLabel'>${self.numSides}</label><br>
+						<div class='paramTitle'>Number of Sides: </div><input type='number' style='width:60px' id='shapeToolNumSidesLabel' value="${self.numSides}" onchange='Modes.ShapeTool.changeSides(event, true)' oninput='Modes.ShapeTool.changeSides(event, true)'><br>
 						<input style='width:100px' type="range" id="shapeToolNumSides" name="shapeToolNumSides" min="3" max="20" value='${self.numSides}' onchange='Modes.ShapeTool.changeSides(event)' oninput='Modes.ShapeTool.changeSides(event)'><br>
 						<input type='checkbox' id='shapeToolIsSnapping' onclick='Modes.ShapeTool.changeSnapping(event)'><label for='shapeToolIsSnapping'>Snap To Grid</label><br>
 						<input type='checkbox' id='shapeToolIsSubtractive' } onclick='Modes.ShapeTool.changeSubtractive(event)'><label for='shapeToolIsSubtractive' >Subtractive</label><br>

@@ -9,7 +9,7 @@ var Hatching = (function(){
 		id:8,
 		size: 20,
 		shape: Shape.Square,
-		title: "Hatching",
+		title: "Hatch Settings",
 		changeColor: function(evt, type){
 			if(type=='fill'){
 				self.fillColor = evt.target.value;
@@ -23,9 +23,13 @@ var Hatching = (function(){
 			pgWarehouseMap.hatchGenerated = false;
 			pgWarehouseMap.hatchStyleImage = self.imageStyle;
 		},
-		changeHatchSize: function(evt){
+		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
-			ir.set("hatchingHatchSizeLabel", self.hatchSize);
+			if(!fromInput){
+				ir.set("hatchingHatchSizeLabel", self.hatchSize);
+			}else{
+				ir.set("hatchingHatchSize", self.hatchSize);
+			}
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
@@ -97,8 +101,8 @@ var Hatching = (function(){
 		},
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
-						<div class='paramTitle'>Hatch Size: </div><label for='hatchingHatchSize' id='hatchingHatchSizeLabel'>${self.hatchSize}</label><br>
-						<input style='width:78px' type="range" id="hatchingHatchSize" name=hatchingHatchSize" min="1" max="200" value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Hatch Size: </div><input type='number' style='width:60px' id='hatchingHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Hatching.changeHatchSize(event, true)' oninput='Modes.Hatching.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200" value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Hatch Style: </div>`;
 			
 			htm += `<select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;

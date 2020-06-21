@@ -14,7 +14,7 @@ var StampTool = (function(){
 		multiplyer:1,
 		size: 30,
 		stampRatio: 1,
-		title: "Stamps",
+		title: "Stamp Settings",
 		addStamp: function(){
 			ir.get("stampUpload").click();
 		},
@@ -41,13 +41,21 @@ var StampTool = (function(){
 		changeSnapping: function(evt){
 			self.isSnapping = ir.bool("stampsIsSnapping");
 		},
-		changeSize: function(evt){
+		changeSize: function(evt, fromInput){
 			self.size = parseInt(evt.target.value);
-			ir.set("stampSizeLabel", self.size);
+			if(!fromInput){
+				ir.set("stampSizeLabel", self.size);
+			}else{
+				ir.set("stampSize", self.size);
+			}
 		},
-		changeSizeMult: function(evt){
+		changeSizeMult: function(evt, fromInput){
 			self.multiplyer = parseInt(evt.target.value);
-			ir.set("stampSizeMultLabel", self.multiplyer);
+			if(!fromInput){
+				ir.set("stampSizeMultLabel", self.multiplyer);
+			}else{
+				ir.set("stampSizeMult", self.multiplyer);
+			}
 		},
 		changeStamp: function(stamp){
 			self.chosenStamp = Stamps[stamp];	
@@ -276,9 +284,9 @@ var StampTool = (function(){
 		},
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
-						<div class='paramTitle'>Size: </div><label for='stampSize' id='stampSizeLabel'>${self.size}</label><br>
+						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="stampSize" name="stampSize" min="1" max="200" value='${self.size}' onchange='Modes.StampTool.changeSize(event)' oninput='Modes.StampTool.changeSize(event)'><br>
-						<div class='paramTitle'>Multiplyer: </div><label for='stampSizeMult' id='stampSizeMultLabel'>${self.multiplyer}</label><br>
+						<div class='paramTitle'>Multiplier: </div><input type='number' style='width:60px' id='stampSizeMultLabel' value="${self.multiplyer}" onchange='Modes.StampTool.changeSizeMult(event, true)' oninput='Modes.StampTool.changeSizeMult(event, true)'><br>
 						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" min="1" max="5" value='${self.multiplyer}' onchange='Modes.StampTool.changeSizeMult(event)' oninput='Modes.StampTool.changeSizeMult(event)'><br>
 						<div class='paramTitle'>Rotate Degrees: </div><br>
 						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.StampTool.changeAngle(event)' oninput='Modes.StampTool.changeAngle(event)'><br>

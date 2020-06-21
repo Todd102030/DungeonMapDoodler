@@ -24,6 +24,18 @@
     font-family: "Rune";
     src: url('fonts/rune/rune.ttf');
 }
+@font-face {
+    font-family: "star_jedi";
+    src: url('fonts/star_jedi/starjedi/Starjedi.ttf');
+}
+@font-face {
+    font-family: "star_jedi_out";
+    src: url('fonts/star_jedi/starjout/Starjout.ttf');
+}
+@font-face {
+    font-family: "neuropol_x";
+    src: url('fonts/neuropol_x/neuropol_x.ttf');
+}
 
 
 *{

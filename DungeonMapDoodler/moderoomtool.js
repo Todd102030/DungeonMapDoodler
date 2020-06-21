@@ -21,9 +21,13 @@ var RoomTool = (function(){
 				self.outlineColor = evt.target.value;
 			}
 		},
-		changeInset: function(evt){
+		changeInset: function(evt, fromInput){
 			self.inset = parseInt(evt.target.value);
-			ir.set("roomToolInsetLabel", self.inset);
+			if(!fromInput){
+				ir.set("roomToolInsetLabel", self.inset);
+			}else{
+				ir.set("roomToolInset", self.inset);
+			}
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
@@ -204,8 +208,8 @@ var RoomTool = (function(){
 		},
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
-						<div class='paramTitle'>In/Outset: </div><label for='roomToolInset' id='roomToolInsetLabel'>${self.inset}</label><br>
-						<input style='width:78px' type="range" id="roomToolInset" name="roomToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
+						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='roomToolInsetLabel' value="${self.inset}" onchange='Modes.RoomTool.changeInset(event, true)' oninput='Modes.RoomTool.changeInset(event, true)'><br>
+						<input style='width:100px' type="range" id="roomToolInset" name="roomToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
 						<input type='checkbox' id='roomToolIsSnapping' onclick='Modes.RoomTool.changeSnapping(event)'><label for='roomToolIsSnapping'>Snap To Grid</label><br>
 						<input type='checkbox' id='roomToolIsSubtractive' } onclick='Modes.RoomTool.changeSubtractive(event)'><label for='roomToolIsSubtractive' >Subtractive</label><br>
 						<input type='color' value='${self.fillColor}' id='roomToolFillColor' onchange="Modes.RoomTool.changeColor(event, 'fill')">

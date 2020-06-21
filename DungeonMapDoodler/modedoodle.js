@@ -55,6 +55,7 @@ var Doodle = (function(){
 			var hatchSize = self.hatchSize;
 			var expos = self.doodleEndX;
 			var eypos = self.doodleEndY;
+			
 			// Radii of the white glow.
 			var innerRadius = self.size * 0.15;
 			var outerRadius = self.size/2+hatchSize;
@@ -164,12 +165,14 @@ var Doodle = (function(){
 		},
 		mouseDown: function(xpos, ypos, data){
 			self.isDoodling = true;
+			console.log("Doodle mousedown");
 			//pgWarehouseMap.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
 			self.draw(xpos, ypos, data);
+			
 		},
 		mouseMove: function(xpos, ypos, data){
 			if (self.isDoodling){

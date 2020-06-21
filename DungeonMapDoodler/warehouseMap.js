@@ -248,7 +248,8 @@ var pgWarehouseMap = (function(){
     	text.text = ir.v("textEditVal");
     	text.vert = ir.bool("textEditVert");
     	text.f = ir.vn("textEditFontSize");
-    	self.enableButtons(true);
+    	text.font = ir.v("textEditFont");
+    	//self.enableButtons(true);
     },
     applyCancelLocPopup: function(){
     	ir.hide("locEditPopup");
@@ -302,7 +303,6 @@ var pgWarehouseMap = (function(){
 		
 	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font));
 	    	self.textId = self.textFields.length-1;
-	    	self.enableButtons(true);
     	}
     },
     cancelDimensionPopup: function(){
@@ -412,7 +412,7 @@ var pgWarehouseMap = (function(){
 		
     
         self.drawWalls();
-        self.drawTextFields();
+        self.drawTextFields(canvas, ctx);
 		self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
 		
 		
@@ -750,12 +750,13 @@ var pgWarehouseMap = (function(){
 			Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
         }
     },
-    drawTextFields: function(){
-    	self.ctx.lineWidth = 1;
+    drawTextFields: function(canv,ct){
+		var ctx = ct || self.ctx;
+    	ctx.lineWidth = 1;
       for(var i=0;i<self.textFields.length;i++){
         var textField = self.textFields[i];            
-        self.ctx.fillStyle = "#000";
-        self.setFont(textField.f * self.zoomLevel, textField.font);
+        ctx.fillStyle = "#000";
+        self.setFont(textField.f * self.zoomLevel, textField.font, ctx);
         var text = textField.text;
         var textLines = text.split(/\r?\n/g);
         var id = self.textId;
@@ -766,18 +767,18 @@ var pgWarehouseMap = (function(){
 		var offy = self.globalOffsetY;
 		var zoom = self.zoomLevel;
         if(textField.vert){
-            self.ctx.save();
-            self.ctx.rotate(-Math.PI/2);
+            ctx.save();
+            ctx.rotate(-Math.PI/2);
             for(var j = 0;j < textLines.length; j++){
-              self.ctx.fillText(textLines[j],
+              ctx.fillText(textLines[j],
               		(offy+(textField.y*zoom))*-1, 
               		offx+(textField.x*zoom)+(textField.f*self.zoomLevel*j));
             }
-        	self.ctx.restore();
+        	ctx.restore();
         }
         else{
         	for(var j = 0;j < textLines.length; j++){
-              self.ctx.fillText(textLines[j],
+              ctx.fillText(textLines[j],
             		offx+(textField.x*zoom), 
             		offy+(textField.y*zoom)+(textField.f*self.zoomLevel*j));
         	}
@@ -1208,6 +1209,8 @@ var pgWarehouseMap = (function(){
 					}
 					st.ratio = st.ratio || 1;
 				})
+				
+				self.textFields = JSON.parse(obj.textFields || "[]") 
 			});
 			
 		}
@@ -1374,29 +1377,32 @@ var pgWarehouseMap = (function(){
       return result;
     },
     onMouseDown: function(evt){
-		
-
 		//if(evt.button != 0){
 		//	evt.preventDefault();
 			//evt.stopPropagation();
 		//	return;
 		//}
-		if(self.touchMouseDown == true && evt.changedTouches){
-			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
-		}
-		self.touchMouseDown = true;
+		//if(self.touchMouseDown == true && evt.changedTouches){
+		//	self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+		//}
+		//self.touchMouseDown = true;
         var mode = self.mode;
         self.mouseIsDown = true;
         var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
         var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
 		var isTwoFinger = false;
+		var isTouch = false;
 		if(evt.changedTouches){
 			evt.preventDefault();
-			console.log("Touch Start")
-			
+			isTouch = true;
 			var touch = evt.changedTouches[0];
-			self.mouseX = touch.clientX - self.canvX;
-        	self.mouseY = touch.clientY - self.canvY;
+			if(self.mouseMode == Modes.Move){
+				
+			}
+				self.mouseX = touch.clientX - self.canvX;
+				self.mouseY = touch.clientY - self.canvY;
+			xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
+        	ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
 			isTwoFinger = evt.changedTouches > 1;
 		}
         if(mode == Mode.MOVE || mode == Mode.DISPLAY){
@@ -1478,14 +1484,14 @@ var pgWarehouseMap = (function(){
         }*/
 		
 		if (evt.ctrlKey || isTwoFinger){
-			Modes.Move.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
     },
 	onKeyUp: function(evt){
-		console.log("Clicked key", evt.key);
+		//console.log("Clicked key", evt.key);
 		if(evt.key=='Delete'){
 			if(self.mouseMode.deleteFn){
 				self.mouseMode.deleteFn();
@@ -1595,7 +1601,16 @@ var pgWarehouseMap = (function(){
 			return;
 		}*/
 		if(evt.changedTouches){
-			console.log("Touch End")
+			evt.preventDefault();
+			var touch = evt.changedTouches[0];
+			self.mouseX = touch.clientX - self.canvX;
+        	self.mouseY = touch.clientY - self.canvY;
+			//isTwoFinger = evt.changedTouches > 1;
+			//for(var i=0;i<evt.changedTouches;i++){
+			//	var t = evt.changedTouches[i];
+			//	self.ctx.drawText(t.identifier, t.clientX - self.canvX,t.clientY - self.canvY)
+			//}
+		
 		}
 		
         var mode = self.mode;
@@ -1738,6 +1753,7 @@ var pgWarehouseMap = (function(){
     	ir.set("textEditVal", text.text);
     	ir.set("textEditVert", text.vert);
     	ir.set("textEditFontSize", text.f);
+    	ir.set("textEditFont", text.font);
     },
     popupWallEdit: function(id){
     	var wall = self.walls[id];
@@ -1897,7 +1913,8 @@ var pgWarehouseMap = (function(){
 			doodleCanvas: self.doodleCanvas.toDataURL("image/png"),
 			outlineCanvas: self.outlineCanvas.toDataURL("image/png"),
 			hatchImg: self.hatchImg.src,
-			stamps: JSON.stringify(self.stamps)
+			stamps: JSON.stringify(self.stamps),
+			textFields: JSON.stringify(self.textFields)
 		}
 		
 		var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storageObj));
@@ -2033,8 +2050,12 @@ var pgWarehouseMap = (function(){
     		text.y = map(text.y, 0, defY, 0, newY);
     	}
     },
-    setFont:function(pixelSize,other) {
+    setFont:function(pixelSize,other, otherCtx) {
+		
 		self.ctx.font = Math.round(pixelSize) + "px '" + (other||"" + "' 'Arial'");
+		if(otherCtx){
+			otherCtx.font = Math.round(pixelSize) + "px '" + (other||"" + "' 'Arial'");
+		}
     	//self.ctx.font = Math.min(40,Math.max(self.minFontPx,Math.round(pixelSize))) + "px Arial " + (other||"");
     },
     setFontToFit: function(text, width, startFont){
@@ -2098,10 +2119,11 @@ var pgWarehouseMap = (function(){
 		}
 	},
     show:function(){
+		var isBeta = false;
 		var passwd = "doodletime";
 		var storedPwd = irstore.get("doodlePwd");
 		var enteredPwd = "";
-		if(storedPwd != passwd){
+		if(storedPwd != passwd && isBeta){
 			ir.show("passwordPrompt");
 			//enteredPwd = prompt("Please enter the password to access Dungeon Map Doodler beta");
 		}

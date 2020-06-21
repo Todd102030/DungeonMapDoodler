@@ -29,17 +29,29 @@ var Erase = (function(){
 			self.eraseRoom = ir.v("eraseRoom");	
 			self.eraseStamps = ir.v("eraseStamps");	
 		},
-		changeSize: function(evt){
+		changeSize: function(evt, fromInput){
 			self.size = parseInt(evt.target.value);
-			ir.set("eraseSizeLabel", self.size);
+			if(!fromInput){
+				ir.set("eraseSizeLabel", self.size);
+			}else{
+				ir.set("eraseSize", self.size);
+			}
 		},
-		changeBorderSize: function(evt){
+		changeBorderSize: function(evt, fromInput){
 			self.borderSize = parseInt(evt.target.value);
-			ir.set("eraseBorderSizeLabel", self.borderSize);
+			if(!fromInput){
+				ir.set("eraseBorderSizeLabel", self.borderSize);
+			}else{
+				ir.set("eraseBorderSize", self.borderSize);
+			}
 		},
-		changeHatchSize: function(evt){
+		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
-			ir.set("eraseHatchSizeLabel", self.hatchSize);
+			if(!fromInput){
+				ir.set("eraseHatchSizeLabel", self.hatchSize);
+			}else{
+				ir.set("eraseHatchSize", self.hatchSize);
+			}
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
@@ -249,12 +261,12 @@ var Erase = (function(){
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<input type='checkbox' id='eraseSnapToGrid' onclick='Modes.Erase.changeSnap()'><label for='eraseSnapToGrid'>Snap To Grid</label><br>
-						<div class='paramTitle'>Size: </div><label for='eraseSize' id='eraseSizeLabel'>${self.size}</label><br>
-						<input style='width:78px' type="range" id="eraseSize" name="eraseSize" min="1" max="200" width='60px' value='${self.size}' onchange='Modes.Erase.changeSize(event)' oninput='Modes.Erase.changeSize(event)'><br>
-						<div class='paramTitle'>Hatch: </div><label for='eraseHatchSize' id='eraseHatchSizeLabel'>${self.hatchSize}</label><br>
-						<input style='width:78px' type="range" id="eraseHatchSize" name="eraseHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Erase.changeHatchSize(event)' oninput='Modes.Erase.changeHatchSize(event)'><br>
-						<div class='paramTitle'>Border: </div><label for='eraseBorderSize' id='eraseBorderSizeLabel'>${self.borderSize}</label><br>
-						<input style='width:78px' type="range" id="eraseBorderSize" name="eraseBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Erase.changeBorderSize(event)' oninput='Modes.Erase.changeBorderSize(event)'><br>
+						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='eraseSizeLabel' value="${self.size}" onchange='Modes.Erase.changeSize(event, true)' oninput='Modes.Erase.changeSize(event, true)'><br>
+						<input style='width:100px' type="range" id="eraseSize" name="eraseSize" min="1" max="200" value='${self.size}' onchange='Modes.Erase.changeSize(event)' oninput='Modes.Erase.changeSize(event)'><br>
+						<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='eraseHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Erase.changeHatchSize(event, true)' oninput='Modes.Erase.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="eraseHatchSize" name="eraseHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Erase.changeHatchSize(event)' oninput='Modes.Erase.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Border: </div><input type='number' style='width:60px' id='eraseBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Erase.changeBorderSize(event, true)' oninput='Modes.Erase.changeBorderSize(event, true)'><br>
+						<input style='width:100px' type="range" id="eraseBorderSize" name="eraseBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Erase.changeBorderSize(event)' oninput='Modes.Erase.changeBorderSize(event)'><br>
 						<input type="radio" id="eraseSquare" name="eraseShape" value="Square" onchange='Modes.Erase.changeShape(event)'>
 						<label for="eraseSquare">Square</label><br>
 						<input type="radio" id="eraseCircle" name="eraseShape" value="Circle" onchange='Modes.Erase.changeShape(event)'>

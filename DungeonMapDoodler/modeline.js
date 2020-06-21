@@ -9,7 +9,7 @@ var Line = (function(){
 		id:8,
 		size: 20,
 		shape: Shape.Circle,
-		title: "Line Tool",
+		title: "Line Settings",
 		changeColor: function(evt, type){
 			if(type=='fill'){
 				self.fillColor = evt.target.value;
