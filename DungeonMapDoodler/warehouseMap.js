@@ -1,5 +1,5 @@
 "use strict";
-var pgWarehouseMap = (function(){
+var doodler = (function(){
   var self={
     animationId : null,
 	  beanColour: "#782632",
@@ -131,13 +131,13 @@ var pgWarehouseMap = (function(){
         var a = self.locRows.values;
         for(var i=0,z=a.length;i<z;i++){
           var loc = a[i];
-          selectbox += "<option onclick='pgWarehouseMap.setLoc("+i+", "+index+")'"
+          selectbox += "<option onclick='doodler.setLoc("+i+", "+index+")'"
             + " value='" + loc.Row + "'>" 
             + loc.Name + "</option>";
         }
         selectbox += "</select>";
         table.tdc(selectbox);
-        table.tdc("<button onclick='pgWarehouseMap.delTableRow("+index+")'>Delete</button>");
+        table.tdc("<button onclick='doodler.delTableRow("+index+")'>Delete</button>");
     },
     addWall: function(sx, sy, ex, ey){
         //Swap values around to make sure sx and sy are the top left
@@ -234,17 +234,21 @@ var pgWarehouseMap = (function(){
     },
     applyCancelTextPopup: function(){
     	ir.hide("textEditPopup");
+		self.popupShowing = false;
     	//self.enableButtons(true);
     },
     applyDeleteTextPopup: function(){
     	ir.hide("textEditPopup");
     	var id = ir.vn("textEditId");
+		
+		self.popupShowing = false;
     	self.textFields.splice(id, 1);
     	self.enableButtons(true);
     },
     applyEditTextPopup: function(){
     	ir.hide("textEditPopup");
     	var text = self.textFields[ir.vn("textEditId")];
+		self.popupShowing = false;
     	text.text = ir.v("textEditVal");
     	text.vert = ir.bool("textEditVert");
     	text.f = ir.vn("textEditFontSize");
@@ -253,6 +257,8 @@ var pgWarehouseMap = (function(){
     },
     applyCancelLocPopup: function(){
     	ir.hide("locEditPopup");
+		
+		self.popupShowing = false;
     	if(ir.vn("locEditDeleteOnCancel")>0){
     		var id = ir.vn("locEditId");
         	self.locations.splice(id, 1);
@@ -261,12 +267,14 @@ var pgWarehouseMap = (function(){
     },
     applyDeleteLocPopup: function(){
     	ir.hide("locEditPopup");
+		self.popupShowing = false;
     	var id = ir.vn("locEditId");
     	self.locations.splice(id, 1);
     	self.enableButtons(true);
     },
     applyEditLocPopup: function(){
     	ir.hide("locEditPopup");
+		self.popupShowing = false;
     	var loc = self.locations[ir.vn("locEditId")];
     	loc.w = Math.max(self.minLocWidth,(ir.vn("locEditWidth")/self.dimensions.scaleX).f2());
     	loc.h = Math.max(self.minLocWidth,(ir.vn("locEditHeight")/self.dimensions.scaleY).f2());
@@ -277,6 +285,7 @@ var pgWarehouseMap = (function(){
     },
     applyCancelWallPopup: function(){
     	ir.hide("wallEditPopup");
+		self.popupShowing = false;
     	self.enableButtons(true);
     },
     applyDeleteWallPopup: function(){
@@ -296,6 +305,7 @@ var pgWarehouseMap = (function(){
     	var text = ir.get("textPopupVal").value;
     	if(text != ""){
     		ir.hide("textPopup");
+			self.popupShowing = false;
     		self.isPlacingText = true;
 	    	var isVert = ir.get("drawVerticalText").checked;
 	    	var fontSize = ir.vn("textPopupFontSize");
@@ -317,6 +327,7 @@ var pgWarehouseMap = (function(){
     },
     cancelTextPopup: function(){
     	ir.hide("textPopup");
+		self.popupShowing = false;
     	//self.setMode(Mode.MOVE);
     	//self.enableButtons(true);
     },
@@ -468,8 +479,8 @@ var pgWarehouseMap = (function(){
 			/// draw the image to be clipped
 			//ctx.drawImage(img, 0, 0, 500, 500);
 			//////
-			var iw = img.naturalWidth;
-			var ih = img.naturalHeight;
+			var iw = img.naturalWidth*Modes.Hatching.renderScale;
+			var ih = img.naturalHeight*Modes.Hatching.renderScale;
 			var xplus = iw*(1/sX);//*self.zoomLevel;
 			var yplus = ih*(1/sY);//*self.zoomLevel;
 			
@@ -494,7 +505,7 @@ var pgWarehouseMap = (function(){
 			img2.onload = function() {
 				img2.width = canv2.width;
 				img2.height = canv2.height;
-				pgWarehouseMap.hatchImg = img2;
+				doodler.hatchImg = img2;
 			};
 			img2.src = dataurl;
 			
@@ -926,8 +937,8 @@ var pgWarehouseMap = (function(){
 			self.gridCanvas.width = img.width;
 			self.gridCanvas.height = img.height;
 			console.log("gridimg width and height are ", img.width, img.height);
-			if(callback && pgWarehouseMap.loadingSave){
-				pgWarehouseMap.loadingSave = false;
+			if(callback && doodler.loadingSave){
+				doodler.loadingSave = false;
 				callback();
 			}
         };
@@ -1161,7 +1172,7 @@ var pgWarehouseMap = (function(){
 			//JSON parse data into objects
 		try{
 			var obj = JSON.parse(data);
-			pgWarehouseMap.loadingSave = true;
+			doodler.loadingSave = true;
 			self.dimensions = obj.dimensions;
 			console.log("Save file dimensions are ", self.dimensions);
 			ir.set("dimensionPopupX", self.dimensions.wf);
@@ -1321,7 +1332,7 @@ var pgWarehouseMap = (function(){
         }
         self.ctx.restore();
     },
-    /** pgWarehouseMap.lotLines returns array of strings */
+    /** doodler.lotLines returns array of strings */
     lotLines: function(lotList,lineCount) {
       var names = [];
       for (var i=0;i<lotList.length;i++) {
@@ -1346,7 +1357,7 @@ var pgWarehouseMap = (function(){
         return (val-A)/(B-A) * (D-C) + C;
     },
     /**
-     * pgWarehouseMap.nameText returns the text to show on the image for the passed lot.
+     * doodler.nameText returns the text to show on the image for the passed lot.
      * <br>lotOrLots could be a cleaned-bean lot or array of, or a seed pickup lot or array of.
      */
     nameText:function(lotOrLots){
@@ -1496,6 +1507,39 @@ var pgWarehouseMap = (function(){
 			if(self.mouseMode.deleteFn){
 				self.mouseMode.deleteFn();
 			}
+		}
+		if(self.popupShowing){
+			return;
+		}
+		if(evt.key.toLowerCase() == "m"){
+			self.clickMode({target:ir.get("modeMove")});
+		}
+		if(evt.key.toLowerCase() == "g"){
+			self.clickMode({target:ir.get("modeSnapToGrid")});
+		}
+		if(evt.key.toLowerCase() == "h"){
+			self.clickMode({target:ir.get("modeHatching")});
+		}
+		if(evt.key.toLowerCase() == "d"){
+			self.clickMode({target:ir.get("modeDoodle")});
+		}
+		if(evt.key.toLowerCase() == "l"){
+			self.clickMode({target:ir.get("modeLine")});
+		}
+		if(evt.key.toLowerCase() == "s"){
+			self.clickMode({target:ir.get("modeStampTool")});
+		}
+		if(evt.key.toLowerCase() == "r"){
+			self.clickMode({target:ir.get("modeRoomTool")});
+		}
+		if(evt.key.toLowerCase() == "e"){
+			self.clickMode({target:ir.get("modeErase")});
+		}
+		if(evt.key.toLowerCase() == "p"){
+			self.clickMode({target:ir.get("modeShapeTool")});
+		}
+		if(evt.key.toLowerCase() == "t"){
+			self.clickMode({target:ir.get("modeTextTool")});
 		}
 	},
     onMouseMove: function(evt){
@@ -1742,6 +1786,7 @@ var pgWarehouseMap = (function(){
     },
     popupTextInput: function(xpos, ypos){
     	ir.show("textPopup");
+		self.popupShowing = true;
 		self.tempTextX = xpos;
 		self.tempTextY = ypos;
     	//self.enableButtons(false);
@@ -1749,6 +1794,7 @@ var pgWarehouseMap = (function(){
     popupTextEdit: function(id){
     	var text = self.textFields[id];
     	ir.show("textEditPopup");
+		self.popupShowing = true;
     	ir.set("textEditId", id);
     	ir.set("textEditVal", text.text);
     	ir.set("textEditVert", text.vert);
@@ -1800,7 +1846,7 @@ var pgWarehouseMap = (function(){
 
                 //img.src = e.target.result;
 				console.log("Files: ", e.target.result);
-				pgWarehouseMap.loadFile(e.target.result);
+				doodler.loadFile(e.target.result);
             };       
             FR.readAsText( this.files[0] );
         }
@@ -1828,7 +1874,7 @@ var pgWarehouseMap = (function(){
 	    	//console.log(image);
 	    	var w = ir.winWidth() - 20;
   			var h = ir.winHeight() - 40;
-  			var div = ir.get("pgWarehouseMap");
+  			var div = ir.get("doodler");
   			var img = ir.get("warehouseImagePopImg");
   			var imgWH = self.fitIntoRectRatio(self.dimensions.imgW, self.dimensions.imgH, w-40, h-60);
   			div.style.width = w + "px";
@@ -1907,7 +1953,7 @@ var pgWarehouseMap = (function(){
 	},
 	saveFile: function(){
 		var storageObj = {
-			dimensions: pgWarehouseMap.dimensions,
+			dimensions: doodler.dimensions,
 			grid: self.gridImg.src,
 			hatchCanvas: self.hatchCanvas.toDataURL("image/png"),
 			doodleCanvas: self.doodleCanvas.toDataURL("image/png"),
@@ -2235,7 +2281,7 @@ var pgWarehouseMap = (function(){
 	    	//Stop the animation loop
 	    	window.cancelAnimationFrame(self.animationId);	
 	    	if(suppressHide==undefined || suppressHide==false){
-	    		ir.hide("pgWarehouseMap");
+	    		ir.hide("doodler");
 	    	}
 	    	self.isRunning = false;
     	}
@@ -2287,17 +2333,17 @@ var pgWarehouseMap = (function(){
 		var dImg = new Image();
 		hImg.onload = function(){
 			if(updateRedo){
-				pgWarehouseMap.redoStack.hatch.push(this);
+				doodler.redoStack.hatch.push(this);
 			}
 		}
 		oImg.onload = function(){
 			if(updateRedo){
-				pgWarehouseMap.redoStack.outline.push(this);
+				doodler.redoStack.outline.push(this);
 			}
 		}
 		dImg.onload = function(){
 			if(updateRedo){
-				pgWarehouseMap.redoStack.doodle.push(this);
+				doodler.redoStack.doodle.push(this);
 			}
 		}
 		hImg.src = self.hatchCanvas.toDataURL("image/png");

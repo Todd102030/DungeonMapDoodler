@@ -7,19 +7,19 @@
       	<!--<link rel="stylesheet" type="text/css" href="style2.css">-->
 		<link rel="manifest" href="manifest.json">
     </head>
-<body onload='pgWarehouseMap.show()'>
-	<div class='topBar' style='text-align: right'><button id="whBtnGridDraw" type="button" class="canvBtn" name="mode" onclick="return pgWarehouseMap.toggleGridOutside()">Toggle Grid Outside</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" onclick="return ir.show('dimensionPopup')">Change Grid Size</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" value="8" onclick="return pgWarehouseMap.saveImage()">Save Map Image</button>&nbsp;&nbsp;<button id="whBtnSaveFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.saveFile()">Save</button>&nbsp;&nbsp;<button id="whBtnLoadFile" type="button" class="canvBtn" name="mode"  onclick="return pgWarehouseMap.showFileLoad()">Load</button></div>
-<div id='pgWarehouseMap'>
+<body onload='doodler.show()'>
+	<div class='topBar' style='text-align: right'><button id="whBtnGridDraw" type="button" class="canvBtn" name="mode" onclick="return doodler.toggleGridOutside()">Toggle Grid Outside</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" onclick="return ir.show('dimensionPopup')">Change Grid Size</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" value="8" onclick="return doodler.saveImage()">Save Map Image</button>&nbsp;&nbsp;<button id="whBtnSaveFile" type="button" class="canvBtn" name="mode"  onclick="return doodler.saveFile()">Save</button>&nbsp;&nbsp;<button id="whBtnLoadFile" type="button" class="canvBtn" name="mode"  onclick="return doodler.showFileLoad()">Load</button></div>
+<div id='doodler'>
 	<canvas id="warehouseCanvas" width="800" height="800" style='border-style:double'></canvas>  
 	<div style='display:none'><br>
-	<button id="whBtnMove" type="button" class="canvBtn" name="mode" value="1" onclick="return pgWarehouseMap.setMode(1)"> Move</button>
-	<button id="whBtnLoc" type="button" class="canvBtn" name="mode" value="2" onclick="return pgWarehouseMap.setMode(2)"> Create Location</button>
-	<button id="whBtnWalls" type="button" class="canvBtn" name="mode" value="3" onclick="return pgWarehouseMap.setMode(3)"> Draw Walls/Objects</button>
-	<button id="whBtnText" type="button" class="canvBtn" name="mode" value="5" onclick="return pgWarehouseMap.setMode(5)"> Create Text</button>
-	<button id="whBtnPreview" type="button" class="canvBtn" name="mode" value="4" onclick="return pgWarehouseMap.setMode(4)"> Preview</button>
-	<button id="whBtnEdit" type="button" class="canvBtn" name="mode" value="6" onclick="return pgWarehouseMap.setMode(6)"> Edit </button>
-	<button id="whBtnDoodle" type="button" class="canvBtn" name="mode" value="6" onclick="return pgWarehouseMap.setMode(8)"> Doodle </button>
-	<button id="whBtnDimen" type="button" class="canvBtn" name="mode" value="7" onclick="return pgWarehouseMap.showDimensionPopup()"> Change dimensions </button>
+	<button id="whBtnMove" type="button" class="canvBtn" name="mode" value="1" onclick="return doodler.setMode(1)"> Move</button>
+	<button id="whBtnLoc" type="button" class="canvBtn" name="mode" value="2" onclick="return doodler.setMode(2)"> Create Location</button>
+	<button id="whBtnWalls" type="button" class="canvBtn" name="mode" value="3" onclick="return doodler.setMode(3)"> Draw Walls/Objects</button>
+	<button id="whBtnText" type="button" class="canvBtn" name="mode" value="5" onclick="return doodler.setMode(5)"> Create Text</button>
+	<button id="whBtnPreview" type="button" class="canvBtn" name="mode" value="4" onclick="return doodler.setMode(4)"> Preview</button>
+	<button id="whBtnEdit" type="button" class="canvBtn" name="mode" value="6" onclick="return doodler.setMode(6)"> Edit </button>
+	<button id="whBtnDoodle" type="button" class="canvBtn" name="mode" value="6" onclick="return doodler.setMode(8)"> Doodle </button>
+	<button id="whBtnDimen" type="button" class="canvBtn" name="mode" value="7" onclick="return doodler.showDimensionPopup()"> Change dimensions </button>
 	
 	<br>
 	<input type='file' id="imageUpload" accept=".dmd"/>
@@ -36,6 +36,11 @@
 	<img id='circlefuzzImg' src='images/circlefuzz.png'>
 	<img id='hatchingImg' src='hatching.png'>
 	<img id='hatchingImgDots' src='hatches/dots.svg'>
+	<img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.svg'>
+	<img id='hatchingImgJPHalftone' src='hatches/DMD Halftone Pattern.svg'>
+	<img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.svg'>
+	<img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.svg'>
+	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.svg'>
 	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
 	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
 	
@@ -89,8 +94,8 @@
 				</select></td>
 		</tr>
 	</table>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyTextPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.cancelTextPopup()">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyTextPopup()">Okay</button>
+	<button type="button" class="canvBtn" onclick="doodler.cancelTextPopup()">Cancel</button>
 </div>
 
 <div id='textEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -125,9 +130,9 @@
 		</tr>
 	</table>
 	<input type='number' value=0 id='textEditId' style="display:none"/>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyEditTextPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyDeleteTextPopup()">Delete</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyCancelTextPopup()">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyEditTextPopup()">Okay</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyDeleteTextPopup()">Delete</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyCancelTextPopup()">Cancel</button>
 </div>
 
 <div id='wallEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -142,9 +147,9 @@
 		</tr>
 	</table>
 	<input type='number' value=0 id='wallEditId' style="display:none"/>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyEditWallPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyDeleteWallPopup()">Delete</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyCancelWallPopup()">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyEditWallPopup()">Okay</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyDeleteWallPopup()">Delete</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyCancelWallPopup()">Cancel</button>
 </div>
 
 <div id='locEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -164,9 +169,9 @@
 	</table>
 	<input type='number' value=0 id='locEditId' style="display:none"/>
 	<input type='number' value=0 id='locEditDeleteOnCancel' style="display:none"/>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyEditLocPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyDeleteLocPopup()">Delete</button>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyCancelLocPopup()">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyEditLocPopup()">Okay</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyDeleteLocPopup()">Delete</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyCancelLocPopup()">Cancel</button>
 </div>
 	
 <div id='imageSavePopup' style='border-style:double;background-color:#fff;display:none;z-index:5000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -188,7 +193,7 @@
 			</td>
 		</tr>
 	</table>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.saveImageConfirm()">Save</button>
+	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm()">Save</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('imageSavePopup')">Cancel</button>
 </div>
 
@@ -213,7 +218,7 @@
 		</tr>
 		<tr><td>Warning: this will clear out any doodles you currently have</td></tr>
 	</table>
-	<button type="button" class="canvBtn" onclick="pgWarehouseMap.applyDimensions()">Okay</button>
+	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup')">Cancel</button>
 </div>
 	
@@ -223,11 +228,11 @@
 </div>
 	
 <div class='floatingControlsLeft'>
-	<div class='floatBtn' onclick="pgWarehouseMap.zoom(1, true)"><img title="Zoom In" src='images/plus.svg' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="pgWarehouseMap.zoom(-1, true)"><img title="Zoom Out" src='images/minus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(1, true)"><img title="Zoom In" src='images/plus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(-1, true)"><img title="Zoom Out" src='images/minus.svg' width='40px' height='40px'></div>
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
-	<div class='floatBtn' onclick="pgWarehouseMap.undo()"><img title='Undo' src='images/undo.svg' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="pgWarehouseMap.redo()"><img title="Redo" src='images/redo.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.svg' width='40px' height='40px'></div>
 	
 	
 </div>	
@@ -235,7 +240,7 @@
 	
 <div class="floatingModes popup">
 	<div class='floatingBtns'>
-	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='pgWarehouseMap.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
 	</div>
 	<div class='paramBox' id='paramBox'></div>
 </div>	
@@ -254,11 +259,17 @@
 			<td colspan='2' class='tdr' id='passwordError'></td>
 		</tr>
 		<tr>
-			<td><button type="button" class="canvBtn" onclick="pgWarehouseMap.showPasswordPromptCallback()">Okay</button></td>
+			<td><button type="button" class="canvBtn" onclick="doodler.showPasswordPromptCallback()">Okay</button></td>
 		</tr>
 	</table></div>
 	
 </div>
+	
+<script type="text/javascript">
+    window.onbeforeunload = function() {
+        return "Are you sure you want to leave the page? Anything unsaved will be lost";
+    }
+</script>	
 	
 <script src='irutil.js'></script>
 <script src='irstore.js'></script>

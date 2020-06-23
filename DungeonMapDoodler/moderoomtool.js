@@ -43,7 +43,7 @@ var RoomTool = (function(){
 			//data.doodleCtx.strokeStyle = "black";
 			//data.doodleCtx.fillRect(self.doodleStartX, self.doodleStartY, self.doodleEndX, self.doodleEndY);
 			
-			var wh = pgWarehouseMap;
+			var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -120,9 +120,9 @@ var RoomTool = (function(){
 					ctx.strokeStyle = "rgb(240,60,60)";
 				}
 				var gridxy = getGridXY(xpos, ypos);
-				var offx = pgWarehouseMap.globalOffsetX;
-				var offy = pgWarehouseMap.globalOffsetY;
-				var zoom = pgWarehouseMap.zoomLevel;
+				var offx = doodler.globalOffsetX;
+				var offy = doodler.globalOffsetY;
+				var zoom = doodler.zoomLevel;
 				if(self.isSnapping){
 					ctx.strokeRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
 				}else{
@@ -136,9 +136,9 @@ var RoomTool = (function(){
 			}else{
 				ctx.strokeStyle = "rgb(240,60,60)";
 			}
-			var offx = pgWarehouseMap.globalOffsetX;
-			var offy = pgWarehouseMap.globalOffsetY;
-			var zoom = pgWarehouseMap.zoomLevel;
+			var offx = doodler.globalOffsetX;
+			var offy = doodler.globalOffsetY;
+			var zoom = doodler.zoomLevel;
 			if(self.isSnapping){
 				var grid1 = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
 				var grid2 = getGridXY2(Math.max(self.doodleStartX,self.doodleEndX), Math.max(self.doodleStartY,self.doodleEndY));
@@ -164,7 +164,7 @@ var RoomTool = (function(){
 			ctx.globalAlpha = 1;
 		},
 		endMode: function(){
-			pgWarehouseMap.canvas.style.cursor = "unset";
+			doodler.canvas.style.cursor = "unset";
 		},
 		mouseDown: function(xpos, ypos, data){
             
@@ -186,7 +186,7 @@ var RoomTool = (function(){
             
 		},
 		mouseMove: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
 			var gridxy = getGridXY2(xpos, ypos);
 			if(self.isSnapping){
 				self.doodleEndX = gridxy.xpos+gridxy.step;
@@ -200,7 +200,7 @@ var RoomTool = (function(){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
 			
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -209,7 +209,7 @@ var RoomTool = (function(){
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='roomToolInsetLabel' value="${self.inset}" onchange='Modes.RoomTool.changeInset(event, true)' oninput='Modes.RoomTool.changeInset(event, true)'><br>
-						<input style='width:100px' type="range" id="roomToolInset" name="roomToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
+						<input style='width:100px' type="range" id="roomToolInset" name="roomToolInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
 						<input type='checkbox' id='roomToolIsSnapping' onclick='Modes.RoomTool.changeSnapping(event)'><label for='roomToolIsSnapping'>Snap To Grid</label><br>
 						<input type='checkbox' id='roomToolIsSubtractive' } onclick='Modes.RoomTool.changeSubtractive(event)'><label for='roomToolIsSubtractive' >Subtractive</label><br>
 						<input type='color' value='${self.fillColor}' id='roomToolFillColor' onchange="Modes.RoomTool.changeColor(event, 'fill')">

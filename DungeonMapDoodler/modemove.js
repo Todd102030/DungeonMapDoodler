@@ -28,10 +28,10 @@ var Move = (function(){
 			ctx.globalAlpha = 1;
 		},
 		endMode: function(){
-			pgWarehouseMap.canvas.style.cursor = "unset";
+			doodler.canvas.style.cursor = "unset";
 		},
 		mouseDown: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
             self.mouseIsDown = true;
 			wh.canvas.style.cursor = 'grabbing';
             self.mouseMovedWhileDown = false;
@@ -44,7 +44,7 @@ var Move = (function(){
             wh.offsetY = parseFloat(wh.mouseY) - parseFloat(wh.globalOffsetY); 
 		},
 		mouseMove: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
 			if(self.mouseIsDown){
             	self.mouseMovedWhileDown = true;
                 wh.globalOffsetX = wh.mouseX-wh.offsetX;
@@ -53,7 +53,7 @@ var Move = (function(){
 		},
 		mouseUp: function(xpos, ypos,data){
             self.mouseIsDown = false;
-			pgWarehouseMap.canvas.style.cursor = 'grab';
+			doodler.canvas.style.cursor = 'grab';
 		},
 		setParameterBox: function(container){
 			var htm = "";

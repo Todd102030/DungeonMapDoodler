@@ -48,7 +48,7 @@ var ShapeTool = (function(){
 			//data.doodleCtx.strokeStyle = "black";
 			//data.doodleCtx.fillRect(self.doodleStartX, self.doodleStartY, self.doodleEndX, self.doodleEndY);
 			
-			var wh = pgWarehouseMap;
+			var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -84,9 +84,10 @@ var ShapeTool = (function(){
 					Ycenter = self.doodleStartY/zoom;
 */
 				var numberOfSides = self.numSides,
-				size = Math.abs(self.doodleStartX-self.doodleEndX),
+				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY)),
 				Xcenter = self.doodleStartX,
 				Ycenter = self.doodleStartY;
+				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
 			
 				
 				//Path Drawing
@@ -96,10 +97,10 @@ var ShapeTool = (function(){
 				ctx.fillStyle = 'black';
 				ctx.fillStyle = self.fillColor;
 				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
 				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
 				ctx.restore();
@@ -113,10 +114,10 @@ var ShapeTool = (function(){
 				size -= (border + inset);
 
 				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
 				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
 				ctx.restore();
@@ -128,10 +129,10 @@ var ShapeTool = (function(){
 					Ycenter = self.doodleStartY/zoom;
 				*/
 				var numberOfSides = self.numSides,
-				size = Math.abs(self.doodleStartX-self.doodleEndX),
+				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY)),
 				Xcenter = self.doodleStartX,
 				Ycenter = self.doodleStartY;
-			
+				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
 		
 				
 				ctx.drawImage(ir.get("circlefuzzImg"),Xcenter-border-hatchSize-size, Ycenter-border-hatchSize-size, 
@@ -144,10 +145,10 @@ var ShapeTool = (function(){
 				//		   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
 				
 				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
 				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
 				
@@ -157,10 +158,10 @@ var ShapeTool = (function(){
 				ctx.fillStyle = self.outlineColor;
 				size += border + inset;
 				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
 				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
 			}
@@ -177,11 +178,11 @@ var ShapeTool = (function(){
 					ctx.strokeStyle = "rgb(240,60,60)";
 				}
 				var gridxy = getGridXY(xpos, ypos);
-				var offx = pgWarehouseMap.globalOffsetX;
-				var offy = pgWarehouseMap.globalOffsetY;
-				var zoom = pgWarehouseMap.zoomLevel;
+				var offx = doodler.globalOffsetX;
+				var offy = doodler.globalOffsetY;
+				var zoom = doodler.zoomLevel;
 				if(self.isSnapping){
-					ctx.strokeRect(gridxy.xpos, gridxy.ypos, 2, 2);
+					ctx.strokeRect(gridxy.xgridmid, gridxy.ygridmid, 2, 2);
 				}else{
 					ctx.strokeRect(xpos, ypos, 2, 2);
 				}
@@ -198,9 +199,9 @@ var ShapeTool = (function(){
 			}else{
 				ctx.strokeStyle = "rgb(240,60,60)";
 			}
-			var offx = pgWarehouseMap.globalOffsetX;
-			var offy = pgWarehouseMap.globalOffsetY;
-			var zoom = pgWarehouseMap.zoomLevel;
+			var offx = doodler.globalOffsetX;
+			var offy = doodler.globalOffsetY;
+			var zoom = doodler.zoomLevel;
 			/*if(self.isSnapping){
 				var grid1 = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
 				var grid2 = getGridXY2(Math.max(self.doodleStartX,self.doodleEndX), Math.max(self.doodleStartY,self.doodleEndY));
@@ -215,17 +216,18 @@ var ShapeTool = (function(){
 			//var gridxy = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
 			
 			var numberOfSides = self.numSides,
-				size = Math.abs(self.doodleStartX-self.doodleEndX)*zoom,
+				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY))*zoom,
 				Xcenter = self.doodleStartX*zoom + offx,
 				Ycenter = self.doodleStartY*zoom + offy;
+			var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
 			
 			
 
 			ctx.beginPath();
-			ctx.moveTo (Xcenter +  size * Math.cos(0), Ycenter +  size *  Math.sin(0));          
+			ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
 			for (var i = 1; i <= numberOfSides;i += 1) {
-			  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides));
+			  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides+angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides+angleRad));
 			}
 			ctx.stroke();
 			
@@ -244,7 +246,7 @@ var ShapeTool = (function(){
 			ctx.globalAlpha = 1;
 		},
 		endMode: function(){
-			pgWarehouseMap.canvas.style.cursor = "unset";
+			doodler.canvas.style.cursor = "unset";
 		},
 		mouseDown: function(xpos, ypos, data){
             
@@ -253,10 +255,10 @@ var ShapeTool = (function(){
             self.mouseIsDown = true;
 			
 			if(self.isSnapping){
-				self.doodleStartX = gridxy.xpos;
-				self.doodleStartY = gridxy.ypos;
-				self.doodleEndX = gridxy.xpos;
-				self.doodleEndY = gridxy.ypos;
+				self.doodleStartX = gridxy.xgridmid;
+				self.doodleStartY = gridxy.ygridmid;
+				self.doodleEndX = gridxy.xgridmid;
+				self.doodleEndY = gridxy.ygridmid;
 			}else{
 				self.doodleStartX = xpos;
 				self.doodleStartY = ypos;
@@ -266,11 +268,11 @@ var ShapeTool = (function(){
             
 		},
 		mouseMove: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
 			var gridxy = getGridXY2(xpos, ypos);
 			if(self.isSnapping){
-				self.doodleEndX = gridxy.xpos+gridxy.step;
-				self.doodleEndY = gridxy.ypos+gridxy.step;
+				self.doodleEndX = gridxy.xgridmid+gridxy.step/2;
+				self.doodleEndY = gridxy.ygridmid+gridxy.step/2;
 			}else{
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
@@ -280,7 +282,7 @@ var ShapeTool = (function(){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
 			
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -289,7 +291,7 @@ var ShapeTool = (function(){
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<!--<div class='paramTitle'>In/Outset: </div><label for='shapeToolInset' id='shapeToolInsetLabel'>${self.inset}</label><br>
-						<input style='width:100px' type="range" id="shapeToolInset" name="shapeToolInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.ShapeTool.changeInset(event)' oninput='Modes.ShapeTool.changeInset(event)'><br>-->
+						<input style='width:100px' type="range" id="shapeToolInset" name="shapeToolInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.ShapeTool.changeInset(event)' oninput='Modes.ShapeTool.changeInset(event)'><br>-->
 						<div class='paramTitle'>Number of Sides: </div><input type='number' style='width:60px' id='shapeToolNumSidesLabel' value="${self.numSides}" onchange='Modes.ShapeTool.changeSides(event, true)' oninput='Modes.ShapeTool.changeSides(event, true)'><br>
 						<input style='width:100px' type="range" id="shapeToolNumSides" name="shapeToolNumSides" min="3" max="20" value='${self.numSides}' onchange='Modes.ShapeTool.changeSides(event)' oninput='Modes.ShapeTool.changeSides(event)'><br>
 						<input type='checkbox' id='shapeToolIsSnapping' onclick='Modes.ShapeTool.changeSnapping(event)'><label for='shapeToolIsSnapping'>Snap To Grid</label><br>

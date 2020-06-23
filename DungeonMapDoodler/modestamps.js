@@ -73,16 +73,16 @@ var StampTool = (function(){
 		},
 		deleteFn: function(){
 			if(self.stampHit != null && self.isMovingStamp){
-				pgWarehouseMap.stamps.splice(self.stampHit,1);
+				doodler.stamps.splice(self.stampHit,1);
 				self.stampHit = null;
 				self.isMovingStamp = null;
 			}
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
-            var zoom = pgWarehouseMap.zoomLevel;
-            var offX = pgWarehouseMap.globalOffsetX;
-            var offY = pgWarehouseMap.globalOffsetY;
+            var zoom = doodler.zoomLevel;
+            var offX = doodler.globalOffsetX;
+            var offY = doodler.globalOffsetY;
 			var border=self.borderSize;
 			var ctx = data.hatchCtx;
 			var newimg = new Image();
@@ -104,7 +104,7 @@ var StampTool = (function(){
 					//ctx.drawImage(self.chosenStampImg, gridxy.xpos*zoom, gridxy.ypos*zoom, gridxy.step/zoom, gridxy.step/zoom);	
 					stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.stamps.push(stampobj);
+					doodler.stamps.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
@@ -124,7 +124,7 @@ var StampTool = (function(){
 				//ratioImg.onload = function(){
 					stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.stamps.push(stampobj);
+					doodler.stamps.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
@@ -138,10 +138,10 @@ var StampTool = (function(){
 					self.stampRatio = this.naturalWidth/this.naturalHeight;
 				}
 			}
-            var zoom = pgWarehouseMap.zoomLevel;
-			var offX = pgWarehouseMap.globalOffsetX;
-			var offY = pgWarehouseMap.globalOffsetY;
-			self.stampMoveHit = pgWarehouseMap.hitTestStamps({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+            var zoom = doodler.zoomLevel;
+			var offX = doodler.globalOffsetX;
+			var offY = doodler.globalOffsetY;
+			self.stampMoveHit = doodler.hitTestStamps({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
 			if(self.stampMoveHit == null && !self.isMovingStamp){
@@ -169,7 +169,7 @@ var StampTool = (function(){
 				
 			}
 			else{
-				self.drawMoveHighlight(pgWarehouseMap.ctx,xpos, ypos,data);
+				self.drawMoveHighlight(doodler.ctx,xpos, ypos,data);
 			}
 			ctx.stroke();
 		},
@@ -177,9 +177,9 @@ var StampTool = (function(){
 			if(self.stampMoveHit == null){
 				return;
 			}
-			var st = pgWarehouseMap.stamps[self.stampMoveHit];
-            var zoom = pgWarehouseMap.zoomLevel;
-			var wh = pgWarehouseMap
+			var st = doodler.stamps[self.stampMoveHit];
+            var zoom = doodler.zoomLevel;
+			var wh = doodler
 			var sX =wh.dimensions.scaleX;
 			var sY =wh.dimensions.scaleY;
 			ctx.strokeStyle = "rgb(60,200,200)";
@@ -218,14 +218,14 @@ var StampTool = (function(){
 			
 		},
 		moveStamp: function(id, xpos, ypos){
-			var st = pgWarehouseMap.stamps[id];
+			var st = doodler.stamps[id];
 			if(st==null){
 				return;
 			}
 			var size = self.size;
-			var zoom = pgWarehouseMap.zoomLevel;
-            var offX = pgWarehouseMap.globalOffsetX;
-            var offY = pgWarehouseMap.globalOffsetY;
+			var zoom = doodler.zoomLevel;
+            var offX = doodler.globalOffsetX;
+            var offY = doodler.globalOffsetY;
 			var border=self.borderSize;
 			if(self.isSnapping){
 				var gridxy = getGridXY2(xpos, ypos);
@@ -248,10 +248,10 @@ var StampTool = (function(){
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
 			//self.draw(xpos, ypos, data);
-			self.stampHit = pgWarehouseMap.hitTestStamps({x:xpos,y:ypos,w:1,h:1});
+			self.stampHit = doodler.hitTestStamps({x:xpos,y:ypos,w:1,h:1});
 			if(self.stampHit != null){
-				self.offsetX = parseFloat(xpos) - parseFloat(pgWarehouseMap.stamps[self.stampHit].x); 
-            	self.offsetY = parseFloat(ypos) - parseFloat(pgWarehouseMap.stamps[self.stampHit].y); 
+				self.offsetX = parseFloat(xpos) - parseFloat(doodler.stamps[self.stampHit].x); 
+            	self.offsetY = parseFloat(ypos) - parseFloat(doodler.stamps[self.stampHit].y); 
 				self.isMovingStamp = true;
 			}else{
 				self.isDoodling = true;
@@ -263,7 +263,7 @@ var StampTool = (function(){
 				self.moveStamp(self.stampHit,xpos, ypos);
 			}
 			else if (self.isDoodling){
-				var wh = pgWarehouseMap;
+				var wh = doodler;
 				//self.draw(xpos*wh.zoomLevel+wh.globalOffsetX, ypos*wh.zoomLevel+wh.globalOffsetY, data);
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;

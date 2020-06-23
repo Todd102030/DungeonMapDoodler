@@ -68,16 +68,16 @@ var TextTool = (function(){
 		},
 		deleteFn: function(){
 			if(self.textHit != null && self.isMovingText){
-				pgWarehouseMap.textFields.splice(self.textHit,1);
+				doodler.textFields.splice(self.textHit,1);
 				self.textHit = null;
 				self.isMovingText = null;
 			}
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
-            var zoom = pgWarehouseMap.zoomLevel;
-            var offX = pgWarehouseMap.globalOffsetX;
-            var offY = pgWarehouseMap.globalOffsetY;
+            var zoom = doodler.zoomLevel;
+            var offX = doodler.globalOffsetX;
+            var offY = doodler.globalOffsetY;
 			var border=self.borderSize;
 			var ctx = data.hatchCtx;
 			var newimg = new Image();
@@ -99,7 +99,7 @@ var TextTool = (function(){
 					//ctx.drawImage(self.chosenStampImg, gridxy.xpos*zoom, gridxy.ypos*zoom, gridxy.step/zoom, gridxy.step/zoom);	
 					stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.textFields.push(stampobj);
+					doodler.textFields.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
@@ -119,7 +119,7 @@ var TextTool = (function(){
 				//ratioImg.onload = function(){
 					stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
 					
-					pgWarehouseMap.textFields.push(stampobj);
+					doodler.textFields.push(stampobj);
 				//}
 				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
 				
@@ -134,10 +134,10 @@ var TextTool = (function(){
 					self.stampRatio = this.naturalWidth/this.naturalHeight;
 				}
 			}
-            var zoom = pgWarehouseMap.zoomLevel;
-			var offX = pgWarehouseMap.globalOffsetX;
-			var offY = pgWarehouseMap.globalOffsetY;
-			self.stampMoveHit = pgWarehouseMap.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+            var zoom = doodler.zoomLevel;
+			var offX = doodler.globalOffsetX;
+			var offY = doodler.globalOffsetY;
+			self.stampMoveHit = doodler.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
 			if(self.stampMoveHit == null && !self.isMovingText){
@@ -165,7 +165,7 @@ var TextTool = (function(){
 				
 			}
 			else{
-				//self.drawMoveHighlight(pgWarehouseMap.ctx,xpos, ypos,data);
+				//self.drawMoveHighlight(doodler.ctx,xpos, ypos,data);
 			}
 			ctx.stroke();
 			
@@ -174,9 +174,9 @@ var TextTool = (function(){
 			if(self.stampMoveHit == null){
 				return;
 			}
-			var st = pgWarehouseMap.textFields[self.stampMoveHit];
-            var zoom = pgWarehouseMap.zoomLevel;
-			var wh = pgWarehouseMap
+			var st = doodler.textFields[self.stampMoveHit];
+            var zoom = doodler.zoomLevel;
+			var wh = doodler
 			var sX =wh.dimensions.scaleX;
 			var sY =wh.dimensions.scaleY;
 			ctx.strokeStyle = "rgb(60,200,200)";
@@ -215,14 +215,14 @@ var TextTool = (function(){
 			
 		},
 		moveStamp: function(id, xpos, ypos){
-			var st = pgWarehouseMap.textFields[id];
+			var st = doodler.textFields[id];
 			if(st==null){
 				return;
 			}
 			var size = self.size;
-			var zoom = pgWarehouseMap.zoomLevel;
-            var offX = pgWarehouseMap.globalOffsetX;
-            var offY = pgWarehouseMap.globalOffsetY;
+			var zoom = doodler.zoomLevel;
+            var offX = doodler.globalOffsetX;
+            var offY = doodler.globalOffsetY;
 			var border=self.borderSize;
 			if(self.isSnapping){
 				var gridxy = getGridXY2(xpos, ypos);
@@ -246,10 +246,10 @@ var TextTool = (function(){
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
 			//self.draw(xpos, ypos, data);
-			self.textHit = pgWarehouseMap.hitTestText({x:xpos,y:ypos,w:1,h:1});
+			self.textHit = doodler.hitTestText({x:xpos,y:ypos,w:1,h:1});
 			if(self.textHit != null){
-				self.offsetX = parseFloat(xpos) - parseFloat(pgWarehouseMap.textFields[self.textHit].x); 
-            	self.offsetY = parseFloat(ypos) - parseFloat(pgWarehouseMap.textFields[self.textHit].y); 
+				self.offsetX = parseFloat(xpos) - parseFloat(doodler.textFields[self.textHit].x); 
+            	self.offsetY = parseFloat(ypos) - parseFloat(doodler.textFields[self.textHit].y); 
 				self.isMovingText = true;
 			}else{
 				self.isPlacingText = true;
@@ -263,7 +263,7 @@ var TextTool = (function(){
 				self.moveStamp(self.textHit,xpos, ypos);
 			}
 			else if (self.isPlacingText){
-				var wh = pgWarehouseMap;
+				var wh = doodler;
 				//self.draw(xpos*wh.zoomLevel+wh.globalOffsetX, ypos*wh.zoomLevel+wh.globalOffsetY, data);
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
@@ -273,14 +273,14 @@ var TextTool = (function(){
 		},
 		mouseUp: function(xpos, ypos, data){
 			if(!self.moveHappened && self.textHit != null){
-				pgWarehouseMap.popupTextEdit(self.textHit);
+				doodler.popupTextEdit(self.textHit);
 			}
 			else if(self.isPlacingText){
-				var offX = pgWarehouseMap.globalOffsetX;
-				var offY = pgWarehouseMap.globalOffsetY;
-				var zoom = pgWarehouseMap.zoomLevel;
+				var offX = doodler.globalOffsetX;
+				var offY = doodler.globalOffsetY;
+				var zoom = doodler.zoomLevel;
 				//self.draw(xpos, ypos, data);
-				pgWarehouseMap.popupTextInput((xpos-offX)/zoom, (ypos-offX)/zoom);
+				doodler.popupTextInput((xpos-offX)/zoom, (ypos-offX)/zoom);
 			}
 			self.isPlacingText = false;
 			self.isMovingText = false;

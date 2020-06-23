@@ -5,9 +5,9 @@ var Doodle = (function(){
 		borderSize: 3,
 		fillColor: "#ffffff",
 		outlineColor: "#000000",
-		hatchSize: 30,
+		hatchSize: 50,
 		id:8,
-		size: 30,
+		size: 50,
 		shape: Shape.Circle,
 		title: "Pen Settings",
 		changeColor: function(evt, type){
@@ -45,7 +45,7 @@ var Doodle = (function(){
 			self.shape = Shape[evt.target.value];
 		},
 		draw: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -131,7 +131,7 @@ var Doodle = (function(){
 			}	
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -147,7 +147,7 @@ var Doodle = (function(){
 			ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size/2+self.hatchSize;
 			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
 			ctx.stroke();
 		},
 		/**
@@ -166,7 +166,7 @@ var Doodle = (function(){
 		mouseDown: function(xpos, ypos, data){
 			self.isDoodling = true;
 			console.log("Doodle mousedown");
-			//pgWarehouseMap.updateUndoStack();
+			//doodler.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
@@ -185,7 +185,7 @@ var Doodle = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

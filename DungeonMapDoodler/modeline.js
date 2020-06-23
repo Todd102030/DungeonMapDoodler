@@ -110,27 +110,27 @@ var Line = (function(){
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
-			var zoom = pgWarehouseMap.zoomLevel;
-			var offx = pgWarehouseMap.globalOffsetX;
-			var offy = pgWarehouseMap.globalOffsetY;
+			var zoom = doodler.zoomLevel;
+			var offx = doodler.globalOffsetX;
+			var offy = doodler.globalOffsetY;
 			var size = self.size;
 			//ctx.beginPath();
-			//ctx.arc(xpos, ypos, radius*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+			//ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
 			//ctx.stroke();
 			
 			//Line
 			ctx.strokeStyle = "rgb(240,60,60)";
 			if(self.shape == Shape.Circle ){
 				ctx.beginPath();
-				ctx.arc(xpos, ypos, (self.size)*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+				ctx.arc(xpos, ypos, (self.size)*doodler.zoomLevel, 0, 2 * Math.PI);
 				ctx.stroke();
 				
 				ctx.beginPath();
-				ctx.arc(self.doodleStartX*zoom+offx || xpos, self.doodleStartY*zoom+offy || ypos, (self.size)*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+				ctx.arc(self.doodleStartX*zoom+offx || xpos, self.doodleStartY*zoom+offy || ypos, (self.size)*doodler.zoomLevel, 0, 2 * Math.PI);
 				ctx.stroke();
 				
 				ctx.beginPath();
-				ctx.arc(self.doodleEndX*zoom+offx || xpos, self.doodleEndY*zoom+offy || ypos, (self.size)*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+				ctx.arc(self.doodleEndX*zoom+offx || xpos, self.doodleEndY*zoom+offy || ypos, (self.size)*doodler.zoomLevel, 0, 2 * Math.PI);
 				ctx.stroke();
 				
 				if(self.doodleEndX != null){
@@ -209,7 +209,7 @@ var Line = (function(){
 			//}
 			
 			
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
 			
 			self.isDoodling = false;
             self.doodleStartX = null;

@@ -9,10 +9,10 @@ var Erase = (function(){
 		eraseStamps: true,
 		fillColor: "#ffffff",
 		outlineColor: "#000000",
-		hatchSize: 30,
+		hatchSize: 1,
 		id:8,
-		isSnapping: true,
-		size: 30,
+		isSnapping: false,
+		size: 50,
 		shape: Shape.Circle,
 		title: "Erase Settings",
 		changeColor: function(evt, type){
@@ -60,7 +60,7 @@ var Erase = (function(){
 			self.isSnapping = ir.v("eraseSnapToGrid");
 		},
 		draw: function(xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -84,7 +84,7 @@ var Erase = (function(){
 			
 			if(self.eraseStamps){
 				//if(self.stampHit != null && self.isMovingStamp){
-				Modes.StampTool.stampHit = pgWarehouseMap.hitTestStamps({x:xpos,y:ypos,w:1,h:1});
+				Modes.StampTool.stampHit = doodler.hitTestStamps({x:xpos,y:ypos,w:1,h:1});
 				Modes.StampTool.isMovingStamp = true;
 				Modes.StampTool.deleteFn();
 			}
@@ -99,8 +99,8 @@ var Erase = (function(){
 			var gridxy = getGridXY2(xpos, ypos);
 			if(self.isSnapping){
 				
-            	var offX = pgWarehouseMap.globalOffsetX;
-            	var offY = pgWarehouseMap.globalOffsetY;
+            	var offX = doodler.globalOffsetX;
+            	var offY = doodler.globalOffsetY;
 				//Path Drawing
 				if(self.eraseRoom){
 					ctx = data.doodleCtx;
@@ -194,7 +194,7 @@ var Erase = (function(){
 			
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
-            var wh = pgWarehouseMap;
+            var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
@@ -252,7 +252,7 @@ var Erase = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

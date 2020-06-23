@@ -6,8 +6,8 @@ var Shape = {
 }
 
 function getGridXY(xpos, ypos){
-	var wh = pgWarehouseMap;
-	var dim = pgWarehouseMap.dimensions;
+	var wh = doodler;
+	var dim = doodler.dimensions;
 	var xfeet = dim.wf;
 	var yfeet = dim.hf;
 	var sx = dim.scaleX;
@@ -25,13 +25,13 @@ function getGridXY(xpos, ypos){
 }
 
 function getGridXY2(xpos, ypos){
-	var dim = pgWarehouseMap.dimensions;
+	var dim = doodler.dimensions;
 	var xfeet = dim.wf;
 	var yfeet = dim.hf;
 	var sx = dim.scaleX;
-	var sy = pgWarehouseMap.dimensions.scaleY;
+	var sy = doodler.dimensions.scaleY;
 	var step = dim.footPixel * dim.stepSize / sx;
-	var zoom = pgWarehouseMap.zoomLevel;
+	var zoom = doodler.zoomLevel;
 	var xgridtop = Math.floor(xpos/step)*step;
 	var ygridtop = Math.floor(ypos/step)*step;
 	var xgridmid = Math.floor((xpos)/step*2)*step/2;

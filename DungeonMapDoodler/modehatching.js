@@ -5,7 +5,9 @@ var Hatching = (function(){
 		borderSize: 3,
 		fillColor: "white",
 		outlineColor: "black",
+		imageStyle: "hatchingImg",
 		hatchSize: 30,
+		renderScale: 1,
 		id:8,
 		size: 20,
 		shape: Shape.Square,
@@ -20,8 +22,8 @@ var Hatching = (function(){
 		changeImageStyle: function(evt){
 			self.imageStyle = ir.v("hatchImageStyle");
 			console.log("Image style is ", self.imageStyle);
-			pgWarehouseMap.hatchGenerated = false;
-			pgWarehouseMap.hatchStyleImage = self.imageStyle;
+			doodler.hatchGenerated = false;
+			doodler.hatchStyleImage = self.imageStyle;
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -30,6 +32,18 @@ var Hatching = (function(){
 			}else{
 				ir.set("hatchingHatchSize", self.hatchSize);
 			}
+		},
+		changeScale: function(evt, fromInput){
+			self.renderScale = parseFloat(evt.target.value);
+			if(!fromInput){
+				ir.set("hatchingScaleLabel", self.renderScale);
+			}else{
+				ir.set("hatchingScale", self.renderScale);
+			}
+		},
+		changeScaleAndRender: function(evt){
+			self.changeScale(evt);
+			doodler.hatchGenerated = false;
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
@@ -58,7 +72,7 @@ var Hatching = (function(){
 			ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
 			ctx.stroke();
 		},
 		/**
@@ -93,7 +107,7 @@ var Hatching = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -102,11 +116,18 @@ var Hatching = (function(){
 		setParameterBox: function(container){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Hatch Size: </div><input type='number' style='width:60px' id='hatchingHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Hatching.changeHatchSize(event, true)' oninput='Modes.Hatching.changeHatchSize(event, true)'><br>
-						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200" value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
+						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200"  value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Scale: </div><input type='number' min='0.125' max='4' step='0.125' style='width:60px' id='hatchingScaleLabel' value="${self.renderScale}" onchange='Modes.Hatching.changeScaleAndRender(event, true)' oninput='Modes.Hatching.changeScale(event, true)'><br>
+						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						<div class='paramTitle'>Hatch Style: </div>`;
 			
 			htm += `<select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
+			htm += "<option name='JPCross' value='hatchingImgJPCrosshatch'>Dense Hatching</option>";
+			htm += "<option name='JPHalftone' value='hatchingImgJPHalftone'>Drawn Halftone</option>";
+			htm += "<option name='JPStipple' value='hatchingImgJPStipple'>Drawn Stipple</option>";
+			htm += "<option name='JPStone' value='hatchingImgJPStone'>Drawn Stone</option>";
+			htm += "<option name='JPGrass' value='hatchingImgJPGrass'>Drawn Grass</option>";
 			htm += "<option name='Dots' value='hatchingImgDots'>Dots</option>";
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
@@ -115,6 +136,8 @@ var Hatching = (function(){
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
 						//<label for="hatchingColor">Hatching Color</label><br>
 			container.innerHTML = htm;
+			
+			ir.set("hatchImageStyle", self.imageStyle);
 			
 			
 			

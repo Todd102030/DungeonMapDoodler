@@ -5,10 +5,10 @@ var SnapToGrid = (function(){
 		borderSize: 3,
 		fillColor: "#ffffff",
 		outlineColor: "#000000",
-		hatchSize: 30,
+		hatchSize: 35,
 		id:8,
 		inset:0,
-		size: 20,
+		size: 25,
 		title: "Snap To Grid Settings",
 		changeColor: function(evt, type){
 			if(type=='fill'){
@@ -32,13 +32,13 @@ var SnapToGrid = (function(){
 			var hatchSize = self.hatchSize;
 
 
-			var dim = pgWarehouseMap.dimensions;
+			var dim = doodler.dimensions;
 			var xfeet = dim.wf;
 			var yfeet = dim.hf;
 			var sx = dim.scaleX;
-			var sy = pgWarehouseMap.dimensions.scaleY;
+			var sy = doodler.dimensions.scaleY;
 			var step = dim.footPixel * dim.stepSize / sx;
-			var zoom = pgWarehouseMap.zoomLevel;
+			var zoom = doodler.zoomLevel;
 			var xgridtop = Math.floor(xpos/step)*step;
 			var ygridtop = Math.floor(ypos/step)*step;
 			// Radii of the white glow.
@@ -73,12 +73,12 @@ var SnapToGrid = (function(){
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(240,60,60)";
-			var dim = pgWarehouseMap.dimensions;
+			var dim = doodler.dimensions;
 			var xfeet = dim.wf;
 			var yfeet = dim.hf;
 			var sx = dim.scaleX;
 			var sy = dim.scaleY;
-            var zoom = pgWarehouseMap.zoomLevel;
+            var zoom = doodler.zoomLevel;
 			var gridxy = getGridXY(xpos, ypos);
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
@@ -86,7 +86,7 @@ var SnapToGrid = (function(){
 			ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius*pgWarehouseMap.zoomLevel, 0, 2 * Math.PI);
+			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
 			ctx.stroke();
 		},
 		/**
@@ -107,7 +107,7 @@ var SnapToGrid = (function(){
 		},
 		mouseDown: function(xpos, ypos, data){
 			self.isDoodling = true;
-			//pgWarehouseMap.updateUndoStack();
+			//doodler.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
@@ -126,7 +126,7 @@ var SnapToGrid = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
-			pgWarehouseMap.updateUndoStack();
+			doodler.updateUndoStack();
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
@@ -138,7 +138,7 @@ var SnapToGrid = (function(){
 			
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='snapToGridInsetLabel' value="${self.inset}" onchange='Modes.SnapToGrid.changeInset(event, true)' oninput='Modes.SnapToGrid.changeInset(event, true)'><br>
-						<input style='width:100px' type="range" id="snapToGridInset" name="snapToGridInset" min="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize * -1}" max="${pgWarehouseMap.dimensions.footPixel * pgWarehouseMap.dimensions.stepSize}" value='${self.inset}' onchange='Modes.SnapToGrid.changeInset(event)' oninput='Modes.SnapToGrid.changeInset(event)'><br>
+						<input style='width:100px' type="range" id="snapToGridInset" name="snapToGridInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.SnapToGrid.changeInset(event)' oninput='Modes.SnapToGrid.changeInset(event)'><br>
 						<input type='color' value='${self.fillColor}' id='snapToGridFillColor' onchange="Modes.SnapToGrid.changeColor(event, 'fill')">
 						<label for="snapToGridFillColor">Fill Color</label><br>
 						<input type='color' value='${self.outlineColor}' id='snapToGridOutlineColor' onchange="Modes.SnapToGrid.changeColor(event, 'outline')">
