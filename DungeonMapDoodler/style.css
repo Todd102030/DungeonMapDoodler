@@ -53,19 +53,34 @@ body{
 	padding: 0;
 }
 
+details{
+	border: 1px solid black;
+}
+
+summary{
+	user-select: none;
+	font-weight: bold;
+}
+
 .floatingModes{
 	position: fixed;
-	left: calc( 100vw - 154px );
+	left: calc( 100vw - 174px );
 	top:65px;
 	background-color: ghostwhite;
 	width:auto;
 	height:auto;
 	text-align: center;
 	box-shadow: 0 0 8px black;
+	user-select: none;
+}
+
+.floatingContainer{
+	overflow-y:auto;
+	max-height: calc(100vh - 200px);
+	width: 170px;
 }
 
 .floatingBtns {
-	width: 150px;
 	/*resize:horizontal;
 	overflow: auto;*/
 }
@@ -87,6 +102,28 @@ body{
 
 .floatingModeTitle{
 	height: 40px;
+}
+
+.layerPreview{
+	/*display: inline-block;*/
+	
+}
+
+.layerRow{
+	border: 1px solid gray;
+	background-color: white;
+	width:100%;
+	min-height: 36px;
+	height: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-content: center;
+	align-items: center;
+}
+
+.layerSelected{
+	border: 2px solid darkred;
 }
 
 .modeBtn{
@@ -120,8 +157,6 @@ body{
 	margin-top:20px;
 	border: 1px solid black;
 	max-width: 200px;
-	overflow-y:auto;
-	max-height: 50vh;
 }
 
 .paramBox > label {

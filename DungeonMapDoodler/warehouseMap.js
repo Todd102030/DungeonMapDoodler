@@ -8,6 +8,8 @@ var doodler = (function(){
     canvX: null,
     canvY: null,
     ctx: null,
+	  /** Index of current layer, to access self.layers, set from switchLayer */
+	  currentLayer: 0,
     //dimensions: {isSet: false,sx: null,sy: null,ex: null,ey: null,imgW: 500,imgH: 500,
      // w: null,h: null,wf: null,hf: null,scaleX: null,scaleY: null,stepSize: 4},
 	dimensions:{ex: 500,
@@ -35,6 +37,9 @@ var doodler = (function(){
     imageScaleY:1,
     isPlacingText: false,
     isRunning: false,
+	  
+	/** Holds layer objects created from warehouseMap2.js */  
+	layers: [],
     //Array to hold all the outlined areas being draw on screen
     locations:[],
     //Only while the user is clicking and dragging to create a new location, store the coordinates here to draw a preview outline
@@ -42,6 +47,8 @@ var doodler = (function(){
     locationSY: null,
     locationEX: null,
     locationEY: null,
+    //Give layers a unique index to keep track of them
+    layerIndex: 0,
     //Give location rectangles a unique index to keep track of them
     locIndex: 0,
     /** Location objects for this warehouse */
@@ -87,12 +94,14 @@ var doodler = (function(){
 	undoStack: { /* holds arrays of canvas.toDataUrl() calls, in most cases on mouseup event when a drawing tool is used */
 		hatch: [],
 		outline: [],
-		doodle: []
+		doodle: [],
+		layerIndex: []
 	},
 	redoStack: { /* holds arrays of canvas.toDataUrl() calls, in most cases on mouseup event when a drawing tool is used */
 		hatch: [],
 		outline: [],
-		doodle: []
+		doodle: [],
+		layerIndex: []
 	},
     uploadedNewImage: false,
     //Holds anything to be drawn that isn't a location
@@ -105,6 +114,76 @@ var doodler = (function(){
     warehouseAlpha: 1,
     warehouseImg: null,
     zoomLevel: 1,
+	addLayer: function(){
+		var xsize = self.dimensions.footPixel * self.dimensions.wf;
+		var ysize = self.dimensions.footPixel * self.dimensions.hf;
+
+		self.hatchCanvas = document.createElement('canvas');
+		self.hatchCanvas.width = xsize;//self.canvas.width;
+		self.hatchCanvas.height = ysize;//self.canvas.height;
+		self.hatchCtx = self.hatchCanvas.getContext('2d');
+		self.hatchCtx.fillStyle = "rgba(0,0,0,0)";
+		self.hatchCtx.fillRect(0,0,self.hatchCanvas.width,self.hatchCanvas.height);
+		self.doodleCanvas = document.createElement('canvas');
+		self.doodleCanvas.width = xsize;//self.canvas.width;
+		self.doodleCanvas.height = ysize;//self.canvas.height;
+		self.doodleCtx = self.doodleCanvas.getContext('2d');
+		self.doodleCtx.fillStyle = "rgba(0,0,0,0)";
+		self.doodleCtx.fillRect(0,0,self.doodleCanvas.width,self.doodleCanvas.height);
+		self.outlineCanvas = document.createElement('canvas');
+		self.outlineCanvas.width = xsize;//self.canvas.width;
+		self.outlineCanvas.height = ysize;//self.canvas.height;
+		self.outlineCtx = self.outlineCanvas.getContext('2d');
+		self.outlineCtx.fillStyle = "rgba(0,0,0,0)";
+		self.outlineCtx.fillRect(0,0,self.outlineCanvas.width,self.outlineCanvas.height);
+		
+		self.layers.push(new Layer("Layer #"+(self.layerIndex+1), self.layerIndex, self.hatchCanvas, self.hatchCtx, self.outlineCanvas, self.outlineCtx, self.doodleCanvas, self.doodleCtx, self.hatchStyleImage));
+		self.switchLayer(self.layerIndex);
+		self.layerIndex ++;
+		
+		//self.loadLayerList(self.layerIndex);
+	},
+	raiseLayer: function(){
+		if(self.currentLayer==self.layers.length-1){
+			return
+		}
+		self.layers.swap(self.currentLayer, self.currentLayer+1);
+		self.currentLayer += 1;
+		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+	},
+	lowerLayer: function(){
+		if(self.currentLayer==0){
+			return
+		}
+		self.layers.swap(self.currentLayer, self.currentLayer-1);
+		self.currentLayer -= 1;
+		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+	},
+	deleteLayer: function(){
+		if(self.layers.length>1){
+			self.layers.splice(self.currentLayer, 1);
+			self.switchLayer(self.layers[0].layerIndex);
+		}	
+	},
+	switchLayer: function(layerIndex){
+		for(var i=0;i<self.layers.length;i++){
+			var layer = self.layers[i];
+			if(layer.layerIndex == layerIndex){
+				self.hatchCanvas = layer.hatchCanvas;
+				self.outlineCanvas = layer.outlineCanvas;
+				self.doodleCanvas = layer.doodleCanvas;
+				self.hatchCtx = layer.hatchCtx;
+				self.outlineCtx = layer.outlineCtx;
+				self.doodleCtx = layer.doodleCtx;
+				self.currentLayer = i;
+				//console.log("Changed to layer "+layerIndex);
+				//return self.layers[i];
+			}
+		}
+		//self.layerIndex = layerIndex;
+		self.updateCurrentImage();
+		self.loadLayerList(layerIndex);
+	},
     addLot: function(sx, sy, ex, ey){
         //Swap values around to make sure sx and sy are the top left
         if(sx > ex){
@@ -185,12 +264,24 @@ var doodler = (function(){
 		self.hatchGenerated = false;
 		
 		if(self.hatchCanvas){
+			self.layers.forEach(function(layer, i){
+				layer.hatchCanvas.width = xsize;
+				layer.hatchCanvas.height = ysize;
+				layer.doodleCanvas.width = xsize;
+				layer.doodleCanvas.height = ysize;
+				layer.outlineCanvas.width = xsize;
+				layer.outlineCanvas.height = ysize;
+				layer.hatchImg = null;
+				layer.hatchGenerated = false;
+			})
 			self.hatchCanvas.width = xsize;//self.canvas.width;
 			self.hatchCanvas.height = ysize;//self.canvas.height;
 			self.doodleCanvas.width = xsize;//self.canvas.width;
 			self.doodleCanvas.height = ysize;//self.canvas.height;
-			self.outlineCanvas.width = xsize;//self.canvas.width;
-			self.outlineCanvas.height = ysize;//self.canvas.height;
+			self.outlineCanvas.width = xsize;
+			self.outlineCanvas.height = ysize;
+			self.tmpCanvas.width = xsize;
+			self.tmpCanvas.height = ysize;
 		}
     	//dim.scaleX = dim.wf / (dim.ex-dim.sx);
     	//dim.scaleY = dim.hf / (dim.ey-dim.sy);
@@ -341,7 +432,7 @@ var doodler = (function(){
 			self.mouseMode.endMode();
 		}
 		var modeName = evt.target.id.substring(4,evt.target.id.length);
-		console.log("clicked", modeName);
+		
 		self.mouseMode = Modes[modeName];
 		self.mouseMode.setParameterBox(ir.get("paramBox"));
 		
@@ -415,8 +506,11 @@ var doodler = (function(){
 		}
 		
 		
-		self.drawCrossHatchMask(canvas, ctx);
-		self.drawDoodleMap(canvas, ctx);
+		self.layers.forEach(function(layer, index){
+			self.drawCrossHatchMask(canvas, ctx, index);
+			self.drawDoodleMap(canvas, ctx, index);	
+		})
+		
 		self.drawGrid(canvas, ctx);
 		self.drawStamps(canvas, ctx);
 		self.drawLocations();
@@ -444,7 +538,7 @@ var doodler = (function(){
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
     },
-    drawCrossHatchMask: function(canvas, ctx){
+    drawCrossHatchMask: function(canvas, ctx, index, skipZoomPos){
 		var canv = canvas || self.canvas;
         var ct = ctx || self.ctx;
         /// draw the shape we want to use for clipping
@@ -458,24 +552,17 @@ var doodler = (function(){
 		var step = dim.stepSize * dim.footPixel;
 		var stepX = xfeet/dim.stepSize;
 		var stepY = yfeet/dim.stepSize;
-        /// change composite mode to use that shape
-        //ctx.globalCompositeOperation = 'xor';
-        
-        
-		/*for(var x=0;x<canv.width;x+=xplus){
-			for(var y=0;y<canv.height;y+=yplus){
-				if(canvas){
-					console.log("putting image at ", x, y);					
-				}
-				ct.drawImage(img, self.globalOffsetX+x,self.globalOffsetY+y,iw*self.zoomLevel*(1/sX), ih*self.zoomLevel*(1/sY));
-			}
-		}*/
+        var layer = self.layers[index];
 		
-		if(!self.hatchGenerated){
-			
-			
+		//Skip if layer not visible, skipZoom is false, 
+		
+		if((!layer.visible || !layer.hatchVisible) && !skipZoomPos){
+			return;
+		}
+		
+		if(!layer.hatchGenerated){			
 			var img = new Image();
-			img.src = ir.get(self.hatchStyleImage).src;
+			img.src = ir.get(layer.hatchStyle).src;
 			/// draw the image to be clipped
 			//ctx.drawImage(img, 0, 0, 500, 500);
 			//////
@@ -485,12 +572,12 @@ var doodler = (function(){
 			var yplus = ih*(1/sY);//*self.zoomLevel;
 			
 			
-			self.hatchGenerated = true;
+			layer.hatchGenerated = true;
 			var canv2 = document.createElement("canvas");
 			//By foot count
 			canv2.width = xfeet*dim.footPixel+1;
 			canv2.height = yfeet*dim.footPixel+1;
-			console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+			//console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
 			var ctx2 = canv2.getContext("2d");
 			ctx2.lineWidth = 1;
 			ctx2.strokeStyle = "#fff";
@@ -505,46 +592,56 @@ var doodler = (function(){
 			img2.onload = function() {
 				img2.width = canv2.width;
 				img2.height = canv2.height;
-				doodler.hatchImg = img2;
+				layer.hatchImg = img2;
 			};
 			img2.src = dataurl;
 			
-			self.hatchGenerated = true;
+			layer.hatchGenerated = true;
 		}
 		
         
-		if(self.hatchImg){
-			ct.save();
+		if(layer.hatchImg && layer.hatchImg.complete && layer.hatchCanvas){
+			var tmpCt = self.tmpCtx;
+			tmpCt.save();
 			// draw the overlay
-			ct.drawImage(self.hatchImg, self.globalOffsetX, self.globalOffsetY, self.hatchImg.width*self.zoomLevel*(1/sX), self.hatchImg.height*self.zoomLevel*(1/sY));
+			tmpCt.clearRect(0,0,self.tmpCanvas.width, self.tmpCanvas.height);
+			tmpCt.drawImage(layer.hatchImg, 0,0, layer.hatchImg.width, layer.hatchImg.height);
 
-			// change composite mode to source-in
-			// any new drawing will only overwrite existing pixels
-			//ct.globalCompositeOperation = "source-in";
-
-			// draw a purple rectangle the size of the canvas
-			// Only the overlay will become purple
-		   // ctx.fillStyle = "purple";
-			//ctx.fillRect(0, 0, self.canvas.width, self.canvas.height);
-
-			// change the composite mode to destination-atop
-			// any new drawing will not overwrite any existing pixels
-			ct.globalCompositeOperation = "destination-atop";
+			tmpCt.globalCompositeOperation = "destination-in";
 
 			// draw the full logo
-			ct.drawImage(self.hatchCanvas, self.globalOffsetX, self.globalOffsetY, self.hatchCanvas.width*self.zoomLevel*(1/sX), self.hatchCanvas.height*self.zoomLevel*(1/sY));
+			tmpCt.drawImage(layer.hatchCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
 			// restore the context to it's original state
-			ct.restore();
+			tmpCt.restore();
+			
+			if(skipZoomPos){
+				ct.drawImage(self.tmpCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+				
+			}else{
+				ct.drawImage(self.tmpCanvas, self.globalOffsetX, self.globalOffsetY, layer.hatchCanvas.width*self.zoomLevel*(1/sX), layer.hatchCanvas.height*self.zoomLevel*(1/sY));
+			}
 		}
     },
-	drawDoodleMap: function(canv, ct){
+	drawDoodleMap: function(canv, ct, index, skipZoomPos){
 		var canvas = canv || self.canvas;
 		var ctx = ct || self.ctx;
 		ctx.fillStyle = "white";
 		var sX =self.dimensions.scaleX;
 		var sY =self.dimensions.scaleY;
-		ctx.drawImage(self.outlineCanvas, self.globalOffsetX, self.globalOffsetY, self.outlineCanvas.width*self.zoomLevel*(1/sX), self.outlineCanvas.height*self.zoomLevel*(1/sY));
-		ctx.drawImage(self.doodleCanvas, self.globalOffsetX, self.globalOffsetY, self.doodleCanvas.width*self.zoomLevel*(1/sX), self.doodleCanvas.height*self.zoomLevel*(1/sY));
+		var layer = self.layers[index];
+		
+		if(layer.outlineCanvas && layer.doodleCanvas){
+			if(skipZoomPos){
+				ctx.drawImage(layer.outlineCanvas, 0,0, layer.outlineCanvas.width, layer.outlineCanvas.height);
+				ctx.drawImage(layer.doodleCanvas, 0,0, layer.doodleCanvas.width,layer.doodleCanvas.height);
+			}
+			else{
+				if(layer.visible){
+					ctx.drawImage(layer.outlineCanvas, self.globalOffsetX, self.globalOffsetY, layer.outlineCanvas.width*self.zoomLevel*(1/sX), layer.outlineCanvas.height*self.zoomLevel*(1/sY));
+					ctx.drawImage(layer.doodleCanvas, self.globalOffsetX, self.globalOffsetY, layer.doodleCanvas.width*self.zoomLevel*(1/sX), 	layer.doodleCanvas.height*self.zoomLevel*(1/sY));
+				}
+			}
+		}
 	},
     drawCurrentLoc: function(){
         self.ctx.lineWidth = 1;
@@ -900,7 +997,7 @@ var doodler = (function(){
 		//By foot count
 		canv.width = xfeet*dim.footPixel+1;
     	canv.height = yfeet*dim.footPixel+1;
-		console.log("Generating grid of size ", canv.width, canv.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+		//console.log("Generating grid of size ", canv.width, canv.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
 		var ctx = canv.getContext("2d");
     	ctx.lineWidth = 2;
     	ctx.strokeStyle = "#000";
@@ -936,7 +1033,7 @@ var doodler = (function(){
             self.gridImg = img;
 			self.gridCanvas.width = img.width;
 			self.gridCanvas.height = img.height;
-			console.log("gridimg width and height are ", img.width, img.height);
+			//console.log("gridimg width and height are ", img.width, img.height);
 			if(callback && doodler.loadingSave){
 				doodler.loadingSave = false;
 				callback();
@@ -1062,7 +1159,8 @@ var doodler = (function(){
 			}
 		}
 	},
-  init:function(){
+	
+    init:function(){
     	if(!self.isRunning){
 	        //locations = [{}];
 	        self.canvas = document.getElementById("warehouseCanvas");
@@ -1083,27 +1181,17 @@ var doodler = (function(){
 			
 			self.zoom(0,true);
 			
+			self.addLayer();
+			
 			xsize = self.dimensions.footPixel * self.dimensions.wf;
 			ysize = self.dimensions.footPixel * self.dimensions.hf;
-            
-            self.hatchCanvas = document.createElement('canvas');
-            self.hatchCanvas.width = xsize;//self.canvas.width;
-            self.hatchCanvas.height = ysize;//self.canvas.height;
-            self.hatchCtx = self.hatchCanvas.getContext('2d');
-            self.hatchCtx.fillStyle = "rgba(0,0,0,0)";
-            self.hatchCtx.fillRect(0,0,self.hatchCanvas.width,self.hatchCanvas.height);
-            self.doodleCanvas = document.createElement('canvas');
-            self.doodleCanvas.width = xsize;//self.canvas.width;
-            self.doodleCanvas.height = ysize;//self.canvas.height;
-            self.doodleCtx = self.doodleCanvas.getContext('2d');
-            self.doodleCtx.fillStyle = "rgba(0,0,0,0)";
-            self.doodleCtx.fillRect(0,0,self.doodleCanvas.width,self.doodleCanvas.height);
-			self.outlineCanvas = document.createElement('canvas');
-            self.outlineCanvas.width = xsize;//self.canvas.width;
-            self.outlineCanvas.height = ysize;//self.canvas.height;
-            self.outlineCtx = self.outlineCanvas.getContext('2d');
-            self.outlineCtx.fillStyle = "rgba(0,0,0,0)";
-            self.outlineCtx.fillRect(0,0,self.outlineCanvas.width,self.outlineCanvas.height);
+			
+			self.tmpCanvas = document.createElement("canvas");
+			self.tmpCanvas.width = xsize;
+			self.tmpCanvas.height = ysize;
+			self.tmpCtx = self.tmpCanvas.getContext("2d");
+			self.tmpCtx.fillStyle = "rgba(0,0,0,0)";
+            self.tmpCtx.fillRect(0,0,self.tmpCanvas.width,self.tmpCanvas.height);
 			
 			self.gridCanvas = document.createElement("canvas");
 			self.gridCanvas.width = xsize;
@@ -1168,67 +1256,196 @@ var doodler = (function(){
         self.zoom(delta);
     },
 	loadFile: function(data){
-		console.log("load file called");
+		//console.log("load file called");
 			//JSON parse data into objects
+		
 		try{
 			var obj = JSON.parse(data);
 			doodler.loadingSave = true;
 			self.dimensions = obj.dimensions;
-			console.log("Save file dimensions are ", self.dimensions);
+			//console.log("Save file dimensions are ", self.dimensions);
 			ir.set("dimensionPopupX", self.dimensions.wf);
     		ir.set("dimensionPopupY", self.dimensions.hf);
     		ir.set("dimensionPopupStep", self.dimensions.stepSize);
     		ir.set("dimensionPopupBoxSize", self.dimensions.footPixel * self.dimensions.stepSize);
 			
-			
+			var xsize = self.dimensions.footPixel * self.dimensions.wf;
+			var ysize = self.dimensions.footPixel * self.dimensions.hf;
 			self.applyDimensions(function(){
 				self.gridImg.src = obj.grid;
-				console.log("Drawing data from save file to canvases");
-				var hatch = new Image();
-				hatch.src = obj.hatchCanvas;
-				var out = new Image();
-				out.src = obj.outlineCanvas;
-				var doodle = new Image();
-				doodle.src = obj.doodleCanvas;
-				doodle.onload = function(){
-					self.doodleCtx.clearRect(0,0,self.doodleCanvas.width, self.doodleCanvas.height);
-					self.doodleCtx.drawImage(doodle,0,0,self.doodleCanvas.width, self.doodleCanvas.height);
+				
+				if(!obj.layers){
+					var stLay = {
+							layerIndex: 0,
+							hatchCanvas: obj.hatchCanvas,
+							outlineCanvas: obj.outlineCanvas,
+							doodleCanvas: obj.doodleCanvas,
+							hatchStyle: self.hatchStyleImage,
+							name: "Layer #1",
+							hatchImg: obj.hatchImg,
+							hatchGenerated: true,
+							visible: obj.visible,
+							hatchVisible: obj.hatchVisible
+						}
+					obj.layers = [stLay];
+					//self.layers = [stLay];
 				}
-				out.onload = function(){
-					self.outlineCtx.clearRect(0,0,self.outlineCanvas.width, self.outlineCanvas.height);
-					self.outlineCtx.drawImage(out,0,0,self.outlineCanvas.width, self.outlineCanvas.height);
-				}
-				hatch.onload = function(){
-					self.hatchCtx.clearRect(0,0,self.hatchCanvas.width, self.hatchCanvas.height);
-					self.hatchCtx.drawImage(hatch,0,0,self.hatchCanvas.width, self.hatchCanvas.height);
-				}
+				
+				if(obj.layers){
+					self.layers=[];
+					obj.layers.forEach(function(layer, i){
+						
+						var stLay = {
+							layerIndex: i,
+							//hatchCanvas: layer.hatchCanvas,
+							//outlineCanvas: layer.outlineCanvas,
+							//doodleCanvas: layer.doodleCanvas,
+							hatchStyle: layer.hatchStyle,
+							name: layer.name,
+							hatchImg: layer.hatchImg,
+							hatchGenerated: layer.hatchGenerated,
+							visible: obj.visible||true
+						}
+						
+						///Need to create all canvases and contexts here first?
+						
+						//Load new save file
+						var hatch = new Image();
+						hatch.src = layer.hatchCanvas;
+						var out = new Image();
+						out.src = layer.outlineCanvas;
+						var doodle = new Image();
+						doodle.src = layer.doodleCanvas;
+						doodle.onload = function(){
+							stLay.doodleCanvas = document.createElement('canvas');
+							stLay.doodleCanvas.width = xsize;//self.canvas.width;
+							stLay.doodleCanvas.height = ysize;//self.canvas.height;
+							stLay.doodleCtx = stLay.doodleCanvas.getContext('2d');
+							stLay.doodleCtx.fillStyle = "rgba(0,0,0,0)";
+							stLay.doodleCtx.clearRect(0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
+							stLay.doodleCtx.drawImage(doodle,0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
+							self.loadLayerList(0);
+							self.switchLayer(0);
+						}
+						out.onload = function(){
+							stLay.outlineCanvas = document.createElement('canvas');
+							stLay.outlineCanvas.width = xsize;//self.canvas.width;
+							stLay.outlineCanvas.height = ysize;//self.canvas.height;
+							stLay.outlineCtx = stLay.outlineCanvas.getContext('2d');
+							stLay.outlineCtx.fillStyle = "rgba(0,0,0,0)";
+							stLay.outlineCtx.clearRect(0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
+							stLay.outlineCtx.drawImage(out,0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
+						}
+						hatch.onload = function(){
+							stLay.hatchCanvas = document.createElement('canvas');
+							stLay.hatchCanvas.width = xsize;//self.canvas.width;
+							stLay.hatchCanvas.height = ysize;//self.canvas.height;
+							stLay.hatchCtx = stLay.hatchCanvas.getContext('2d');
+							stLay.hatchCtx.fillStyle = "rgba(0,0,0,0)";
+							stLay.hatchCtx.clearRect(0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
+							stLay.hatchCtx.drawImage(hatch,0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
+						}
+						var hat = new Image();
+						hat.src = layer.hatchImg;
+						stLay.hatchImg = hat;
+						
+						
+						
+						self.layers.push(stLay);
+					});
 					
-				var hat = new Image();
-				hat.src = obj.hatchImg;
-
-				
-				
-				
-				self.hatchImg = hat;
+					
+				}
+			
+				self.currentLayer = 0;
+				self.layerIndex = self.layers.length;
 				self.stamps = JSON.parse(obj.stamps);
 				self.stamps.forEach((st, i)=>{
 					if(st.img == null || st.img.src == null){
-						console.log("Setting stamp img to ", st.path);
+						//console.log("Setting stamp img to ", st.path);
 						st.img = new Image();
 						st.img.src = st.path;
 						
 					}
 					st.ratio = st.ratio || 1;
 				})
-				
 				self.textFields = JSON.parse(obj.textFields || "[]") 
 			});
-			
 		}
 		catch(e){
 			throw(e);
 			return;
 		}
+	},
+	loadLayerList: function(layerSelected){
+		var htm = "";
+		//self.layers.forEach(function(layer, i){
+		for(var i=self.layers.length-1; i>=0;i--){
+			var layer = self.layers[i];
+			var layerSelect = layer.layerIndex == layerSelected;
+			htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>
+						<div class='layerPreview'><img id='layerPreview${i}' src="${self.getLayerPreview(i)}" width="50px"><br>`
+			
+			if(layerSelect){	
+				htm += `<img id='layerVisible${i}' onclick='doodler.changeVisibility(${i})' src='images/eye${layer.visible?"":"-off"}.png' width='26px' height='26px'>`;
+				htm += `<img id='layerHatchVisible${i}' onclick='doodler.changeHatchVisibility(${i})' src='hatch${layer.hatchVisible?"":"-off"}.png'  width='26px' height='26px'>`;
+			}			
+			htm +=	`</div>
+						<div><!--<input type='text' onchange='doodler.changeLayerName(${i}, event)' value='${layer.name}'>-->${layer.name} </div>
+						
+				`;
+			if(layerSelect){
+				//htm += `<div>Buttons go here</div>`;
+			}
+				htm += `</div>`
+		}
+		//});
+		
+		ir.get("layerList").innerHTML = htm;
+	},
+	changeLayerName: function(index, evt){
+		self.layers[index].name = evt.target.value;
+	},
+	changeVisibility: function(index){
+		self.layers[index].visible = !self.layers[index].visible;
+		if(self.layers[index].visible){
+			ir.get("layerVisible"+index).src = src='images/eye.png';
+		}else{
+			ir.get("layerVisible"+index).src = src='images/eye-off.png';
+		}
+	},
+	changeHatchVisibility: function(index){
+		self.layers[index].hatchVisible = !self.layers[index].hatchVisible;
+		if(self.layers[index].visible){
+			ir.get("layerVisible"+index).src = src='images/eye.png';
+		}else{
+			ir.get("layerVisible"+index).src = src='images/eye-off.png';
+		}
+	},
+	reloadLayerPreview: function(index){
+		//console.log("Reloading layer ", index);
+		var layerImg = ir.get("layerPreview"+index);
+		if(layerImg == null){
+			return;
+		}
+		layerImg.src = self.getLayerPreview(index);
+	},
+	getLayerPreview: function(i){
+		var layer = self.layers[i];
+		if(layer==null){
+			return;
+		}
+		var canv = document.createElement("canvas");
+		var ctx = canv.getContext("2d");
+		canv.width = layer.hatchCanvas.width;
+		canv.height = layer.hatchCanvas.height;
+		ctx.fillStyle = "#ddd";
+		ctx.fillRect(0,0,canv.width, canv.height);
+		self.drawCrossHatchMask(canv, ctx, i, true);
+		self.drawDoodleMap(canv, ctx, i, true);	
+		
+		return canv.toDataURL();
+		
 	},
     locationDetailsHori: function(locRect, lot){
         self.ctx.strokeStyle = "#000";
@@ -1845,7 +2062,7 @@ var doodler = (function(){
                 //};
 
                 //img.src = e.target.result;
-				console.log("Files: ", e.target.result);
+				//console.log("Files: ", e.target.result);
 				doodler.loadFile(e.target.result);
             };       
             FR.readAsText( this.files[0] );
@@ -1936,7 +2153,7 @@ var doodler = (function(){
 	},
 	saveImage: function(){
 		ir.show("imageSavePopup");
-		ir.forcus("imageSaveName");
+		ir.focus("imageSaveName");
 	},
 	saveImageConfirm: function(){
 		var fileName = ir.v("imageSaveName");
@@ -1953,15 +2170,37 @@ var doodler = (function(){
 	},
 	saveFile: function(){
 		var storageObj = {
+			version: "1.1",
 			dimensions: doodler.dimensions,
 			grid: self.gridImg.src,
-			hatchCanvas: self.hatchCanvas.toDataURL("image/png"),
-			doodleCanvas: self.doodleCanvas.toDataURL("image/png"),
-			outlineCanvas: self.outlineCanvas.toDataURL("image/png"),
-			hatchImg: self.hatchImg.src,
+			layers:[
+				
+			],
+			//hatchCanvas: self.hatchCanvas.toDataURL("image/png"),
+			//doodleCanvas: self.doodleCanvas.toDataURL("image/png"),
+			//outlineCanvas: self.outlineCanvas.toDataURL("image/png"),
+			//hatchImg: self.hatchImg.src,
 			stamps: JSON.stringify(self.stamps),
 			textFields: JSON.stringify(self.textFields)
 		}
+		
+		self.layers.forEach(function(layer, i){
+			var stLay = {
+				layerIndex: layer.layerIndex,
+				hatchCanvas: layer.hatchCanvas.toDataURL("image/png"),
+				outlineCanvas: layer.outlineCanvas.toDataURL("image/png"),
+				doodleCanvas: layer.doodleCanvas.toDataURL("image/png"),
+				hatchStyle: layer.hatchStyle,
+				name: layer.name,
+				hatchImg: layer.hatchImg.src,
+				hatchGenerated: layer.hatchGenerated,
+				visible: layer.visible,
+				hatchVisible: layer.hatchVisible
+			}
+			storageObj.layers.push(stLay);
+		});
+		
+		
 		
 		var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(storageObj));
 		var link = document.getElementById('link');
@@ -2165,7 +2404,7 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = false;
+		var isBeta = true;
 		var passwd = "doodletime";
 		var storedPwd = irstore.get("doodlePwd");
 		var enteredPwd = "";
@@ -2346,20 +2585,26 @@ var doodler = (function(){
 				doodler.redoStack.doodle.push(this);
 			}
 		}
-		hImg.src = self.hatchCanvas.toDataURL("image/png");
-		oImg.src = self.outlineCanvas.toDataURL("image/png");
-		dImg.src = self.doodleCanvas.toDataURL("image/png");
+		if(updateRedo){
+			doodler.redoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
+		}
+		hImg.src = self.layers[self.currentLayer].hatchCanvas.toDataURL("image/png");
+		oImg.src = self.layers[self.currentLayer].outlineCanvas.toDataURL("image/png");
+		dImg.src = self.layers[self.currentLayer].doodleCanvas.toDataURL("image/png");
 		self.hTempImg = hImg;
 		self.oTempImg = oImg;
 		self.dTempImg = dImg;
 	},
 	updateUndoStack: function(){
 		
+		setTimeout(function(){self.reloadLayerPreview(self.currentLayer)}, 10);
+		
 		//Wipe out redo stack if you draw something
 		self.redoStack = { 
 			hatch: [],
 			outline: [],
-			doodle: []
+			doodle: [],
+			layerIndex: []
 		}
 		//two steps, updating current image, pushing current image to stack
 		//
@@ -2367,9 +2612,9 @@ var doodler = (function(){
 			self.undoStack.hatch.push(self.hTempImg);
 			self.undoStack.outline.push(self.oTempImg);
 			self.undoStack.doodle.push(self.dTempImg);
+			self.undoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
 			
-			
-			
+			//console.log("Pushing to undo stack for layer", self.currentLayer);
 		}else{
 			
 		}
@@ -2378,33 +2623,51 @@ var doodler = (function(){
 			self.undoStack.hatch.shift();
 			self.undoStack.outline.shift();
 			self.undoStack.doodle.shift();
+			self.undoStack.layerIndex.shift();
 		}
 		
 		self.updateCurrentImage(true);
+		
 		
 	},
 	undo: function(){
 		//self.hTempImg = null;
 		//self.oTempImg = null;
 		//self.dTempImg = null;
+		var layerIndex = 0;
+		if(self.undoStack.layerIndex.length > 0){
+			var layerIndex = self.undoStack.layerIndex.pop();
+			self.undoStack.layerIndex.push(layerIndex);
+			self.redoStack.layerIndex.push(layerIndex);
+		}
+		
+		var layer = null;
+		self.layers.forEach(function(lay,i){
+			if(lay.layerIndex == layerIndex){
+				layer = lay;
+			}
+		})
+		if(layer == null){
+			return;
+		}
 		
 		//Pop the last image off each stack, clear current canvas and draw this image in its place
 		if(self.undoStack.hatch.length > 0){
 			var lastHatch = self.undoStack.hatch.pop();	
-			self.hatchCtx.clearRect(0,0,self.hatchCanvas.width, self.hatchCanvas.height);
-			self.hatchCtx.drawImage(lastHatch, 0,0,self.hatchCanvas.width, self.hatchCanvas.height)
+			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
+			layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.redoStack.hatch.push(lastHatch);
 		}
 		if(self.undoStack.outline.length > 0){
 			var lastOutline = self.undoStack.outline.pop();
-			self.outlineCtx.clearRect(0,0,self.outlineCanvas.width, self.outlineCanvas.height);
-			self.outlineCtx.drawImage(lastOutline, 0,0,self.outlineCanvas.width, self.outlineCanvas.height)
+			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
+			layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.redoStack.outline.push(lastOutline);
 		}
 		if(self.undoStack.doodle.length > 0){
 			var lastDoodle = self.undoStack.doodle.pop();
-			self.doodleCtx.clearRect(0,0,self.doodleCanvas.width, self.doodleCanvas.height);
-			self.doodleCtx.drawImage(lastDoodle, 0,0,self.doodleCanvas.width, self.doodleCanvas.height)		
+			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
+			layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)		
 			self.redoStack.doodle.push(lastDoodle);
 		}
 		if(self.undoStack.hatch.length == 0){
@@ -2413,32 +2676,53 @@ var doodler = (function(){
 			//self.oTempImg = null;
 			//self.dTempImg = null;
 		}
+		if(self.undoStack.layerIndex.length > 0){
+			var layerIndex = self.undoStack.layerIndex.pop();
+			self.reloadLayerPreview(layerIndex);
+		}
 		self.updateCurrentImage(false);
 		//console.log(self.undoStack, self.redoStack);
 	},
 	redo: function(){
+		
+		var layerIndex = 0;
+		if(self.redoStack.layerIndex.length > 0){
+			var layerIndex = self.redoStack.layerIndex.pop();
+			self.redoStack.layerIndex.push(layerIndex);
+			self.undoStack.layerIndex.push(layerIndex);
+		}
+		
+		var layer = null;
+		self.layers.forEach(function(lay,i){
+			if(lay.layerIndex == layerIndex){
+				layer = lay;
+			}
+		})
+		if(layer == null){
+			return;
+		}
 		//console.log("start of redo", self.redoStack);
 		//Pop the last image off each stack, clear current canvas and draw this image in its place
 		if(self.redoStack.hatch.length > 0){
 			var lastHatch = self.redoStack.hatch.pop();	
-			self.hatchCtx.clearRect(0,0,self.hatchCanvas.width, self.hatchCanvas.height);
-			self.hatchCtx.drawImage(lastHatch, 0,0,self.hatchCanvas.width, self.hatchCanvas.height)
+			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
+			layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.undoStack.hatch.push(lastHatch);
 		}else{
 			//self.undoStack.hatch.push(self.hTempImg);
 		}
 		if(self.redoStack.outline.length > 0){
 			var lastOutline = self.redoStack.outline.pop();
-			self.outlineCtx.clearRect(0,0,self.outlineCanvas.width, self.outlineCanvas.height);
-			self.outlineCtx.drawImage(lastOutline, 0,0,self.outlineCanvas.width, self.outlineCanvas.height)
+			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
+			layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.undoStack.outline.push(lastOutline);
 		}else{
 			//self.undoStack.outline.push(self.oTempImg);
 		}
 		if(self.redoStack.doodle.length > 0){
 			var lastDoodle = self.redoStack.doodle.pop();
-			self.doodleCtx.clearRect(0,0,self.doodleCanvas.width, self.doodleCanvas.height);
-			self.doodleCtx.drawImage(lastDoodle, 0,0,self.doodleCanvas.width, self.doodleCanvas.height)			
+			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
+			layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)			
 			self.undoStack.doodle.push(lastDoodle);
 		}else{
 			//self.undoStack.doodle.push(self.dTempImg);
@@ -2448,6 +2732,10 @@ var doodler = (function(){
 			//self.hTempImg = null;
 			//self.oTempImg = null;
 			//self.dTempImg = null;
+		}
+		if(self.redoStack.layerIndex.length > 0){
+			var layerIndex = self.redoStack.layerIndex.pop();
+			self.reloadLayerPreview(layerIndex);
 		}
 		//self.updateCurrentImage();
 		//console.log("end of redo", self.redoStack);

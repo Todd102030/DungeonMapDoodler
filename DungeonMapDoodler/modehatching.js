@@ -24,6 +24,10 @@ var Hatching = (function(){
 			console.log("Image style is ", self.imageStyle);
 			doodler.hatchGenerated = false;
 			doodler.hatchStyleImage = self.imageStyle;
+			var layer = doodler.layers[doodler.currentLayer];
+			layer.hatchStyle = self.imageStyle;
+			layer.hatchImg = null;
+			layer.hatchGenerated = false;
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);

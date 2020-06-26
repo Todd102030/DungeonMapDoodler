@@ -239,10 +239,22 @@
 	
 	
 <div class="floatingModes popup">
-	<div class='floatingBtns'>
-	<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+	<div class='floatingContainer'>
+		<details open>
+			<summary>Layer Options</summary>
+			<div id="layerList"></div>
+			<div class='layerBtns'>
+				<div class='modeBtn' title="Add Layer" onclick='doodler.addLayer()'><img src="images/plus.svg" width='32px' height='32px'></div><div class='modeBtn' title="Delete Layer" onclick='doodler.deleteLayer()'><img src="images/delete.png" width='32px' height='32px'></div><div class='modeBtn' title="Raise Layer" onclick='doodler.raiseLayer()'><img src="images/raise.png" width='32px' height='32px'></div><div class='modeBtn' title="Lower Layer" onclick='doodler.lowerLayer()'><img src="images/lower.png" width='32px' height='32px'></div>
+				</div>
+		</details>
+		<details open>
+			<summary>Tool Options</summary>
+			<div class='floatingBtns'>
+			<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+			</div>
+			<div class='paramBox' id='paramBox'></div>
+		</details>
 	</div>
-	<div class='paramBox' id='paramBox'></div>
 </div>	
 	
 	

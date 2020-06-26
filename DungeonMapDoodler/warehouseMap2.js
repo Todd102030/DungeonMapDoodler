@@ -50,6 +50,24 @@ function TextField(text, x, y, isVertical, fontSize, font){
 	this.font = font;
 	return this;
 }
+
+function Layer(name, layerIndex, hatchCanvas, hatchCtx, outlineCanvas, outlineCtx, doodleCanvas, doodleCtx, hatchStyle){
+	this.layerIndex = layerIndex;
+	this.hatchCanvas = hatchCanvas;
+	this.outlineCanvas = outlineCanvas;
+	this.doodleCanvas = doodleCanvas;
+	this.hatchCtx = hatchCtx;
+	this.outlineCtx = outlineCtx;
+	this.doodleCtx = doodleCtx;
+	this.hatchStyle = hatchStyle;
+	this.visible = true;
+	this.hatchVisible = true;
+	this.name = name;
+	this.hatchImg = null;
+	this.hatchGenerated = false;
+	return this;
+}
+
 //MODE LIST:
 // 1 = Click and drag to pan the entire page around, scroll wheel to zoom in and out
 // 2 = Click and drag creates an outline for a location

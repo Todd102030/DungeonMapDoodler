@@ -5,6 +5,13 @@ var Shape = {
 	Square: 2,
 }
 
+Array.prototype.swap = function (x,y) {
+  var b = this[x];
+  this[x] = this[y];
+  this[y] = b;
+  return this;
+}
+
 function getGridXY(xpos, ypos){
 	var wh = doodler;
 	var dim = doodler.dimensions;
