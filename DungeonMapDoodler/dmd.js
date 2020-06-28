@@ -12,6 +12,13 @@ Array.prototype.swap = function (x,y) {
   return this;
 }
 
+window.onresize = function(){
+	//Stuff canvas into flexbox that takes up whole window, with topbar also in it
+	//Ditch canvas border, 
+	
+	//onresize, set width and height to flexitem's width and height
+}
+
 function getGridXY(xpos, ypos){
 	var wh = doodler;
 	var dim = doodler.dimensions;

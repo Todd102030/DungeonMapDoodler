@@ -183,6 +183,7 @@ var doodler = (function(){
 		//self.layerIndex = layerIndex;
 		self.updateCurrentImage();
 		self.loadLayerList(layerIndex);
+		console.log("Switching layer");
 	},
     addLot: function(sx, sy, ex, ey){
         //Swap values around to make sure sx and sy are the top left
@@ -1409,26 +1410,28 @@ var doodler = (function(){
 	changeVisibility: function(index){
 		self.layers[index].visible = !self.layers[index].visible;
 		if(self.layers[index].visible){
-			ir.get("layerVisible"+index).src = src='images/eye.png';
+			ir.get("layerVisible"+index).src='images/eye.png';
 		}else{
-			ir.get("layerVisible"+index).src = src='images/eye-off.png';
+			ir.get("layerVisible"+index).src='images/eye-off.png';
 		}
 	},
 	changeHatchVisibility: function(index){
 		self.layers[index].hatchVisible = !self.layers[index].hatchVisible;
 		if(self.layers[index].visible){
-			ir.get("layerVisible"+index).src = src='images/eye.png';
+			ir.get("layerHatchVisible"+index).src = 'hatch.png';
 		}else{
-			ir.get("layerVisible"+index).src = src='images/eye-off.png';
+			ir.get("layerHatchVisible"+index).src = 'hatch-off.png';
 		}
 	},
 	reloadLayerPreview: function(index){
 		//console.log("Reloading layer ", index);
-		var layerImg = ir.get("layerPreview"+index);
-		if(layerImg == null){
-			return;
-		}
-		layerImg.src = self.getLayerPreview(index);
+		setTimeout(function(){
+			var layerImg = ir.get("layerPreview"+index);
+			if(layerImg == null){
+				return;
+			}
+			layerImg.src = self.getLayerPreview(index);
+		},5);
 	},
 	getLayerPreview: function(i){
 		var layer = self.layers[i];
@@ -1444,7 +1447,12 @@ var doodler = (function(){
 		self.drawCrossHatchMask(canv, ctx, i, true);
 		self.drawDoodleMap(canv, ctx, i, true);	
 		
-		return canv.toDataURL();
+		var canvSmall = document.createElement("canvas");
+		var ctxSmall = canvSmall.getContext("2d");
+		canvSmall.width = 150;
+		canvSmall.height = canv.height/canv.width*150;
+		ctxSmall.drawImage(canv, 0, 0, canvSmall.width, canvSmall.height);
+		return canvSmall.toDataURL();
 		
 	},
     locationDetailsHori: function(locRect, lot){
@@ -2588,12 +2596,14 @@ var doodler = (function(){
 		if(updateRedo){
 			doodler.redoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
 		}
-		hImg.src = self.layers[self.currentLayer].hatchCanvas.toDataURL("image/png");
-		oImg.src = self.layers[self.currentLayer].outlineCanvas.toDataURL("image/png");
-		dImg.src = self.layers[self.currentLayer].doodleCanvas.toDataURL("image/png");
-		self.hTempImg = hImg;
-		self.oTempImg = oImg;
-		self.dTempImg = dImg;
+		setTimeout(function(){
+			hImg.src = self.layers[self.currentLayer].hatchCanvas.toDataURL("image/png");
+			oImg.src = self.layers[self.currentLayer].outlineCanvas.toDataURL("image/png");
+			dImg.src = self.layers[self.currentLayer].doodleCanvas.toDataURL("image/png");
+			self.hTempImg = hImg;
+			self.oTempImg = oImg;
+			self.dTempImg = dImg;
+		},2);
 	},
 	updateUndoStack: function(){
 		

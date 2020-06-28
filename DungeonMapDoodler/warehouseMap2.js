@@ -29,7 +29,6 @@ function StampObj(x, y, w, h, img, imgPath, angle) {
 	var self = this;
 	img.onload = function(){
 		self.ratio = this.naturalWidth/this.naturalHeight;
-		console.log("Ratio at stamp is ", self.ratio)
 	}
     this.x = x;
     this.y = y;

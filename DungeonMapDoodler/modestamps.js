@@ -50,7 +50,7 @@ var StampTool = (function(){
 			}
 		},
 		changeSizeMult: function(evt, fromInput){
-			self.multiplyer = parseInt(evt.target.value);
+			self.multiplyer = parseFloat(evt.target.value);
 			if(!fromInput){
 				ir.set("stampSizeMultLabel", self.multiplyer);
 			}else{
@@ -63,6 +63,9 @@ var StampTool = (function(){
 				self.chosenStampImg = new Image();
 			}
 			self.chosenStampImg.src = self.chosenStamp.path || self.chosenStamp.src;
+			self.multiplyer = self.chosenStamp.defMult;
+			ir.set("stampSizeMultLabel", self.chosenStamp.defMult);
+			ir.set("stampSizeMult", self.chosenStamp.defMult);
 		},
 		changeColor: function(evt, type){
 			if(type=='fill'){
@@ -286,16 +289,29 @@ var StampTool = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="stampSize" name="stampSize" min="1" max="200" value='${self.size}' onchange='Modes.StampTool.changeSize(event)' oninput='Modes.StampTool.changeSize(event)'><br>
-						<div class='paramTitle'>Multiplier: </div><input type='number' style='width:60px' id='stampSizeMultLabel' value="${self.multiplyer}" onchange='Modes.StampTool.changeSizeMult(event, true)' oninput='Modes.StampTool.changeSizeMult(event, true)'><br>
-						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" min="1" max="5" value='${self.multiplyer}' onchange='Modes.StampTool.changeSizeMult(event)' oninput='Modes.StampTool.changeSizeMult(event)'><br>
+						<div class='paramTitle'>Multiplier: </div><input type='number' style='width:60px' step='0.5' id='stampSizeMultLabel' value="${self.multiplyer}" onchange='Modes.StampTool.changeSizeMult(event, true)' oninput='Modes.StampTool.changeSizeMult(event, true)'><br>
+						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" step='0.5' min="0.5" max="5" value='${self.multiplyer}' onchange='Modes.StampTool.changeSizeMult(event)' oninput='Modes.StampTool.changeSizeMult(event)'><br>
 						<div class='paramTitle'>Rotate Degrees: </div><br>
 						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.StampTool.changeAngle(event)' oninput='Modes.StampTool.changeAngle(event)'><br>
 						<input type='checkbox' id='stampsIsSnapping' onclick='Modes.StampTool.changeSnapping(event)'><label for='stampsIsSnapping'>Snap To Grid</label><br>
 						`;
 			
 			htm += `<div style='max-width:150px;'>`
-			Stamps.forEach(function(stamp, i){
-				htm += `<div class='stampBtn' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' width='40px' height='40px'></div>`;
+			
+			var sortedStamps = Stamps.sort(function(a,b){
+				return a.group - b.group;
+			});
+			console.log("Sorted stamps is ", sortedStamps);
+			
+			sortedStamps.forEach(function(stamp, i){
+				if(i==0 || sortedStamps[i-1].group != stamp.group){
+					htm += `<details ${i==0?"open":""}><summary>${StampGroupName[stamp.group]}</summary>`;
+				}
+				
+				htm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' ></div>`;
+				if(sortedStamps[i+1]==null || ( sortedStamps[i+1] && sortedStamps[i+1].group != stamp.group)){
+					htm += `</details>`;
+				}
 			});
 			htm += `</div>`;
 			
