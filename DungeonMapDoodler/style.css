@@ -36,6 +36,42 @@
     font-family: "neuropol_x";
     src: url('fonts/neuropol_x/neuropol_x.ttf');
 }
+@font-face {
+    font-family: "arush_shiny";
+    src: url('fonts/a_arush_shiny/aArushShiny.ttf');
+}
+@font-face {
+    font-family: "blacklet";
+    src: url('fonts/blacklet/Blacklet.ttf');
+}
+@font-face {
+    font-family: "handwriting_main";
+    src: url('fonts/handwriting_main/HandwritingMain-Regular.ttf');
+}
+@font-face {
+    font-family: "castaway";
+    src: url('fonts/castaway/CastawaySolid v2.otf');
+}
+@font-face {
+    font-family: "castaway_inline";
+    src: url('fonts/castaway/CastawayInline v2.otf');
+}
+@font-face {
+    font-family: "decorative_stencil";
+    src: url('fonts/decorative_stencil/Decorative Stencil.otf');
+}
+@font-face {
+    font-family: "gamejot";
+    src: url('fonts/gamejot/Gamejot.ttf');
+}
+@font-face {
+    font-family: "pioneer";
+    src: url('fonts/pioneer/Pioneer.ttf');
+}
+@font-face {
+    font-family: "nerik";
+    src: url('fonts/nerik/Nerik-normal.ttf');
+}
 
 
 *{

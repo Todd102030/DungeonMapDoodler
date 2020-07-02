@@ -50,7 +50,7 @@ function TextField(text, x, y, isVertical, fontSize, font){
 	return this;
 }
 
-function Layer(name, layerIndex, hatchCanvas, hatchCtx, outlineCanvas, outlineCtx, doodleCanvas, doodleCtx, hatchStyle){
+function Layer(name, layerIndex, hatchCanvas, hatchCtx, outlineCanvas, outlineCtx, doodleCanvas, doodleCtx, hatchStyle, floorStyle, showFloor){
 	this.layerIndex = layerIndex;
 	this.hatchCanvas = hatchCanvas;
 	this.outlineCanvas = outlineCanvas;
@@ -64,6 +64,8 @@ function Layer(name, layerIndex, hatchCanvas, hatchCtx, outlineCanvas, outlineCt
 	this.name = name;
 	this.hatchImg = null;
 	this.hatchGenerated = false;
+    this.floorStyle = floorStyle;
+    this.showFloor = showFloor;
 	return this;
 }
 

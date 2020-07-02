@@ -6,6 +6,7 @@ var Hatching = (function(){
 		fillColor: "white",
 		outlineColor: "black",
 		imageStyle: "hatchingImg",
+		floorStyle: "hatchingImgJPStone",
 		hatchSize: 30,
 		renderScale: 1,
 		id:8,
@@ -28,6 +29,16 @@ var Hatching = (function(){
 			layer.hatchStyle = self.imageStyle;
 			layer.hatchImg = null;
 			layer.hatchGenerated = false;
+		},
+		changeFloorStyle: function(evt){
+			self.floorStyle = ir.v("hatchFloorStyle");
+			console.log("Floor style is ", self.floorStyle);
+			//doodler.hatchGenerated = false;
+			doodler.floorStyle = self.floorStyle;
+			var layer = doodler.layers[doodler.currentLayer];
+			layer.floorStyle = self.floorStyle;
+			layer.floorImg = null;
+			layer.floorGenerated = false;
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -125,7 +136,7 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						<div class='paramTitle'>Hatch Style: </div>`;
 			
-			htm += `<select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
+			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
 			htm += "<option name='JPCross' value='hatchingImgJPCrosshatch'>Dense Hatching</option>";
 			htm += "<option name='JPHalftone' value='hatchingImgJPHalftone'>Drawn Halftone</option>";
@@ -135,6 +146,13 @@ var Hatching = (function(){
 			htm += "<option name='Dots' value='hatchingImgDots'>Dots</option>";
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "</select><br>";
+			
+			htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' onchange='Modes.Hatching.changeFloorStyle(event)'>`;
+			htm += `<option name='Stone' value='hatchingImgJPStone'>Drawn Stone</option>`;
+			htm += `<option name='Stone' value='hatchingImgJPGrass'>Drawn Grass</option>`;
+			htm += `<option name='Stone' value='hatchingImgGrass'>Grass</option>`;
+			htm += `<option name='Stone' value='hatchingImgRock'>Rock</option>`;
 			htm += "</select>";
 			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
