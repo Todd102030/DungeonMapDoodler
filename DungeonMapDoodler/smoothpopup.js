@@ -8,6 +8,7 @@ var smoothPopup = {
             //smoothPopup.popups[i].addEventListener("mousedown", smoothPopup.onMouseDown, false);
             //smoothPopup.popups[i].addEventListener("dragstart", function(e){e.preventDefault()}, false);            
             var dragDiv = document.createElement("DIV");
+			dragDiv.id = "popupDragDiv";
             var moveImageSrc = "images/move.svg";
             if (paramObj) {
             	if (paramObj.moveImageSrc>"") {

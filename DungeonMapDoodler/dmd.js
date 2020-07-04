@@ -13,6 +13,17 @@ Array.prototype.swap = function (x,y) {
 }
 
 window.onresize = function(){
+	var canv = ir.get("warehouseCanvas");
+	var parent = canv.parentNode,
+    styles = getComputedStyle(parent),
+    w = parseInt(styles.getPropertyValue("width"), 10),
+    h = parseInt(styles.getPropertyValue("height"), 10);
+
+	canv.width = w;
+	canv.height = h-4;
+	
+	//canv.width = canv.parentNode.clientWidth;
+	//canv.height = canv.parentNode.clientHeight;
 	//Stuff canvas into flexbox that takes up whole window, with topbar also in it
 	//Ditch canvas border, 
 	

@@ -8,28 +8,49 @@
 		<link rel="manifest" href="manifest.json">
     </head>
 <body onload='doodler.show()'>
-	<div class='topBar' style='text-align: right'><button id="whBtnGridDraw" type="button" class="canvBtn" name="mode" onclick="return doodler.toggleGridOutside()">Toggle Grid Outside</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" onclick="return ir.show('dimensionPopup')">Change Grid Size</button>&nbsp;&nbsp;<button id="whBtnSave" type="button" class="canvBtn" name="mode" value="8" onclick="return doodler.saveImage()">Save Map Image</button>&nbsp;&nbsp;<button id="whBtnSaveFile" type="button" class="canvBtn" name="mode"  onclick="return doodler.saveFile()">Save</button>&nbsp;&nbsp;<button id="whBtnLoadFile" type="button" class="canvBtn" name="mode"  onclick="return doodler.showFileLoad()">Load</button></div>
-<div id='doodler'>
-	<canvas id="warehouseCanvas" width="800" height="800" style='border-style:double'></canvas>  
-	<div style='display:none'><br>
-	<button id="whBtnMove" type="button" class="canvBtn" name="mode" value="1" onclick="return doodler.setMode(1)"> Move</button>
-	<button id="whBtnLoc" type="button" class="canvBtn" name="mode" value="2" onclick="return doodler.setMode(2)"> Create Location</button>
-	<button id="whBtnWalls" type="button" class="canvBtn" name="mode" value="3" onclick="return doodler.setMode(3)"> Draw Walls/Objects</button>
-	<button id="whBtnText" type="button" class="canvBtn" name="mode" value="5" onclick="return doodler.setMode(5)"> Create Text</button>
-	<button id="whBtnPreview" type="button" class="canvBtn" name="mode" value="4" onclick="return doodler.setMode(4)"> Preview</button>
-	<button id="whBtnEdit" type="button" class="canvBtn" name="mode" value="6" onclick="return doodler.setMode(6)"> Edit </button>
-	<button id="whBtnDoodle" type="button" class="canvBtn" name="mode" value="6" onclick="return doodler.setMode(8)"> Doodle </button>
-	<button id="whBtnDimen" type="button" class="canvBtn" name="mode" value="7" onclick="return doodler.showDimensionPopup()"> Change dimensions </button>
-	
-	<br>
-	<input type='file' id="imageUpload" accept=".dmd"/>
-	<div style="display:inline-block">
-		<label id='whImgLabel' for="whImgSlider">Background Visibility 40%</label><br>
-		<input id="whImgSlider" type="range" min="0" max="1" step="0.01" value="0.40">
+	<div class='flex-container'>
+		<div class='topBar' style='text-align: right'>
+			<nav id="nav">
+				<ul id="navigation">
+					<li><a href="/">Dungeon Map Doodler</a></li>
+					<li><a href="#">File &raquo;</a>
+						<ul>
+							<li><a href="#" onclick="return doodler.saveFile()">Save</a></li>
+							<li><a href="#" onclick="return doodler.showFileLoad()">Load</a></li>
+							<li><a href="#" onclick="return doodler.saveImage()">Export Image</a></li>
+
+						</ul>
+					</li>
+					<li><a href="#">Grid &raquo;</a>
+						<ul>
+							<li><a href="#" onclick="return doodler.toggleGridOutside()">Toggle Outer Grid</a></li>
+							<li><a href="#" onclick="return ir.show('dimensionPopup')">Change Grid Dimensions</a></li>
+						</ul>
+					</li>
+					<li><a href="#">Options &raquo;</a>
+						<ul>
+							<li><a href="#" onclick="return doodler.toggleToolDock()">Dock/Undock Tools</a></li>
+						</ul>
+					</li>
+					<li><a href="#" class="last" onclick="return doodler.showAboutPopup()">About</a></li>
+				</ul>
+			</nav>
+		</div>
+		
+		<div id='doodler'>
+			<canvas id="warehouseCanvas" width="800" height="800" ></canvas>  
+			<div style='display:none'><br>
+
+			<br>
+			<input type='file' id="imageUpload" accept=".dmd"/>
+			<div style="display:inline-block">
+				<label id='whImgLabel' for="whImgSlider">Background Visibility 40%</label><br>
+				<input id="whImgSlider" type="range" min="0" max="1" step="0.01" value="0.40">
+			</div>
+			</div>
+
+		</div>
 	</div>
-	</div>
-	
-</div>
 	
 <div style='display:none;'>
 	<img id='squarefuzzImg' src='images/squarefuzz.png'>
@@ -251,21 +272,24 @@
 </div>	
 	
 	
-<div class="floatingModes popup">
+<div class="floatingModes popup" id='floatingModes'>
+	<button id='dockOpenCloseBtn' class='modeBtn' style='padding:0;margin-left: 0px;float:left;outline:none;' type="button" onclick="doodler.toggleDockOpen()"><img id='dockOpenCloseImg' src="close.png" width='32px' height='32px'></button>
 	<div class='floatingContainer'>
-		<details open>
+		<details open id='layerDetails'>
 			<summary>Layer Options</summary>
 			<div id="layerList"></div>
 			<div class='layerBtns'>
 				<div class='modeBtn' title="Add Layer" onclick='doodler.addLayer()'><img src="images/plus.svg" width='32px' height='32px'></div><div class='modeBtn' title="Delete Layer" onclick='doodler.deleteLayer()'><img src="images/delete.png" width='32px' height='32px'></div><div class='modeBtn' title="Raise Layer" onclick='doodler.raiseLayer()'><img src="images/raise.png" width='32px' height='32px'></div><div class='modeBtn' title="Lower Layer" onclick='doodler.lowerLayer()'><img src="images/lower.png" width='32px' height='32px'></div>
 				</div>
 		</details>
-		<details open>
+		<details open id='toolDetails'>
 			<summary>Tool Options</summary>
-			<div class='floatingBtns'>
-			<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+			<div id='toolFlexbox' style='display:flex'>
+				<div class='floatingBtns'>
+				<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+				</div>
+				<div class='paramBox' id='paramBox'></div>
 			</div>
-			<div class='paramBox' id='paramBox'></div>
 		</details>
 	</div>
 </div>	

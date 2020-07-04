@@ -25,6 +25,7 @@ var doodler = (function(){
 		sy: 0,
 		w: 10,
 		wf: 10},
+	dockedTools: true,
     dimensionsOld: null,
 	drawGridOutside: true,
     editMode:false,
@@ -647,6 +648,7 @@ var doodler = (function(){
 		}
 	},
     drawFloorMask: function(canvas, ctx, index, skipZoomPos){
+		return;
 		var canv = canvas || self.canvas;
         var ct = ctx || self.ctx;
         /// draw the shape we want to use for clipping
@@ -1015,13 +1017,6 @@ var doodler = (function(){
         self.ctx.globalAlpha = 1;
     },
     enableButtons: function(enable){
-    	ir.enable("whImgSlider", enable);
-    	ir.enable("whBtnMove", enable);
-    	ir.enable("whBtnLoc", enable);
-    	ir.enable("whBtnWalls", enable);
-    	ir.enable("whBtnText", enable);
-    	ir.enable("whBtnPreview", enable);
-    	ir.enable("whBtnEdit", enable);
     },
     errorMessage: function(message, subMessage){
   		self.setFont(26,"bold");
@@ -1253,9 +1248,9 @@ var doodler = (function(){
 	        self.canvas = document.getElementById("warehouseCanvas");
 	        self.ctx = self.canvas.getContext("2d");
 			
-			self.canvas.width = ir.winWidth()-6 ;
-			self.canvas.height = ir.winHeight()-90;
-	  		
+			//self.canvas.width = ir.winWidth()-6 ;
+			//self.canvas.height = ir.winHeight()-90;
+			
 	  		//self.dimensions.ex = self.canvas.width-20;
 	  		//self.dimensions.ey = self.canvas.height-20;
 			var xsize = 200;
@@ -1319,6 +1314,13 @@ var doodler = (function(){
 			//Things to call once everything is all loaded
 			self.clickMode({target:ir.get("modeSnapToGrid")});
 			self.updateUndoStack();
+			self.toggleToolDock(true);
+			var parent = self.canvas.parentNode,
+			styles = getComputedStyle(parent),
+			w = parseInt(styles.getPropertyValue("width"), 10),
+			h = parseInt(styles.getPropertyValue("height"), 10);
+			self.canvas.width = w;
+			self.canvas.height = h-4;
 			
 	        //Set up animation, using requestAnimationFrame is the smoothest option, works a lot better than a setTimeout/setInterval
 	        window.requestAnimFrame = function(){
@@ -2657,6 +2659,41 @@ var doodler = (function(){
     },
 	toggleGridOutside: function(){
 		self.drawGridOutside = !self.drawGridOutside;
+	},
+	toggleToolDock: function(override){
+		self.dockedTools = override || !self.dockedTools;
+		
+		if(self.dockedTools){
+			ir.show("dockOpenCloseBtn");
+			ir.get("floatingModes").classList.add("docked");
+			ir.get("floatingModes").classList.remove("popup");
+			ir.get("toolFlexbox").style.flexDirection = "row";
+			ir.hide("popupDragDiv");
+			self.openDock = true;
+			self.toggleDockOpen();
+		}else{
+			ir.hide("dockOpenCloseBtn");
+			ir.get("floatingModes").classList.remove("docked");
+			ir.get("floatingModes").classList.add("popup");
+			ir.get("toolFlexbox").style.flexDirection = "column";
+			ir.show("popupDragDiv");
+		}
+	},
+	toggleDockOpen:function(){
+		
+		if(self.openDock){
+			ir.get("dockOpenCloseImg").src = "close.png";
+			ir.get("floatingModes").classList.add("openDock");
+			ir.get("floatingModes").style.top = "";
+			ir.get("floatingModes").style.left = "";
+			ir.show("layerDetails");
+		}else{
+			ir.get("dockOpenCloseImg").src = "open.png";
+			ir.get("floatingModes").classList.remove("openDock");
+			ir.hide("layerDetails");
+		}
+		self.openDock = !self.openDock;
+		
 	},
     /*undo: function(){
         if(self.mode == Mode.LOCATION){
