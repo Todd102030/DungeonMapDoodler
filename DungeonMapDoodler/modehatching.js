@@ -134,7 +134,7 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200"  value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Scale: </div><input type='number' min='0.125' max='4' step='0.125' style='width:60px' id='hatchingScaleLabel' value="${self.renderScale}" onchange='Modes.Hatching.changeScaleAndRender(event, true)' oninput='Modes.Hatching.changeScale(event, true)'><br>
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
-						<div class='paramTitle'>Hatch Style: </div>`;
+						`;
 			
 			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
@@ -148,12 +148,12 @@ var Hatching = (function(){
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
 			htm += "</select><br>";
 			
-			htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' onchange='Modes.Hatching.changeFloorStyle(event)'>`;
+			/*htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' onchange='Modes.Hatching.changeFloorStyle(event)'>`;
 			htm += `<option name='Stone' value='hatchingImgJPStone'>Drawn Stone</option>`;
 			htm += `<option name='Stone' value='hatchingImgJPGrass'>Drawn Grass</option>`;
 			htm += `<option name='Stone' value='hatchingImgGrass'>Grass</option>`;
 			htm += `<option name='Stone' value='hatchingImgRock'>Rock</option>`;
-			htm += "</select>";
+			htm += "</select>";*/
 			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
 						//<label for="hatchingColor">Hatching Color</label><br>

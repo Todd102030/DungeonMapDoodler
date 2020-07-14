@@ -2308,6 +2308,9 @@ var doodler = (function(){
 	    link.setAttribute('download', 'DungeonMapDoodle.dmd');
 	    link.setAttribute('href', dataStr);
 	    link.click();
+		try{
+			track("Save File", "...", "file.dmd");
+		}catch(e){}
 	},
     saveToImage: function(fileName){
     	//self.setMode(4);
@@ -2381,7 +2384,10 @@ var doodler = (function(){
 		
   		self.isRunning = true;
 		self.zoomLevel = self.oldZoomLevel;
-  		//self.shutdownEditor();    	
+  		//self.shutdownEditor();    
+		try{
+			track("Saving Image", "image", image.length + " bytes");
+		}catch(e){}
     },
     scaleForImage:function(){
 		

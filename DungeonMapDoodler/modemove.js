@@ -40,8 +40,8 @@ var Move = (function(){
             if(hit != null){
             	self.movingId = hit;
             }*/
-            wh.offsetX = parseFloat(wh.mouseX) - parseFloat(wh.globalOffsetX); 
-            wh.offsetY = parseFloat(wh.mouseY) - parseFloat(wh.globalOffsetY); 
+            wh.offsetX = parseInt(wh.mouseX) - parseInt(wh.globalOffsetX); 
+            wh.offsetY = parseInt(wh.mouseY) - parseInt(wh.globalOffsetY); 
 		},
 		mouseMove: function(xpos, ypos, data){
             var wh = doodler;

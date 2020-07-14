@@ -30,6 +30,22 @@ window.onresize = function(){
 	//onresize, set width and height to flexitem's width and height
 }
 
+function track(group, name, desc, int){
+	if("OWATracker" in window){
+		try{
+			if(int != undefined){
+				OWATracker.trackAction(group, name, desc, int);
+			}else{
+				OWATracker.trackAction(group, name, desc);
+			}
+		}catch(e){
+			//ignore
+		}
+	}
+	
+	
+}
+
 function getGridXY(xpos, ypos){
 	var wh = doodler;
 	var dim = doodler.dimensions;
