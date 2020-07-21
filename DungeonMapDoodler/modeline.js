@@ -25,6 +25,22 @@ var Line = (function(){
 				ir.set("lineSize", self.size);
 			}
 		},
+        changeBorderSize: function(evt, fromInput){
+			self.borderSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("lineBorderSizeLabel", self.borderSize);
+			}else{
+				ir.set("lineBorderSize", self.borderSize);
+			}
+		},
+		changeHatchSize: function(evt, fromInput){
+			self.hatchSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("lineHatchSizeLabel", self.hatchSize);
+			}else{
+				ir.set("lineHatchSize", self.hatchSize);
+			}
+		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
 		},
@@ -106,6 +122,7 @@ var Line = (function(){
     			ctx.lineTo(expos,eypos);
 				ctx.stroke();
 			}	
+            doodler.updateFrameBuffer();
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(60,200,200)";
@@ -221,6 +238,10 @@ var Line = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Width: </div><input type='number' style='width:60px' id='lineSizeLabel' value="${self.size}" onchange='Modes.Line.changeSize(event, true)' oninput='Modes.Line.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="lineSize" name=lineSize" min="1" max="150" value='${self.size}' onchange='Modes.Line.changeSize(event)' oninput='Modes.Line.changeSize(event)'><br>
+                        <div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='lineHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Line.changeHatchSize(event, true)' oninput='Modes.Line.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="lineHatchSize" name="lineHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Line.changeHatchSize(event)' oninput='Modes.Line.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='lineBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Line.changeBorderSize(event, true)' oninput='Modes.Line.changeBorderSize(event, true)'><br>
+						<input style='width:100px' type="range" id="lineBorderSize" name="lineBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Line.changeBorderSize(event)' oninput='Modes.Line.changeBorderSize(event)'><br>
 						<!--<input type="radio" id="lineSquare" name="lineShape" value="Square" onchange='Modes.Line.changeShape(event)'>
 						<label for="lineSquare">Square</label><br>
 						<input type="radio" id="lineCircle" name="lineShape" value="Circle" onchange='Modes.Line.changeShape(event)'>

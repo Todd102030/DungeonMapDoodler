@@ -29,6 +29,22 @@ var RoomTool = (function(){
 				ir.set("roomToolInset", self.inset);
 			}
 		},
+        changeBorderSize: function(evt, fromInput){
+			self.borderSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("roomToolBorderSizeLabel", self.borderSize);
+			}else{
+				ir.set("roomToolBorderSize", self.borderSize);
+			}
+		},
+		changeHatchSize: function(evt, fromInput){
+			self.hatchSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("roomToolHatchSizeLabel", self.hatchSize);
+			}else{
+				ir.set("roomToolHatchSize", self.hatchSize);
+			}
+		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
 		},
@@ -107,7 +123,7 @@ var RoomTool = (function(){
 				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
 			}
-			
+            doodler.updateFrameBuffer();
 				
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
@@ -210,6 +226,10 @@ var RoomTool = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='roomToolInsetLabel' value="${self.inset}" onchange='Modes.RoomTool.changeInset(event, true)' oninput='Modes.RoomTool.changeInset(event, true)'><br>
 						<input style='width:100px' type="range" id="roomToolInset" name="roomToolInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.RoomTool.changeInset(event)' oninput='Modes.RoomTool.changeInset(event)'><br>
+                        <div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='roomToolHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.RoomTool.changeHatchSize(event, true)' oninput='Modes.RoomTool.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="roomToolHatchSize" name="roomToolHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.RoomTool.changeHatchSize(event)' oninput='Modes.RoomTool.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='roomToolBorderSizeLabel' value="${self.borderSize}" onchange='Modes.RoomTool.changeBorderSize(event, true)' oninput='Modes.RoomTool.changeBorderSize(event, true)'><br>
+						<input style='width:100px' type="range" id="roomToolBorderSize" name="roomToolBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.RoomTool.changeBorderSize(event)' oninput='Modes.RoomTool.changeBorderSize(event)'><br>
 						<input type='checkbox' id='roomToolIsSnapping' onclick='Modes.RoomTool.changeSnapping(event)'><label for='roomToolIsSnapping'>Snap To Grid</label><br>
 						<input type='checkbox' id='roomToolIsSubtractive' } onclick='Modes.RoomTool.changeSubtractive(event)'><label for='roomToolIsSubtractive' >Subtractive</label><br>
 						<input type='color' value='${self.fillColor}' id='roomToolFillColor' onchange="Modes.RoomTool.changeColor(event, 'fill')">

@@ -12,6 +12,7 @@ Array.prototype.swap = function (x,y) {
   return this;
 }
 
+
 window.onresize = function(){
 	var canv = ir.get("warehouseCanvas");
 	var parent = canv.parentNode,
@@ -20,7 +21,7 @@ window.onresize = function(){
     h = parseInt(styles.getPropertyValue("height"), 10);
 
 	canv.width = w;
-	canv.height = h-4;
+	canv.height = h-6;
 	
 	//canv.width = canv.parentNode.clientWidth;
 	//canv.height = canv.parentNode.clientHeight;

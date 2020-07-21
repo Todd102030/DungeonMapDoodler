@@ -1,6 +1,7 @@
 "use strict";
 var doodler = (function(){
   var self={
+      showErrors:true,
     animationId : null,
 	  beanColour: "#782632",
     canvas: null,
@@ -34,7 +35,7 @@ var doodler = (function(){
     globalOffsetY: 0,
     gridImg: null,
 	hatchStyleImage: "hatchingImg",
-	floorStyle: "hatchingImgJPStone",
+	floorStyle: "",
     imageScaleX:1,
     imageScaleY:1,
     isPlacingText: false,
@@ -152,6 +153,7 @@ var doodler = (function(){
 		self.layers.swap(self.currentLayer, self.currentLayer+1);
 		self.currentLayer += 1;
 		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+        self.updateFrameBuffer();
 	},
 	lowerLayer: function(){
 		if(self.currentLayer==0){
@@ -160,11 +162,13 @@ var doodler = (function(){
 		self.layers.swap(self.currentLayer, self.currentLayer-1);
 		self.currentLayer -= 1;
 		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+        self.updateFrameBuffer();
 	},
 	deleteLayer: function(){
 		if(self.layers.length>1){
 			self.layers.splice(self.currentLayer, 1);
 			self.switchLayer(self.layers[0].layerIndex);
+            self.updateFrameBuffer();
 		}	
 	},
 	switchLayer: function(layerIndex){
@@ -185,7 +189,6 @@ var doodler = (function(){
 		//self.layerIndex = layerIndex;
 		self.updateCurrentImage();
 		self.loadLayerList(layerIndex);
-		console.log("Switching layer");
 	},
     addLot: function(sx, sy, ex, ey){
         //Swap values around to make sure sx and sy are the top left
@@ -236,6 +239,7 @@ var doodler = (function(){
         self.walls.push(new Wall(Number(sx.toFixed(2)), Number(sy.toFixed(2)), Number((ex-sx).toFixed(2)), Number((ey-sy).toFixed(2))));
     },
 	applyDimensions: function(callback){   
+        doodler.popupShowing=false;
 		ir.hide("dimensionPopup");
     	var xfeet = ir.vn("dimensionPopupX");
     	var yfeet = ir.vn("dimensionPopupY");
@@ -285,13 +289,16 @@ var doodler = (function(){
 			self.outlineCanvas.height = ysize;
 			self.tmpCanvas.width = xsize;
 			self.tmpCanvas.height = ysize;
+			self.fbCanvas.width = xsize;
+			self.fbCanvas.height = ysize;
 		}
     	//dim.scaleX = dim.wf / (dim.ex-dim.sx);
     	//dim.scaleY = dim.hf / (dim.ey-dim.sy);
     	self.generateGrid(callback);    	
     	
     },
-    applyDimensionPopup: function(){    	
+    applyDimensionPopup: function(){  
+        doodler.popupShowing=false;
     	var xfeet = ir.vn("dimensionPopupX");
     	var yfeet = ir.vn("dimensionPopupY");
     	var stepsize = ir.vn("dimensionPopupStep");
@@ -396,6 +403,7 @@ var doodler = (function(){
     	self.enableButtons(true);
     },
     applyTextPopup: function(){
+        self.popupShowing = false;
     	var text = ir.get("textPopupVal").value;
     	if(text != ""){
     		ir.hide("textPopup");
@@ -410,12 +418,14 @@ var doodler = (function(){
     	}
     },
     cancelDimensionPopup: function(){
+        self.popupShowing = false;
     	self.dimensions = self.dimensionsOld;
     	self.setMode(Mode.MOVE);
     	ir.hide("dimensionPopup");
     	self.enableButtons(true);
     },
     cancelSaveImagePopup: function(){
+        doodler.popupShowing=false;
     	ir.hide("saveImagePopup");
     	self.enableButtons(true);
     },
@@ -498,17 +508,79 @@ var doodler = (function(){
     		self.errorMessage("You must set the dimensions of your map before continuing", "Click and drag to highlight the bounds of the warehouse");
     	}*/
     },
-    drawCanvasNormally: function(canvas, ctx){
-    	self.clear();
-        self.drawBackground();
+    updateFrameBuffer: function(canv, ct){
+        self.needsRefresh = true;
+    },
+    updateFBDraw: function(canv, ct){
+        // if(self.lastFBUpdate != null && new Date().getTime() - self.lastFBUpdate < 50){
+        //    return;
+        //    }
+        
+        //self.clear();
+        var canvas = canv || self.fbCanvas;
+        var ctx = ct || self.fbCtx;
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+		/*if(self.gridImg){
+			//var canv = canvas || self.canvas;
+        	//var ct = ctx || self.ctx;
+			ctx.fillStyle = self.backgroundColor || "white";
+			ctx.fillRect(0,0,self.gridImg.width,self.gridImg.height)
+		}*/
+		self.layers.forEach(function(layer, index){
+			self.drawCrossHatchMask(canvas, ctx, index);
+			self.drawDoodleMap(canvas, ctx, index);	
+			self.drawFloorMask(canvas, ctx, index);	
+		})
+		self.drawGrid(canvas, ctx);
+        self.ctx.strokeStyle = "rgb(255,0,0)";
+        self.ctx.fillStyle = "rgb(255,0,0)";    
+        self.lastFBUpdate = new Date().getTime();
+    },
+    drawCanvasNormally: function(canv, ct){
+    	//self.clear();
+        if(self.needsRefresh){
+            self.updateFBDraw();
+            self.needsRefresh = false;
+        }
+        var canvas = canv || self.canvas;
+        var ctx = ct || self.ctx;
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+ 
+        self.ctx.fillStyle = "#bbb";
+        self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
+        
 		if(self.gridImg){
-			var canv = canvas || self.canvas;
-        	var ct = ctx || self.ctx;
-			ct.fillStyle = self.backgroundColor || "white";
-			ct.fillRect(self.globalOffsetX,self.globalOffsetY,self.gridImg.width*self.zoomLevel,self.gridImg.height*self.zoomLevel)
+			ctx.fillStyle = self.backgroundColor || "white";
+			ctx.fillRect(self.globalOffsetX,self.globalOffsetY,self.gridImg.width*self.zoomLevel,self.gridImg.height*self.zoomLevel)
 		}
-		
-		
+        
+        ctx.drawImage(self.fbCanvas,
+				self.globalOffsetX, 
+				self.globalOffsetY, 
+				self.fbCanvas.width*self.zoomLevel,
+				self.fbCanvas.height*self.zoomLevel);
+        
+        if(self.movingTouches && self.movingTouches.length){
+            self.ctx.strokeStyle = "rgb(255,0,0)";
+            self.ctx.fillStyle = "rgb(255,0,0)";
+            for(var i=0;i<self.movingTouches.length;i++){
+                var t = self.movingTouches[i];
+                self.setFont(40);
+                self.ctx.fillText(t.identifier, t.clientX,t.clientY)
+            }
+        }
+        
+		self.drawStamps(canvas, ctx);
+        
+        self.drawTextFields(canvas, ctx);
+        if(!self.pinchZoom){
+            self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
+        }
+        
+        
+        
+        
+		/*
 		self.layers.forEach(function(layer, index){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
@@ -516,13 +588,12 @@ var doodler = (function(){
 		})
 		
 		self.drawGrid(canvas, ctx);
-		self.drawStamps(canvas, ctx);
 		self.drawLocations();
 		
     
         self.drawWalls();
         self.drawTextFields(canvas, ctx);
-		self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
+		
 		
 		
         if(self.mode == Mode.LOCATION){
@@ -538,7 +609,7 @@ var doodler = (function(){
         	self.drawHitTestWalls(mrect);
         	self.drawHitTestText(mrect);
         	self.drawHitTestLocations(mrect);
-        }        
+        }        */
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
     },
@@ -570,37 +641,41 @@ var doodler = (function(){
 			/// draw the image to be clipped
 			//ctx.drawImage(img, 0, 0, 500, 500);
 			//////
-			var iw = img.naturalWidth*Modes.Hatching.renderScale;
-			var ih = img.naturalHeight*Modes.Hatching.renderScale;
-			var xplus = iw*(1/sX);//*self.zoomLevel;
-			var yplus = ih*(1/sY);//*self.zoomLevel;
+            img.onload = function(){
+                var iw = img.naturalWidth*Modes.Hatching.renderScale;
+                var ih = img.naturalHeight*Modes.Hatching.renderScale;
+                var xplus = iw*(1/sX);//*self.zoomLevel;
+                var yplus = ih*(1/sY);//*self.zoomLevel;
+
+
+                layer.hatchGenerated = true;
+                var canv2 = document.createElement("canvas");
+                //By foot count
+                canv2.width = xfeet*dim.footPixel+1;
+                canv2.height = yfeet*dim.footPixel+1;
+                //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+                var ctx2 = canv2.getContext("2d");
+                ctx2.lineWidth = 1;
+                ctx2.strokeStyle = "#fff";
+                for(var x=0;x<canv2.width;x+=xplus){
+                    for(var y=0;y<canv2.height;y+=yplus){					
+                        ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
+                    }
+                }
+                var img2 = new Image();
+                var dataurl = canv2.toDataURL();
+
+                img2.onload = function() {
+                    img2.width = canv2.width;
+                    img2.height = canv2.height;
+                    layer.hatchImg = img2;
+                    self.updateFrameBuffer();
+                };
+                img2.src = dataurl;
+
+                layer.hatchGenerated = true;
+            }
 			
-			
-			layer.hatchGenerated = true;
-			var canv2 = document.createElement("canvas");
-			//By foot count
-			canv2.width = xfeet*dim.footPixel+1;
-			canv2.height = yfeet*dim.footPixel+1;
-			//console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-			var ctx2 = canv2.getContext("2d");
-			ctx2.lineWidth = 1;
-			ctx2.strokeStyle = "#fff";
-			for(var x=0;x<canv2.width;x+=xplus){
-				for(var y=0;y<canv2.height;y+=yplus){					
-					ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
-				}
-			}
-			var img2 = new Image();
-			var dataurl = canv2.toDataURL();
-			
-			img2.onload = function() {
-				img2.width = canv2.width;
-				img2.height = canv2.height;
-				layer.hatchImg = img2;
-			};
-			img2.src = dataurl;
-			
-			layer.hatchGenerated = true;
 		}
 		
         
@@ -622,7 +697,7 @@ var doodler = (function(){
 				ct.drawImage(self.tmpCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
 				
 			}else{
-				ct.drawImage(self.tmpCanvas, self.globalOffsetX, self.globalOffsetY, layer.hatchCanvas.width*self.zoomLevel*(1/sX), layer.hatchCanvas.height*self.zoomLevel*(1/sY));
+				ct.drawImage(self.tmpCanvas, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
 			}
 		}
     },
@@ -641,14 +716,14 @@ var doodler = (function(){
 			}
 			else{
 				if(layer.visible){
-					ctx.drawImage(layer.outlineCanvas, self.globalOffsetX, self.globalOffsetY, layer.outlineCanvas.width*self.zoomLevel*(1/sX), layer.outlineCanvas.height*self.zoomLevel*(1/sY));
-					ctx.drawImage(layer.doodleCanvas, self.globalOffsetX, self.globalOffsetY, layer.doodleCanvas.width*self.zoomLevel*(1/sX), 	layer.doodleCanvas.height*self.zoomLevel*(1/sY));
+					ctx.drawImage(layer.outlineCanvas, 0, 0, layer.outlineCanvas.width, layer.outlineCanvas.height);
+					ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width,layer.doodleCanvas.height);
 				}
 			}
 		}
 	},
     drawFloorMask: function(canvas, ctx, index, skipZoomPos){
-		return;
+		//return;
 		var canv = canvas || self.canvas;
         var ct = ctx || self.ctx;
         /// draw the shape we want to use for clipping
@@ -665,48 +740,58 @@ var doodler = (function(){
         var layer = self.layers[index];
 		
 		//Skip if layer not visible, skipZoom is false, 
-		
+		if(layer.floorStyle==''){
+            return;
+        }
 		if((!layer.visible || !layer.showFloor) && !skipZoomPos){
 			return;
 		}
 		
-		if(!layer.floorGenerated){			
-			var img = new Image();
-			img.src = ir.get(layer.floorStyle).src;
-			/// draw the image to be clipped
-			//ctx.drawImage(img, 0, 0, 500, 500);
-			//////
-			var iw = img.naturalWidth*Modes.Hatching.renderScale;
-			var ih = img.naturalHeight*Modes.Hatching.renderScale;
-			var xplus = iw*(1/sX);//*self.zoomLevel;
-			var yplus = ih*(1/sY);//*self.zoomLevel;
-			
-			
-			layer.floorGenerated = true;
-			var canv2 = document.createElement("canvas");
-			//By foot count
-			canv2.width = xfeet*dim.footPixel+1;
-			canv2.height = yfeet*dim.footPixel+1;
-			//console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-			var ctx2 = canv2.getContext("2d");
-			ctx2.lineWidth = 1;
-			ctx2.strokeStyle = "#fff";
-			for(var x=0;x<canv2.width;x+=xplus){
-				for(var y=0;y<canv2.height;y+=yplus){					
-					ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
-				}
-			}
-			var img2 = new Image();
-			var dataurl = canv2.toDataURL();
-			
-			img2.onload = function() {
-				img2.width = canv2.width;
-				img2.height = canv2.height;
-				layer.floorImg = img2;
-			};
-			img2.src = dataurl;
-			
-			layer.floorGenerated = true;
+		if(!layer.floorGenerated){	
+            
+            var img = new Image();
+            img.src = ir.get(layer.floorStyle).src;
+            /// draw the image to be clipped
+            //ctx.drawImage(img, 0, 0, 500, 500);
+            //////
+            img.onload = function(){
+                var iw = img.naturalWidth*Modes.Hatching.renderScale;
+                var ih = img.naturalHeight*Modes.Hatching.renderScale;
+                var xplus = iw*(1/sX);//*self.zoomLevel;
+                var yplus = ih*(1/sY);//*self.zoomLevel;
+
+
+                layer.floorGenerated = true;
+                var canv2 = document.createElement("canvas");
+                //By foot count
+                canv2.width = xfeet*dim.footPixel+1;
+                canv2.height = yfeet*dim.footPixel+1;
+                //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+                var ctx2 = canv2.getContext("2d");
+                ctx2.lineWidth = 1;
+                ctx2.strokeStyle = "#fff";
+                for(var x=0;x<canv2.width;x+=xplus){
+                    for(var y=0;y<canv2.height;y+=yplus){					
+                        ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
+                    }
+                }
+                console.log("Before loading image todataurl")
+                var img2 = new Image();
+                var dataurl = canv2.toDataURL();
+
+                img2.onload = function() {
+                    console.log("Loaded image into layer.floorImg")
+                    img2.width = canv2.width;
+                    img2.height = canv2.height;
+                    layer.floorImg = img2;
+                    self.updateFrameBuffer();
+                };
+                img2.src = dataurl;
+
+                layer.floorGenerated = true;
+            }
+
+            
 		}
 		
         
@@ -728,7 +813,7 @@ var doodler = (function(){
 				ct.drawImage(self.tmpCanvas, 0,0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 				
 			}else{
-				ct.drawImage(self.tmpCanvas, self.globalOffsetX, self.globalOffsetY, layer.doodleCanvas.width*self.zoomLevel*(1/sX), layer.doodleCanvas.height*self.zoomLevel*(1/sY));
+				ct.drawImage(self.tmpCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 			}
 		}
     },
@@ -786,10 +871,10 @@ var doodler = (function(){
     drawGrid: function(canv, ct){
 		var ctx = ct || self.ctx;
     	ctx.globalAlpha = self.warehouseAlpha;
-    	ctx.mozImageSmoothingEnabled = false;
-    	ctx.webkitImageSmoothingEnabled = false;
-    	ctx.msImageSmoothingEnabled = false;
-    	ctx.imageSmoothingEnabled = false;
+    	//ctx.mozImageSmoothingEnabled = false;
+    	//ctx.webkitImageSmoothingEnabled = false;
+    	//ctx.msImageSmoothingEnabled = false;
+    	//ctx.imageSmoothingEnabled = false;
 		
 		var sX =self.dimensions.scaleX;
 		var sY =self.dimensions.scaleY;
@@ -797,40 +882,38 @@ var doodler = (function(){
     	if(img != null){
 			
 			if(!self.drawGridOutside){
-				self.gridCtx.mozImageSmoothingEnabled = false;
-				self.gridCtx.webkitImageSmoothingEnabled = false;
-				self.gridCtx.msImageSmoothingEnabled = false;
-				self.gridCtx.imageSmoothingEnabled = false;
+				//self.gridCtx.mozImageSmoothingEnabled = false;
+				//self.gridCtx.webkitImageSmoothingEnabled = false;
+				//self.gridCtx.msImageSmoothingEnabled = false;
+				//self.gridCtx.imageSmoothingEnabled = false;
 				
 				self.gridCtx.fillStyle = "#fff";
 				self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height)
 	        	self.gridCtx.drawImage(img,0,0,img.width*(1/sX),img.height*(1/sY));
 				self.gridCtx.globalCompositeOperation = "destination-atop";
-				self.gridCtx.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width*(1/sX), self.doodleCanvas.height*(1/sY));
+				self.gridCtx.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width, self.doodleCanvas.height);
     			self.gridCtx.globalCompositeOperation = "source-over";
 				ctx.drawImage(self.gridCanvas,
-					self.globalOffsetX, 
-					self.globalOffsetY, 
-					self.gridCanvas.width*self.zoomLevel*(1/sX),
-					self.gridCanvas.height*self.zoomLevel*(1/sY));
+					0, 
+					0, 
+					self.gridCanvas.width,
+					self.gridCanvas.height);
 				self.gridCtx.mozImageSmoothingEnabled = true;
 				self.gridCtx.webkitImageSmoothingEnabled = true;
 				self.gridCtx.msImageSmoothingEnabled = true;
 				self.gridCtx.imageSmoothingEnabled = true;
 			}else{
-				ctx.drawImage(img,
-				self.globalOffsetX, 
-				self.globalOffsetY, 
-				self.gridCanvas.width*self.zoomLevel*(1/sX),
-				self.gridCanvas.height*self.zoomLevel*(1/sY));
+				ctx.drawImage(img,0,0, 
+				self.gridCanvas.width,
+				self.gridCanvas.height);
 			}
 			
 		}
     	ctx.globalAlpha = 1;
-    	ctx.mozImageSmoothingEnabled = true;
-    	ctx.webkitImageSmoothingEnabled = true;
-    	ctx.msImageSmoothingEnabled = true;
-    	ctx.imageSmoothingEnabled = true;
+    	//ctx.mozImageSmoothingEnabled = true;
+    	//ctx.webkitImageSmoothingEnabled = true;
+    	//ctx.msImageSmoothingEnabled = true;
+    	//ctx.imageSmoothingEnabled = true;
     },
     drawHitTest : function(rect1, rect2) {
 		if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x
@@ -1119,7 +1202,9 @@ var doodler = (function(){
 			if(callback && doodler.loadingSave){
 				doodler.loadingSave = false;
 				callback();
-			}
+			}else{
+                doodler.updateFrameBuffer();
+            }
         };
         img.src = dataurl;
     },
@@ -1281,6 +1366,13 @@ var doodler = (function(){
 			self.gridCtx = self.gridCanvas.getContext("2d");
 			self.gridCtx.fillStyle = "rgba(0,0,0,0)";
             self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height);
+            
+            self.fbCanvas = document.createElement("canvas");
+			self.fbCanvas.width = xsize;
+			self.fbCanvas.height = ysize;
+			self.fbCtx = self.fbCanvas.getContext("2d");
+			self.fbCtx.fillStyle = "rgba(0,0,0,0)";
+            self.fbCtx.fillRect(0,0,self.fbCanvas.width,self.fbCanvas.height);
 			
 			
 	        document.getElementById("imageUpload").addEventListener("change", self.readImage, false);
@@ -1321,6 +1413,7 @@ var doodler = (function(){
 			h = parseInt(styles.getPropertyValue("height"), 10);
 			self.canvas.width = w;
 			self.canvas.height = h-4;
+            self.updateFrameBuffer();
 			
 	        //Set up animation, using requestAnimationFrame is the smoothest option, works a lot better than a setTimeout/setInterval
 	        window.requestAnimFrame = function(){
@@ -1377,6 +1470,7 @@ var doodler = (function(){
 							hatchVisible: obj.hatchVisible,
                             floorStyle: obj.floorStyle,
                             showFloor: obj.showFloor,
+                            floorGenerated: false,
 						}
 					obj.layers = [stLay];
 					//self.layers = [stLay];
@@ -1385,7 +1479,7 @@ var doodler = (function(){
 				if(obj.layers){
 					self.layers=[];
 					obj.layers.forEach(function(layer, i){
-						
+						//TODO: Change these thing||true spots to actually allow for a false value
 						var stLay = {
 							layerIndex: i,
 							//hatchCanvas: layer.hatchCanvas,
@@ -1395,7 +1489,11 @@ var doodler = (function(){
 							name: layer.name,
 							hatchImg: layer.hatchImg,
 							hatchGenerated: layer.hatchGenerated,
-							visible: obj.visible||true
+							visible: obj.visible||true,
+							hatchVisible: obj.hatchVisible||true,
+                            floorStyle: obj.floorStyle || "",
+                            showFloor: obj.showFloor||true,
+                            floorGenerated: false,
 						}
 						
 						///Need to create all canvases and contexts here first?
@@ -1417,6 +1515,7 @@ var doodler = (function(){
 							stLay.doodleCtx.drawImage(doodle,0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
 							self.loadLayerList(0);
 							self.switchLayer(0);
+                            self.updateFrameBuffer();
 						}
 						out.onload = function(){
 							stLay.outlineCanvas = document.createElement('canvas');
@@ -1426,6 +1525,7 @@ var doodler = (function(){
 							stLay.outlineCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.outlineCtx.clearRect(0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
 							stLay.outlineCtx.drawImage(out,0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
+                            self.updateFrameBuffer();
 						}
 						hatch.onload = function(){
 							stLay.hatchCanvas = document.createElement('canvas');
@@ -1435,6 +1535,7 @@ var doodler = (function(){
 							stLay.hatchCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.hatchCtx.clearRect(0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
 							stLay.hatchCtx.drawImage(hatch,0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
+                            self.updateFrameBuffer();
 						}
 						var hat = new Image();
 						hat.src = layer.hatchImg;
@@ -1504,6 +1605,7 @@ var doodler = (function(){
 		}else{
 			ir.get("layerVisible"+index).src='images/eye-off.png';
 		}
+        self.updateFrameBuffer();
 	},
 	changeHatchVisibility: function(index){
 		self.layers[index].hatchVisible = !self.layers[index].hatchVisible;
@@ -1512,6 +1614,7 @@ var doodler = (function(){
 		}else{
 			ir.get("layerHatchVisible"+index).src = 'hatch-off.png';
 		}
+        self.updateFrameBuffer();
 	},
 	reloadLayerPreview: function(index){
 		//console.log("Reloading layer ", index);
@@ -1525,7 +1628,7 @@ var doodler = (function(){
 	},
 	getLayerPreview: function(i){
 		var layer = self.layers[i];
-		if(layer==null){
+		if(layer==null || layer.hatchCanvas == null){
 			return;
 		}
 		var canv = document.createElement("canvas");
@@ -1704,6 +1807,9 @@ var doodler = (function(){
       return result;
     },
     onMouseDown: function(evt){
+        if(self.popupShowing){
+			return;
+		}
 		//if(evt.button != 0){
 		//	evt.preventDefault();
 			//evt.stopPropagation();
@@ -1717,7 +1823,6 @@ var doodler = (function(){
         self.mouseIsDown = true;
         var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
         var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
-		var isTwoFinger = false;
 		var isTouch = false;
 		if(evt.changedTouches){
 			evt.preventDefault();
@@ -1726,12 +1831,26 @@ var doodler = (function(){
 			if(self.mouseMode == Modes.Move){
 				
 			}
-				self.mouseX = touch.clientX - self.canvX;
-				self.mouseY = touch.clientY - self.canvY;
-			xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
+			self.mouseX = touch.clientX - self.canvX;
+			self.mouseY = touch.clientY - self.canvY;
+            xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
         	ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
-			isTwoFinger = evt.changedTouches > 1;
+			//isTwoFinger = evt.changedTouches.length > 1;
+            
 		}
+        var htm = "";
+        if(evt.touches){
+            for(var i=0;i<evt.touches.length;i++){
+                var t = evt.touches[i];
+               
+                htm += JSON.stringify({identifier:t.identifier, clientX:t.clientX - self.canvX,clientY:t.clientY - self.canvY});
+            }
+        }
+        if (evt.touches && evt.touches.length == 2) {
+            self.pinchZoom = true;
+            self.pinchStart(evt);
+            return;
+        }
         if(mode == Mode.MOVE || mode == Mode.DISPLAY){
            /* self.canvas.style.cursor = 'grabbing';
             self.mouseMovedWhileDown = false;
@@ -1810,7 +1929,7 @@ var doodler = (function(){
             self.doodleEndY = ypos;
         }*/
 		
-		if (evt.ctrlKey || isTwoFinger){
+		if (evt.ctrlKey){
 			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		else if(self.mouseMode){
@@ -1819,14 +1938,15 @@ var doodler = (function(){
     },
 	onKeyUp: function(evt){
 		//console.log("Clicked key", evt.key);
+        if(self.popupShowing){
+			return;
+		}
 		if(evt.key=='Delete'){
 			if(self.mouseMode.deleteFn){
 				self.mouseMode.deleteFn();
 			}
 		}
-		if(self.popupShowing){
-			return;
-		}
+		
 		if(evt.key.toLowerCase() == "m"){
 			self.clickMode({target:ir.get("modeMove")});
 		}
@@ -1859,6 +1979,9 @@ var doodler = (function(){
 		}
 	},
     onMouseMove: function(evt){
+        if(self.popupShowing){
+			return;
+		}
 		/*if(evt.button != 0){
 			evt.preventDefault();
 			evt.stopPropagation();
@@ -1869,18 +1992,23 @@ var doodler = (function(){
         self.canvY = rect.top;
         self.mouseX = evt.clientX - self.canvX;
         self.mouseY = evt.clientY - self.canvY;
-		var isTwoFinger = false;
 		if(evt.changedTouches){
 			evt.preventDefault();
 			var touch = evt.changedTouches[0];
 			self.mouseX = touch.clientX - self.canvX;
         	self.mouseY = touch.clientY - self.canvY;
-			isTwoFinger = evt.changedTouches > 1;
-			//for(var i=0;i<evt.changedTouches;i++){
-			//	var t = evt.changedTouches[i];
-			//	self.ctx.drawText(t.identifier, t.clientX - self.canvX,t.clientY - self.canvY)
-			//}
+			/*isTwoFinger = evt.changedTouches.length > 1;
+            self.movingTouches = [];
+			for(var i=0;i<evt.changedTouches.length;i++){
+				var t = evt.changedTouches[i];
+				self.movingTouches.push({identifier:t.identifier, clientX:t.clientX - self.canvX,clientY:t.clientY - self.canvY});
+			}*/
 		}
+        if (self.pinchZoom) {
+            self.pinchMove(evt);
+            return;
+        }
+        
         var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
         var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel;        
         var mode = self.mode;
@@ -1945,7 +2073,7 @@ var doodler = (function(){
 			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
 		}*/
 		
-		if (evt.ctrlKey || isTwoFinger){
+		if (evt.ctrlKey){
 			Modes.Move.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
 		else if(self.mouseMode){
@@ -1954,6 +2082,9 @@ var doodler = (function(){
         
     },
     onMouseUp: function(evt){
+        if(self.popupShowing){
+			return;
+		}
 		self.touchMouseDown = false;
 		/*if(evt.button != 0){
 			evt.preventDefault();
@@ -1972,6 +2103,11 @@ var doodler = (function(){
 			//}
 		
 		}
+        if (self.pinchZoom) {
+            self.pinchEnd(evt);
+            self.pinchZoom = false;
+            return;
+        }
 		
         var mode = self.mode;
         self.mouseIsDown = false;
@@ -2030,6 +2166,63 @@ var doodler = (function(){
 			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
         
+    },
+    pinchStart: function(e){
+        if(e.touches.length==2){
+            self.startDist = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY);
+            self.startZoom = self.zoomLevel;
+            var midX = (e.touches[0].pageX + e.touches[1].pageX)/2;
+            var midY = (e.touches[0].pageY + e.touches[1].pageY)/2;
+            self.offsetPinchX = (parseInt(midX) - parseInt(self.globalOffsetX))/self.zoomLevel; 
+            self.offsetPinchY = (parseInt(midY) - parseInt(self.globalOffsetY))/self.zoomLevel; 
+        }
+    
+    },
+    pinchMove: function(e){
+        
+        var midX = 0;
+        var midY = 0;
+        var xpos = 0;
+        var ypos = 0;
+        if(e.touches.length==2){
+            self.endDist = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY);
+            
+         
+            
+            midX = (e.touches[0].clientX + e.touches[1].clientX)/2;
+            midY = (e.touches[0].clientY + e.touches[1].clientY)/2;
+            
+             
+            
+        }
+        self.zoomLevel = self.endDist/self.startDist*self.startZoom;
+        ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%");
+        
+        //set globalOffsetX and globalOffsetY to keep image in line with center of fingers
+        var xpos = midX*self.zoomLevel;
+        var ypos = midY*self.zoomLevel;
+   
+        //Some math to adjust the global offsets so that you zoom in directly 
+        //to where your mouse cursor is, rather than zooming on the origin (top left of image)
+        var z = self.zoomLevel;
+
+        
+        self.globalOffsetX = (midX-self.offsetPinchX*z); //-(self.offsetPinchX*z);
+        self.globalOffsetY = (midY-self.offsetPinchY*z); //-(self.offsetPinchY*z);
+        
+        //ir.get("errorBox").innerHTML = "Midpoint at " + midX + ", " + midY + ". Setting globalX+Y to "+self.globalOffsetX+", "+self.globalOffsetY;
+        
+    },
+    pinchEnd: function(e){
+        if(e.touches.length==2){
+            self.endDist = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY);
+        }
     },
     outlineRectForEdit: function(rect, colour){
     	self.ctx.fillStyle = colour || "#00ffff88"; //"rgb("+(Math.random()*255)+","+(Math.random()*255)+","+(Math.random()*255)+")";
@@ -2251,6 +2444,7 @@ var doodler = (function(){
 		  ir.get("imageUpload").click();
 	},
 	saveImage: function(){
+        doodler.popupShowing=true;
 		ir.show("imageSavePopup");
 		ir.focus("imageSaveName");
 	},
@@ -2264,6 +2458,7 @@ var doodler = (function(){
 		}else{
 			self.backgroundColor = background;
 		}
+        self.updateFrameBuffer();
 		self.saveToImage(fileName);
 		
 	},
@@ -2296,7 +2491,9 @@ var doodler = (function(){
 				visible: layer.visible,
 				hatchVisible: layer.hatchVisible,
 				floorStyle: layer.floorStyle,
-				showFloor: layer.showFloor
+				showFloor: layer.showFloor,
+                floorGenerated: false,
+                
 			}
 			storageObj.layers.push(stLay);
 		});
@@ -2364,7 +2561,9 @@ var doodler = (function(){
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		ctx.restore();
 		
-    	var image = canvas.toDataURL("image/png");
+        var imageType = ir.v("imageSaveFile");
+        
+    	var image = canvas.toDataURL(imageType);
 		
 		self.backgroundColor = "white";
 		
@@ -2372,8 +2571,14 @@ var doodler = (function(){
 		self.dimensions.scaleY = 1;
   		//Open image in new tab
 		//window.open(image);
-		if(!fileName.endsWith(".png")){
+		if(imageType=="image/png" && !fileName.endsWith(".png")){
 			fileName += ".png";
+		}
+        if(imageType=="image/jpeg" && !fileName.endsWith(".jpg")){
+			fileName += ".jpg";
+		}
+        if(imageType=="image/bmp" && !fileName.endsWith(".bmp")){
+			fileName += ".bmp";
 		}
 		
 		var link = document.getElementById('link');
@@ -2497,7 +2702,7 @@ var doodler = (function(){
         }
     },
 	showPasswordPromptCallback: function(){
-		var passwd = "doodletime";
+		var passwd = "letsdraw";
 		var enteredPwd = ir.v("passwordPromptInput")
 		if(enteredPwd == passwd){
 			self.editMode = true;
@@ -2511,8 +2716,9 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = true;
-		var passwd = "doodletime";
+		var isBeta = false;
+        //Change in above func too
+		var passwd = "letsdraw";
 		var storedPwd = irstore.get("doodlePwd");
 		var enteredPwd = "";
 		if(storedPwd != passwd && isBeta){
@@ -2665,6 +2871,7 @@ var doodler = (function(){
     },
 	toggleGridOutside: function(){
 		self.drawGridOutside = !self.drawGridOutside;
+        self.updateFrameBuffer();
 	},
 	toggleToolDock: function(override){
 		self.dockedTools = override || !self.dockedTools;
@@ -2730,14 +2937,14 @@ var doodler = (function(){
 		if(updateRedo){
 			doodler.redoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
 		}
-		setTimeout(function(){
+		//setTimeout(function(){
 			hImg.src = self.layers[self.currentLayer].hatchCanvas.toDataURL("image/png");
 			oImg.src = self.layers[self.currentLayer].outlineCanvas.toDataURL("image/png");
 			dImg.src = self.layers[self.currentLayer].doodleCanvas.toDataURL("image/png");
 			self.hTempImg = hImg;
 			self.oTempImg = oImg;
 			self.dTempImg = dImg;
-		},2);
+		//},2);
 	},
 	updateUndoStack: function(){
 		
@@ -2820,11 +3027,13 @@ var doodler = (function(){
 			//self.oTempImg = null;
 			//self.dTempImg = null;
 		}
-		if(self.undoStack.layerIndex.length > 0){
+		self.updateFrameBuffer();
+        if(self.undoStack.layerIndex.length > 0){
 			var layerIndex = self.undoStack.layerIndex.pop();
 			self.reloadLayerPreview(layerIndex);
 		}
 		self.updateCurrentImage(false);
+        
 		//console.log(self.undoStack, self.redoStack);
 	},
 	redo: function(){
@@ -2877,6 +3086,7 @@ var doodler = (function(){
 			//self.oTempImg = null;
 			//self.dTempImg = null;
 		}
+        self.updateFrameBuffer();
 		if(self.redoStack.layerIndex.length > 0){
 			var layerIndex = self.redoStack.layerIndex.pop();
 			self.reloadLayerPreview(layerIndex);
@@ -2885,33 +3095,35 @@ var doodler = (function(){
 		//console.log("end of redo", self.redoStack);
 	},
     zoom: function(zoom, suppressOffset){
-    	//if(!self.isPlacingText && self.mode != Mode.DIMENSIONS){
-	        var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
-	        var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel;
-	        self.zoomLevel += zoom/8;
-	        
-	        if(self.zoomLevel < 0.125){
-	            self.zoomLevel = 0.125;
-	        }else{
-	        	//Some math to adjust the global offsets so that you zoom in directly 
-	        	//to where your mouse cursor is, rather than zooming on the origin (top left of image)
-	        	var z = self.zoomLevel;
-		        
-				if(!suppressOffset){
-					var mx = self.mouseX;
-		        	var my = self.mouseY;
-	        		self.globalOffsetX = ((xpos*z)-mx)*-1;
-		        	self.globalOffsetY = ((ypos*z)-my)*-1;
-				}else{
-					//xpos = (self.canvas.width/2-self.globalOffsetX)/self.zoomLevel;
-	        		//ypos = (self.canvas.height/2-self.globalOffsetY)/self.zoomLevel;
-	        		//self.globalOffsetX = ((xpos*z))*-1;
-		        	//self.globalOffsetY = ((ypos*z))*-1;
-				}
-				
-	        }
-			ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%")
-    	//}
+        if(self.lastZoomTime && new Date().getTime() - self.lastZoomTime < 100){
+            return;
+        }
+        var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
+        var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel;
+        self.zoomLevel += zoom/8;
+
+        if(self.zoomLevel < 0.125){
+            self.zoomLevel = 0.125;
+        }else{
+            //Some math to adjust the global offsets so that you zoom in directly 
+            //to where your mouse cursor is, rather than zooming on the origin (top left of image)
+            var z = self.zoomLevel;
+
+            if(!suppressOffset){
+                var mx = self.mouseX;
+                var my = self.mouseY;
+                self.globalOffsetX = ((xpos*z)-mx)*-1;
+                self.globalOffsetY = ((ypos*z)-my)*-1;
+            }else{
+                //xpos = (self.canvas.width/2-self.globalOffsetX)/self.zoomLevel;
+                //ypos = (self.canvas.height/2-self.globalOffsetY)/self.zoomLevel;
+                //self.globalOffsetX = ((xpos*z))*-1;
+                //self.globalOffsetY = ((ypos*z))*-1;
+            }
+
+        }
+        ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%")
+    	self.lastZoomTime = new Date().getTime();
     },
     zz_warehouseMap: 0};
   return self;

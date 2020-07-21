@@ -29,6 +29,7 @@ var Hatching = (function(){
 			layer.hatchStyle = self.imageStyle;
 			layer.hatchImg = null;
 			layer.hatchGenerated = false;
+            doodler.updateFrameBuffer();
 		},
 		changeFloorStyle: function(evt){
 			self.floorStyle = ir.v("hatchFloorStyle");
@@ -39,6 +40,7 @@ var Hatching = (function(){
 			layer.floorStyle = self.floorStyle;
 			layer.floorImg = null;
 			layer.floorGenerated = false;
+            doodler.updateFrameBuffer();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -82,6 +84,7 @@ var Hatching = (function(){
 
 			ctx.fillStyle = gradient;
 			ctx.fill();
+            doodler.updateFrameBuffer();
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(60,200,200)";
@@ -136,7 +139,7 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						`;
 			
-			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' onchange='Modes.Hatching.changeImageStyle(event)'>`;
+			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' style='max-width:100px;' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
 			htm += "<option name='JPCross' value='hatchingImgJPCrosshatch'>Dense Hatching</option>";
 			htm += "<option name='JPHalftone' value='hatchingImgJPHalftone'>Drawn Halftone</option>";
@@ -144,22 +147,53 @@ var Hatching = (function(){
 			htm += "<option name='JPStone' value='hatchingImgJPStone'>Drawn Stone</option>";
 			htm += "<option name='JPGrass' value='hatchingImgJPGrass'>Drawn Grass</option>";
 			htm += "<option name='Dots' value='hatchingImgDots'>Dots</option>";
+            htm += `<option name='wood1' value='wood1'>Cartoon Wood Flooring</option>`;            
+            htm += `<option name='metal1' value='metal1'>Cartoon Metal Flooring</option>`;
+            htm += `<option name='stone1' value='stone1'>Cartoon Stone</option>`;
+			htm += `<option name='brick1' value='brick1'>Cartoon Brick</option>`;
+			htm += `<option name='sand1' value='sand1'>Cartoon Sand</option>`;
+			htm += `<option name='sand2' value='sand2'>Cartoon Sand 2</option>`;
+			htm += `<option name='magma1' value='magma1'>Cartoon Magma</option>`;
+			htm += `<option name='water1' value='water1'>Cartoon Water</option>`;
+			htm += `<option name='space1' value='space1'>Space 1</option>`;
+			htm += `<option name='space2' value='space2'>Space 2</option>`;
+			htm += `<option name='space3' value='space3'>Space 3</option>`;
+			htm += `<option name='space4' value='space4'>Space 4</option>`;
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
 			htm += "</select><br>";
 			
-			/*htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' onchange='Modes.Hatching.changeFloorStyle(event)'>`;
-			htm += `<option name='Stone' value='hatchingImgJPStone'>Drawn Stone</option>`;
-			htm += `<option name='Stone' value='hatchingImgJPGrass'>Drawn Grass</option>`;
-			htm += `<option name='Stone' value='hatchingImgGrass'>Grass</option>`;
-			htm += `<option name='Stone' value='hatchingImgRock'>Rock</option>`;
-			htm += "</select>";*/
+			htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' style='max-width:100px;' onchange='Modes.Hatching.changeFloorStyle(event)'>`;
+			htm += `<option name='' value=''>None</option>`;
+			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
+			htm += "<option name='JPCross' value='hatchingImgJPCrosshatch'>Dense Hatching</option>";
+			htm += "<option name='JPHalftone' value='hatchingImgJPHalftone'>Drawn Halftone</option>";
+			htm += "<option name='JPStipple' value='hatchingImgJPStipple'>Drawn Stipple</option>";
+			htm += "<option name='JPStone' value='hatchingImgJPStone'>Drawn Stone</option>";
+			htm += "<option name='JPGrass' value='hatchingImgJPGrass'>Drawn Grass</option>";
+			htm += "<option name='Dots' value='hatchingImgDots'>Dots</option>";
+            htm += `<option name='wood1' value='wood1'>Cartoon Wood Flooring</option>`;
+            htm += `<option name='metal1' value='metal1'>Cartoon Metal Flooring</option>`;
+            htm += `<option name='stone1' value='stone1'>Cartoon Stone</option>`;
+			htm += `<option name='brick1' value='brick1'>Cartoon Brick</option>`;
+			htm += `<option name='sand1' value='sand1'>Cartoon Sand</option>`;
+			htm += `<option name='sand2' value='sand2'>Cartoon Sand 2</option>`;
+			htm += `<option name='magma1' value='magma1'>Cartoon Magma</option>`;
+			htm += `<option name='water1' value='water1'>Cartoon Water</option>`;
+			htm += `<option name='space1' value='space1'>Space 1</option>`;
+			htm += `<option name='space2' value='space2'>Space 2</option>`;
+			htm += `<option name='space3' value='space3'>Space 3</option>`;
+			htm += `<option name='space4' value='space4'>Space 4</option>`;
+			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
+			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "</select>";
 			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
 						//<label for="hatchingColor">Hatching Color</label><br>
 			container.innerHTML = htm;
 			
-			ir.set("hatchImageStyle", self.imageStyle);
+			ir.set("hatchImageStyle", doodler.layers[doodler.currentLayer].hatchStyle);
+			ir.set("hatchFloorStyle", doodler.layers[doodler.currentLayer].floorStyle);
 			
 			
 			

@@ -34,6 +34,22 @@ var ShapeTool = (function(){
 			self.inset = parseInt(evt.target.value);
 			ir.set("shapeToolInsetLabel", self.inset);
 		},
+        changeBorderSize: function(evt, fromInput){
+			self.borderSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("shapeToolBorderSizeLabel", self.borderSize);
+			}else{
+				ir.set("shapeToolBorderSize", self.borderSize);
+			}
+		},
+		changeHatchSize: function(evt, fromInput){
+			self.hatchSize = parseInt(evt.target.value);
+			if(!fromInput){
+				ir.set("shapeToolHatchSizeLabel", self.hatchSize);
+			}else{
+				ir.set("shapeToolHatchSize", self.hatchSize);
+			}
+		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
 		},
@@ -165,7 +181,7 @@ var ShapeTool = (function(){
 				}
 				ctx.fill();
 			}
-			
+            doodler.updateFrameBuffer();
 				
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
@@ -292,6 +308,10 @@ var ShapeTool = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<!--<div class='paramTitle'>In/Outset: </div><label for='shapeToolInset' id='shapeToolInsetLabel'>${self.inset}</label><br>
 						<input style='width:100px' type="range" id="shapeToolInset" name="shapeToolInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.ShapeTool.changeInset(event)' oninput='Modes.ShapeTool.changeInset(event)'><br>-->
+                        <div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='shapeToolHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.ShapeTool.changeHatchSize(event, true)' oninput='Modes.ShapeTool.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="shapeToolHatchSize" name="shapeToolHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.ShapeTool.changeHatchSize(event)' oninput='Modes.ShapeTool.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='shapeToolBorderSizeLabel' value="${self.borderSize}" onchange='Modes.ShapeTool.changeBorderSize(event, true)' oninput='Modes.ShapeTool.changeBorderSize(event, true)'><br>
+						<input style='width:100px' type="range" id="shapeToolBorderSize" name="shapeToolBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.ShapeTool.changeBorderSize(event)' oninput='Modes.ShapeTool.changeBorderSize(event)'><br>
 						<div class='paramTitle'>Number of Sides: </div><input type='number' style='width:60px' id='shapeToolNumSidesLabel' value="${self.numSides}" onchange='Modes.ShapeTool.changeSides(event, true)' oninput='Modes.ShapeTool.changeSides(event, true)'><br>
 						<input style='width:100px' type="range" id="shapeToolNumSides" name="shapeToolNumSides" min="3" max="20" value='${self.numSides}' onchange='Modes.ShapeTool.changeSides(event)' oninput='Modes.ShapeTool.changeSides(event)'><br>
 						<input type='checkbox' id='shapeToolIsSnapping' onclick='Modes.ShapeTool.changeSnapping(event)'><label for='shapeToolIsSnapping'>Snap To Grid</label><br>

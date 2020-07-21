@@ -191,6 +191,7 @@ var Erase = (function(){
 					ctx.restore();
 				}
 			}	
+            doodler.updateFrameBuffer();
 			
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
@@ -265,7 +266,7 @@ var Erase = (function(){
 						<input style='width:100px' type="range" id="eraseSize" name="eraseSize" min="1" max="200" value='${self.size}' onchange='Modes.Erase.changeSize(event)' oninput='Modes.Erase.changeSize(event)'><br>
 						<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='eraseHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Erase.changeHatchSize(event, true)' oninput='Modes.Erase.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="eraseHatchSize" name="eraseHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Erase.changeHatchSize(event)' oninput='Modes.Erase.changeHatchSize(event)'><br>
-						<div class='paramTitle'>Border: </div><input type='number' style='width:60px' id='eraseBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Erase.changeBorderSize(event, true)' oninput='Modes.Erase.changeBorderSize(event, true)'><br>
+						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='eraseBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Erase.changeBorderSize(event, true)' oninput='Modes.Erase.changeBorderSize(event, true)'><br>
 						<input style='width:100px' type="range" id="eraseBorderSize" name="eraseBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Erase.changeBorderSize(event)' oninput='Modes.Erase.changeBorderSize(event)'><br>
 						<input type="radio" id="eraseSquare" name="eraseShape" value="Square" onchange='Modes.Erase.changeShape(event)'>
 						<label for="eraseSquare">Square</label><br>

@@ -4,8 +4,13 @@
 		<title>Dungeon Map Doodler</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
       	<link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="apple-touch-icon" href="touch-icon-iphone.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
+        <link rel="apple-touch-icon" sizes="167x167" href="icon-167.png">
       	<!--<link rel="stylesheet" type="text/css" href="style2.css">-->
 		<link rel="manifest" href="manifest.json">
+        <link rel="icon" type="image/png"   href="icon-192.png">
     </head>
 <body onload='doodler.show()'>
 	<div class='flex-container'>
@@ -24,7 +29,7 @@
 					<li><a href="#">Grid &raquo;</a>
 						<ul>
 							<li><a href="#" onclick="return doodler.toggleGridOutside()">Toggle Outer Grid</a></li>
-							<li><a href="#" onclick="return ir.show('dimensionPopup')">Change Grid Dimensions</a></li>
+							<li><a href="#" onclick="ir.show('dimensionPopup');doodler.popupShowing=true;">Change Grid Dimensions</a></li>
 						</ul>
 					</li>
 					<li><a href="#">Options &raquo;</a>
@@ -64,6 +69,19 @@
 	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.svg'>
 	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
 	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
+    
+	<img id='brick1' src='floortiles/brick1.svg'>
+	<img id='metal1' src='floortiles/metal1.svg'>
+	<img id='wood1' src='floortiles/wood1.svg'>
+	<img id='magma1' src='floortiles/magma1.svg'>
+	<img id='sand1' src='floortiles/sand1.svg'>
+	<img id='sand2' src='floortiles/sand2.svg'>
+	<img id='space1' src='floortiles/space1.svg'>
+	<img id='space2' src='floortiles/space2.svg'>
+	<img id='space3' src='floortiles/space3.svg'>
+	<img id='space4' src='floortiles/space4.svg'>
+	<img id='stone1' src='floortiles/stone1.svg'>
+	<img id='water1' src='floortiles/water1.svg'>
 	
 	
 	<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
@@ -121,7 +139,7 @@
 		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.applyTextPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="doodler.cancelTextPopup()">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.cancelTextPopup();doodler.popupShowing=false;">Cancel</button>
 </div>
 
 <div id='textEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -214,7 +232,7 @@
 		<tr>
 			<td class='tdr'>File Name:</td>
 			<td class='tdl'>
-				<input type="text" id="imageSaveName" value='DungeonMapDoodle.png' >
+				<input type="text" id="imageSaveName" value='DungeonMapDoodle' >
 			</td>
 		</tr>
 		<tr>
@@ -226,9 +244,26 @@
 				<label for="imageSaveColorTrans">Transparent</label><br>
 			</td>
 		</tr>
+        <tr>
+			<td class='tdr'>File Type:</td>
+			<td class='tdl'>
+				<input type="radio" id="imageSaveFilePng" checked='checked' name="imageSaveFile" value="image/png" >
+				<label for="imageSaveFilePng">PNG</label>
+				<input type="radio" id="imageSaveFileJpeg" name="imageSaveFile" value="image/jpeg" >
+				<label for="imageSaveFileJpeg">JPG</label>
+				<input type="radio" id="imageSaveFileBmp" name="imageSaveFile" value="image/bmp" >
+				<label for="imageSaveFileBmp">BMP</label>
+			</td>
+		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm()">Save</button>
-	<button type="button" class="canvBtn" onclick="ir.hide('imageSavePopup')">Cancel</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
+</div>
+	
+<div id='creditPopup' style='border-style:double;background-color:#fff;display:none;z-index:5000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
+	<h2>Credits</h2>
+	<a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by 0melapics - www.freepik.com</a>
+    <a href='https://www.freepik.com/free-photos-vectors/background'>Background vector created by 0melapics - www.freepik.com</a>
 </div>
 
 <div id='dimensionPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -253,7 +288,7 @@
 		<tr><td>Warning: this will clear out any doodles you currently have</td></tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
-	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup')">Cancel</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
 	
 <div style='display:none'>
@@ -270,6 +305,8 @@
 	
 	
 </div>	
+    
+<div id="errorBox" style='display:none;position:fixed;bottom:0;left:0;right:0;width:100%;height:80px;background-color:azure'></div>
 	
 	
 <div class="floatingModes popup" id='floatingModes'>

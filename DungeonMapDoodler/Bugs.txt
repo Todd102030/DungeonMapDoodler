@@ -1,3 +1,35 @@
 Todo Bugfixes:
 Add cursor outline to line draw tool - not lining up on zoom
 Right click acts as draw as well
+
+Fixes to mobile use, offline support
+
+DONE set showingPopup to true when saving image, saving file, text editing
+
+Confirm popup when deleting layers
+Add option to duplicate a layer
+
+Hatching doesn't fill entire length of line tool
+
+Fix weird fuzziness/colour transparency when outside grid is disabled
+
+Finish floor tiles
+
+DONE Create a framebuffer image, composite all images onto it, only rerender it when necessary
+  lets us only draw a single item to the actual screen each frame
+  
+DONE Border and hatch size option for all drawing tools
+
+Add solid black option for hatching
+
+
+
+
+Changelog:
+Offline support - install DMD to your tablet or computer's home screen and use without internet
+Floor Tiles - Lots of different styles to customize the look and feel of your dungeons
+Multitouch support for pan and zoom gestures on mobile
+Performance improvements
+JPG and BMP file export support
+Wall thickness and hatch size options on all drawing tools
+Lots of bug fixes
