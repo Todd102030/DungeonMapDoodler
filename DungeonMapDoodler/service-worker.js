@@ -1,4 +1,4 @@
-var cacheName = 'cache-v2'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
+var cacheName = 'cache-v5'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
 var resourcesToPrecache = [
 	"/",
 "./Bugs.txt",
@@ -8,6 +8,7 @@ var resourcesToPrecache = [
 "./door_left_right.png",
 "./door_up_down.png",
 "./erase.png",
+"./wall.png",
 "./filelist.txt",
 "./hatch.jpg",
 "./hatch.png",
@@ -24,6 +25,7 @@ var resourcesToPrecache = [
 "./modeerase.js",
 "./modehatching.js",
 "./modeline.js",
+"./modewall.js",
 "./modemove.js",
 "./moderoomtool.js",
 "./modes.js",
@@ -112,6 +114,7 @@ var resourcesToPrecache = [
 "./hatches/DMD Stipple Pattern.svg",
 "./hatches/DMD Stone Pattern.svg",
 "./hatches/DMG Grass Pattern.svg",
+"./hatches/solidblack.png",
 "./hatches/dots.svg",
 "./images/circlefuzz.png",
 "./images/delete.png",

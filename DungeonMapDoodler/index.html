@@ -23,6 +23,7 @@
 							<li><a href="#" onclick="return doodler.saveFile()">Save</a></li>
 							<li><a href="#" onclick="return doodler.showFileLoad()">Load</a></li>
 							<li><a href="#" onclick="return doodler.saveImage()">Export Image</a></li>
+							<li><a href="#" onclick="return doodler.exportImage()" alt="Publish to fictionalmaps.com" title="Publish to fictionalmaps.com">Publish Map</a></li>
 
 						</ul>
 					</li>
@@ -34,10 +35,15 @@
 					</li>
 					<li><a href="#">Options &raquo;</a>
 						<ul>
-							<li><a href="#" onclick="return doodler.toggleToolDock()">Dock/Undock Tools</a></li>
+							<li><a href="#" onclick="doodler.toggleToolDock()">Dock/Undock Tools</a></li>
 						</ul>
 					</li>
-					<!--<li><a href="#" class="last" onclick="return doodler.showAboutPopup()">About</a></li>-->
+                    <li><a href="#" class="last">Info &raquo;</a>
+                        <ul>
+							<li><a href="#" onclick="doodler.showAboutPopup()">About</a></li>
+							<li><a href="#" onclick="doodler.showHowToPopup()">How To</a></li>
+						</ul>
+                    </li>
 				</ul>
 			</nav>
 		</div>
@@ -67,6 +73,7 @@
 	<img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.svg'>
 	<img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.svg'>
 	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.svg'>
+	<img id='hatchingImgSolidBlack' src='hatches/solidblack.png'>
 	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
 	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
     
@@ -90,10 +97,73 @@
 	
 
 	
+<div id='aboutPopup' class='popupPanel' style='display:none;text-align: left;padding:20px;'>
+    <div id="aboutPopupContent" style="max-height: calc( 100% - 38px ); overflow: auto;">
+        <h3>About</h3>
+        <p>Dungeon Map Doodler is a program designed to easily create tabletop RPG maps created by Todd Ross (<a target="_blank" rel="noopener noreferrer" href='https://twitter.com/ToddRossDIY'>ToddRossDIY</a>). This project is in early development stages and there will likely be bugs and other issues with it. I appreciate your patience in using this software and look forward to continuing to improve it!</p>
+        
+        <h3>Commercial Use Policy</h3>
+        <p>Any maps you create with the intention of distributing for free whether by itself or as a part of a larger project can be included under the same licensing that the rest of your content is being released as. 
+        <br><br>
+        If you are making money with your creations, I ask that you become a patron of the $5 tier or higher to help support continued development of the project. If you're not a patron already, you can join at (<a target="_blank" rel="noopener noreferrer" href='https://www.patreon.com/bePatron?u=17254686'>https://www.patreon.com/bePatron?u=17254686</a>). If this small cost is prohibitive to you, please contact me and we can work something out!
+        <br><br>
+        While not mandatory, I would appreciate if you give credit so that people can see where the maps were made and have the opportunity to try the software out themselves. This can be as simple as a footnote along the lines of "Maps created at dungeonmapdoodler.com"</p>
+        
+        <h3>Contact Us</h3>
+        <p>For any questions, bug reports or other comments, please email me at <a target="_blank" rel="noopener noreferrer" href='mailto:tross5000@gmail.com?subject=Dungeon Map Doodler Inquiry'>tross5000@gmail.com</a></p>
+    </div>
+    <div class='popupFooter' style='padding-top: 8px;text-align: center'>
+        <button type="button" class="canvBtn" onclick="ir.hide('aboutPopup');doodler.popupShowing = false;">Cancel</button>
+    </div>
+</div>
+    
+<div id='howToPopup' class='popupPanel' style='display:none;text-align: left;padding:20px;'>
+    <div id="howToPopupContent" style="max-height: calc( 100% - 38px ); overflow: auto;">
+        <h3>How To Use Dungeon Map Doodler</h3>
+        <p>Dungeon Map Doodler is a tool for quickly designing RPG game maps with a hand drawn feel. It's designed to be very intuitive to use and work on as many devices as possible. It's still in early stages of development, so if you find any issues with it, please reach out to me using the contact info in the About section. <b>Note:</b> If you notice anything not working as expected, please first try forcing a reload by holding Ctrl and pressing F5. The offline support can cause new code to not always get downloaded from the server when updates are released, giving the appearance of something not working correctly.</p>
+        
+        <h4>General Questions</h4>
+        <h5>How to install to home screen/desktop for offline use</h5>
+        <p>Instructions for this can be a little different for all web browsers and operating systems. For Chrome on a desktop, you should see a "+ Install" button in the top right of your screen in the URL bar. On Chrome for Android, a popup will typically appear at the bottom of the screen mentioning that it's possible to add to your home screen. On Apple devices, the Share button in Safari should have an option to add to your home screen.</p>
+        
+        <h5>Different Between Saving and Exporting</h5>
+        <p>If you want to close the window and come back to work on your map later, you'll want to use the "Save" option in the File menu. This creates a ".dmd" file which can then be loaded back into the software using the "Load" option. To save your map as a PNG image or other image format, you'll want to use the "Export Image" option. This creates an actual image file that you can then print, open in any other image editing program or send to your friends. You can also choose a background colour for the image, or choose to make it transparent.</p>
+        
+        <h4>Drawing Tools</h4>
+        <h5>Snap To Grid</h5>
+        <p>The Snap To Grid tool allows you to quickly draw while snapping your cursor to the visible grid, filling in entire squares at a time. Use this to create straight hallways, rooms and any other structures where you want to have a solid feel to the room.</p>
+        <h5>Free Draw</h5>
+        <p>The Free Draw tool allows you to freehand draw anything you'd like! It has a few options for size, hatch size, wall thickness, shape and colour. This can be used for drawing more organic shapes like the outline of a forest, a winding path or anything else that you don't want snapped to the grid.</p>
+        <h5>Line Tool</h5>
+        <p>The Line tool lets you draw a straight line from one point to another. Click and hold to start a line, and release it at the end of the line. Use this tool to draw straight lines at any angle.</p>
+        <h5>Wall Tool</h5>
+        <p>The Interior Wall tool acts like a thin eraser to let you draw walls inside of a larger room. Similar to the Line tool, click and hold to start a wall, and release at the end of the line.</p>
+        <h5>Room Tool</h5>
+        <p>The Room tool is similar to the Snap To Grid tool, but allows you to fill in large rectangles at a time. Click and hold to drag out a rectangle the size that you want for your room and release to create the room. This tool is optionally snap to grid, and can be used in Subtractive mode as well. Enabling this will delete the floor of your room rather than adding to it, and can be used for all sorts of cool designs, especially when combined with the Shape tool.</p>
+        <h5>Shape Tool</h5>
+        <p>The Shape Tool is similar to the Room tool, but lets you draw regular polygons of any number of sides. To draw, click and drag from the center of your shape and pull your mouse outwards. The distance from the center will determine the size of your shape, and moving your cursor around will rotate it accordingly. This tool is also optionally snap to grid and offers Subtractive mode.</p>
+        <h5>Hatching</h5>
+        <p>The Hatching tool allows you to fill in just the hatching layer without drawing anything else. You can also change the style of hatching as well as the floor style here. Hatching is specific to the layer you're working on, and all layers can have different hatch styles. This allows for lots of different map appearances, not just hand drawn styles.</p>
+        <h5>Stamp Tool</h5>
+        <p>The Stamp tool is how you go about adding any sort of details to your maps like doors, staircases, furniture and hazards/traps. Clicking on a stamp in the toolbox will select that stamp. You can also click on the "Current Stamp" icon to show a larger selection popup with a search tool. Stamps are organized into categories based on their purpose, and clicking the header of a section will expand/collapse the section. Once a stamp has been placed, you can click and drag to move it around. Clicking on a stamp will select it, allowing you to rotate it by clicking and dragging the little red circle near the stamp. You can delete a placed stamp by selecting it and clicking the little garbage can button beside the current stamp in the toolbox.</p>
+        <h5>Erase Tool</h5>
+        <p>The Erase tool can be used to erase all aspects of your map depending on which parts are selected. There's checkboxes for Hatching, Outline, Rooms and Stamps, allowing you to choose one or more specific pieces of the map to erase.</p>
+        <h5>Text Tool</h5>
+        <p>The Text tool lets you write text on your map in various different fonts. Clicking on the map will show the edit popup for text, letting you write the text you want, choose a font size and font. Clicking okay will create a text object on the screen which you can then click and drag to move to wherever you want. Clicking on existing text will show the edit popup again, allowing you to change any aspects of the text, or delete the text object</p>
+        
+    </div>
+    <div class='popupFooter' style='padding-top: 8px;text-align: center'>
+        <button type="button" class="canvBtn" onclick="ir.hide('howToPopup');doodler.popupShowing = false;">Close</button>
+    </div>
+</div>
 
-
-<div id='locationPopup'>
-
+<div id='stampPopup' class='popupPanel' style='display:none;text-align: center'>
+    <input type='text' style='padding:6px;font-size: 16pt;width:100%;' id='stampSearch' placeholder="Search by stamp name" oninput="Modes.StampTool.searchStamp(event)">
+    <div id="stampPopupList" style="max-height: calc( 100% - 100px ); overflow: auto;"></div>
+    <div class='popupFooter' style='padding-top: 8px'>
+        <button type="button" class="canvBtn" onclick="Modes.StampTool.addStamp(true);doodler.popupShowing = false;">Add Stamp</button>
+        <button type="button" class="canvBtn" onclick="ir.hide('stampPopup');doodler.popupShowing = false;">Cancel</button>
+    </div>
 </div>
 
 
@@ -226,7 +296,7 @@
 	<button type="button" class="canvBtn" onclick="doodler.applyCancelLocPopup()">Cancel</button>
 </div>
 	
-<div id='imageSavePopup' style='border-style:double;background-color:#fff;display:none;z-index:5000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
+<div id='imageSavePopup' class='popupPanel' style='display:none;text-align: center'>
 	<h2>Export Image File</h2>
 	<table>
 		<tr>
@@ -257,7 +327,46 @@
 		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm()">Save</button>
+	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm(true)">Print</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
+</div>
+    
+<div id='imageExportPopup' class='popupPanel' style='display:none;text-align: center'>
+	<h2>Publish Image File</h2>
+	<table>
+        <tr><td colspan="2">This will publish your map image to fictionalmaps.com, an online map viewer similar to Google Maps</td></tr>
+		<tr>
+			<td class='tdr'>File Name:</td>
+			<td class='tdl'>
+				<input type="text" id="imageExportName" value='DungeonMapDoodle' >
+			</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Background Colour:</td>
+			<td class='tdl'><!--<input type='color' value='rgb()' id='imageSaveColor'/>-->
+				<input type="radio" id="imageExportColorWhite" name="imageExportColor" checked='checked' value="color" >
+				<label for="imageExportColorWhite">Coloured <input type='color' value='#ffffff' id='imageExportColorColor'></label><br>
+				<input type="radio" id="imageExportColorTrans" name="imageExportColor" value="rgba(0,0,0,0)" >
+				<label for="imageExportColorTrans">Transparent</label><br>
+			</td>
+		</tr>
+        <div style='width:100%'><div id="exportWait" class="loader" style="display:none;"></div></div>
+	</table>
+	<button type="button" class="canvBtn" onclick="doodler.exportImageConfirm()">Publish</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('imageExportPopup');doodler.popupShowing=false;">Cancel</button>
+</div>
+    
+<div style='display: none'>
+    <form id='fictionalMapsForm' action="https://fictionalmaps.com/wp-content/plugins/fictional-maps-handler/php/receiver/xs_receiver.php" method="post" enctype="multipart/form-
+    data">
+    <input type="text" name="map_name" id="map_name"/>
+    <input type="hidden" name="origin" id="origin" value="DMD"/>
+    <input type="hidden" name="claim_token" id="claim_token" value=""/>
+    <input type="hidden" name="security_token" id="security_token" value=""/>
+    <!--<input type="file" name="map_file" id="map_file" />-->
+    <input type="submit" value="Publish to Fictionalmaps.com" name="publish"
+    id="fictionalMapSubmit"/>
+    </form>
 </div>
 	
 <div id='creditPopup' style='border-style:double;background-color:#fff;display:none;z-index:5000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -266,27 +375,28 @@
     <a href='https://www.freepik.com/free-photos-vectors/background'>Background vector created by 0melapics - www.freepik.com</a>
 </div>
 
-<div id='dimensionPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
+<div id='dimensionPopup' class='popupPanel' style='display:none;text-align: center'>
+    <h2>Change Grid/Image Size</h2>
 	<table>
-		
 		<tr>
 			<td class='tdr'>Width in Feet:</td>
-			<td class='tdl'><input type="number" style='width:100px;' id="dimensionPopupX" value='10'></td>
+			<td class='tdl'><input type="number" id="dimensionPopupX" value='10'></td>
 		</tr>
 		<tr>
 			<td class='tdr'>Height in Feet:</td>
-			<td class='tdl'><input type="number" style='width:100px;' id="dimensionPopupY" value='10'></td>
+			<td class='tdl'><input type="number" id="dimensionPopupY" value='10'></td>
 		</tr>
-		<tr>
+        <tr>
 			<td class='tdr'>Feet Per Box:</td>
-			<td class='tdl'><input type="number" style='width:100px;' value='5' id="dimensionPopupStep" ></td>
+			<td class='tdl'><input type="number" value='5' id="dimensionPopupStep" ></td>
 		</tr>
-		<tr>
+        <tr>
 			<td class='tdr'>Box Size in Pixels:</td>
-			<td class='tdl'><input type="number" style='width:100px;' value='5' id="dimensionPopupBoxSize" ></td>
+			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize" ></td>
 		</tr>
-		<tr><td>Warning: this will clear out any doodles you currently have</td></tr>
+        <tr><td colspan='2'>Warning: this will clear out any doodles you currently have</td></tr>
 	</table>
+    
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
@@ -323,7 +433,7 @@
 			<summary>Tool Options</summary>
 			<div id='toolFlexbox' style='display:flex'>
 				<div class='floatingBtns'>
-				<div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Wall Tool" id='modeWall' onclick='doodler.clickMode(event)'><img id='imgmWall' src="wall.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
 				</div>
 				<div class='paramBox' id='paramBox'></div>
 			</div>
@@ -367,6 +477,7 @@
 <script src='modeerase.js'></script>
 <script src='modehatching.js'></script>
 <script src='modeline.js'></script>
+<script src='modewall.js'></script>
 <script src='modemove.js'></script>
 <script src='moderoomtool.js'></script>
 <script src='modesnaptogrid.js'></script>

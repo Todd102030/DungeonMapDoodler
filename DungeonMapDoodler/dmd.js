@@ -3,6 +3,7 @@
 var Shape = {
 	Circle: 1,
 	Square: 2,
+    Line: 3,
 }
 
 Array.prototype.swap = function (x,y) {

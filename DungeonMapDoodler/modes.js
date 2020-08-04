@@ -11,6 +11,7 @@ var Modes = {
 	StampTool, 
 	SnapToGrid,
 	ShapeTool, 
-	TextTool
+	TextTool,
+    Wall
 };
 

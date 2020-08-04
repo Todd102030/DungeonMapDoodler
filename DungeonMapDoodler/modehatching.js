@@ -22,7 +22,6 @@ var Hatching = (function(){
 		},
 		changeImageStyle: function(evt){
 			self.imageStyle = ir.v("hatchImageStyle");
-			console.log("Image style is ", self.imageStyle);
 			doodler.hatchGenerated = false;
 			doodler.hatchStyleImage = self.imageStyle;
 			var layer = doodler.layers[doodler.currentLayer];
@@ -33,7 +32,6 @@ var Hatching = (function(){
 		},
 		changeFloorStyle: function(evt){
 			self.floorStyle = ir.v("hatchFloorStyle");
-			console.log("Floor style is ", self.floorStyle);
 			//doodler.hatchGenerated = false;
 			doodler.floorStyle = self.floorStyle;
 			var layer = doodler.layers[doodler.currentLayer];
@@ -161,6 +159,7 @@ var Hatching = (function(){
 			htm += `<option name='space4' value='space4'>Space 4</option>`;
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "<option name='SolidBlack' value='hatchingImgSolidBlack'>Solid Black</option>";
 			htm += "</select><br>";
 			
 			htm += `<div class='paramTitle'>Floor Style</div><br><select id='hatchFloorStyle' style='max-width:100px;' onchange='Modes.Hatching.changeFloorStyle(event)'>`;

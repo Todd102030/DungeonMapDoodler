@@ -3,12 +3,12 @@
   "name": "Dungeon Map Doodler",
   "icons": [
   {
-  "src":"https://dungeonmapdoodler.com/beta/icon-192.png",
+  "src":"https://dungeonmapdoodler.com/draw/icon-192.png",
   "sizes": "192x192",
   "type": "image/png"
   }
   ],
-  "start_url": "https://dungeonmapdoodler.com/beta/index.html",
+  "start_url": "https://dungeonmapdoodler.com/draw/index.html",
   "background_color": "#56d1e2",
   "theme_color": "#5eb7e6",
   "display": "standalone"

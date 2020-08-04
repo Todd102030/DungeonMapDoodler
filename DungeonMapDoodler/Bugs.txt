@@ -20,16 +20,53 @@ DONE Create a framebuffer image, composite all images onto it, only rerender it 
   
 DONE Border and hatch size option for all drawing tools
 
-Add solid black option for hatching
+
+Make text and stamps be layer specific
+
+Change undo buttons to factor in stamps and text as well
 
 
 
+***FOR EACH NEW UPDATE***
+- Edit serviceworker.js if new files added, ensure cache version is updated
+- manifest.json, make sure is pointing to correct domain/folder
+- make sure isBeta is set correctly
 
-Changelog:
+
+
+Changelog 1.2:
 Offline support - install DMD to your tablet or computer's home screen and use without internet
 Floor Tiles - Lots of different styles to customize the look and feel of your dungeons
 Multitouch support for pan and zoom gestures on mobile
+New stamp picker interface with larger icons
 Performance improvements
 JPG and BMP file export support
 Wall thickness and hatch size options on all drawing tools
+Added commercial use policy to "About" section
 Lots of bug fixes
+
+Changelog 1.3:
+Interior wall tool
+Improvements to stamp tool
+Added some info on how to use the program 
+
+
+** Stamps to Buy **
+Arrow trap (shoots arrow from wall)
+Bear trap
+Man eating flower
+Quicksand
+Spikes
+Green slime
+Spider webs
+
+
+
+Stamp Changes:
+When no stamp is selected, clicking without moving not on a stamp should place a new stamp
+When no stamp is selected, clicking without moving *on* a stamp should select the stamp
+
+When stamp is selected, draw outline and button to rotate stamp
+When stamp is selected, clicking off stamp will unselect stamp but not place a stamp
+
+When stamp is selected, clicking and dragging it should move the stamp

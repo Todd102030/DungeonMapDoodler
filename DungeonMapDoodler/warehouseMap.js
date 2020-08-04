@@ -1283,6 +1283,7 @@ var doodler = (function(){
 		}
 		return null;
 	},
+ 
 	//Passed a rectangle object describing the location of the mouse before it's scaled or moved
 	hitTestLocations: function(mrect){
 	  var a = self.locations;
@@ -1928,7 +1929,8 @@ var doodler = (function(){
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
         }*/
-		
+        self.shiftDown = evt.shiftKey;
+        
 		if (evt.ctrlKey){
 			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
@@ -2072,6 +2074,7 @@ var doodler = (function(){
 			self.touchMouseDown = true;
 			self.mouseMode.mouseDown(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx});
 		}*/
+        self.shiftDown = evt.shiftKey;
 		
 		if (evt.ctrlKey){
 			Modes.Move.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
@@ -2443,12 +2446,38 @@ var doodler = (function(){
 	showFileLoad: function(){
 		  ir.get("imageUpload").click();
 	},
+    exportImage: function(){
+        doodler.popupShowing=true;
+		ir.show("imageExportPopup");
+		ir.focus("imageExportName");
+	},
+	exportImageConfirm: function(){
+		var fileName = ir.v("imageExportName");
+		var background = ir.v("imageExportColor");
+		var color = ir.v("imageExportColorColor");
+		self.isIsometric = false;
+		if(background=='color'){
+			self.backgroundColor = color;
+		}else{
+			self.backgroundColor = background;
+		}
+        
+        var claimToken = "DMD-"+fileName+"-"+(Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
+        
+        ir.set("claim_token",claimToken);
+        ir.set("map_name", fileName);
+        
+        self.updateFrameBuffer();
+		self.publishImage(fileName, claimToken);
+		
+	},
+   
 	saveImage: function(){
         doodler.popupShowing=true;
 		ir.show("imageSavePopup");
 		ir.focus("imageSaveName");
 	},
-	saveImageConfirm: function(){
+	saveImageConfirm: function(print){
 		var fileName = ir.v("imageSaveName");
 		var background = ir.v("imageSaveColor");
 		var color = ir.v("imageSaveColorColor");
@@ -2459,7 +2488,7 @@ var doodler = (function(){
 			self.backgroundColor = background;
 		}
         self.updateFrameBuffer();
-		self.saveToImage(fileName);
+		self.saveToImage(fileName, print);
 		
 	},
 	saveFile: function(){
@@ -2506,10 +2535,10 @@ var doodler = (function(){
 	    link.setAttribute('href', dataStr);
 	    link.click();
 		try{
-			track("Save File", "...", "file.dmd");
+			track("Save File", "file.dmd", parseInt(dataStr.length/1000)/1000 + " MB");
 		}catch(e){}
 	},
-    saveToImage: function(fileName){
+    saveToImage: function(fileName, doPrint){
     	//self.setMode(4);
     	self.fontSizes = [];
     	var canvas = document.createElement("canvas");
@@ -2581,18 +2610,153 @@ var doodler = (function(){
 			fileName += ".bmp";
 		}
 		
-		var link = document.getElementById('link');
-	    link.setAttribute('download', fileName);
-	    link.setAttribute('href', image.replace("image/png", "image/octet-stream"));
-	    link.click();
-		
+        
+        
+        if(doPrint){
+            var popup;
+
+            function closePrint () {
+                if ( popup ) {
+                    popup.close();
+                }
+            }
+
+            popup = window.open("about:blank", "_new");//("<html><body><img src='"+ image+"' > </body></html>" );
+            popup.document.open();
+            popup.document.write("<html><body><img src='"+ image+"' > </body></html>");
+            popup.document.close();
+            popup.onbeforeunload = closePrint;
+            popup.onafterprint = closePrint;
+            popup.focus(); // Required for IE
+            popup.print();
+        }
+        else{
+            var link = document.getElementById('link');
+            link.setAttribute('download', fileName);
+            link.setAttribute('href', image.replace("image/png", "image/octet-stream"));
+            link.click();
+        }
 		
   		self.isRunning = true;
 		self.zoomLevel = self.oldZoomLevel;
   		//self.shutdownEditor();    
 		try{
-			track("Saving Image", "image", image.length + " bytes");
+			track("Saving Image", fileName, parseInt(image.length/1000)/1000 + " MB");
 		}catch(e){}
+    },
+    publishImage: function(fileName, claimToken){
+        ir.show("exportWait");
+    	//self.setMode(4);
+    	self.fontSizes = [];
+    	var canvas = document.createElement("canvas");
+    	var ctx = canvas.getContext("2d");
+    	//ctx.imageSmoothingEnabled = false;
+		
+		//self.dimensions.scaleX = 0.5;
+		//self.dimensions.scaleY = 0.5;
+		self.oldZoomLevel = self.zoomLevel;
+		self.zoomLevel = 1;
+		self.globalOffsetX = 0;
+		self.globalOffsetY = 0;
+		var sX = (1/self.dimensions.scaleX);
+		var sY = (1/self.dimensions.scaleY);
+    	canvas.width = self.gridImg.width*sX;//ir.vn("saveImagePopupWidth");
+    	canvas.height = self.gridImg.height*sY;//ir.vn("saveImagePopupHeight");    	
+    	//self.canvas = canvas;
+    	//self.ctx = ctx;    	
+		
+		var xAxis  = {x : 1, y: 0.5};
+    	var yAxis  = {x : -1, y: 0.5};
+		var origin = {x : 0, y : 0};
+		var area = (xAxis.x * ( xAxis.y + yAxis.y ) + ( xAxis.x + yAxis.x ) * yAxis.y) - (xAxis.y * ( xAxis.x + yAxis.x ) + ( xAxis.y + yAxis.y ) * yAxis.x);
+		var scaleBy = 1 / Math.sqrt(area);
+		
+		if(self.isIsometric){
+			canvas.width *= 1.15;
+			canvas.height *= 1.15;
+			ctx.save();
+			xAxis.x *= scaleBy;
+			xAxis.y *= scaleBy;
+			yAxis.x *= scaleBy;
+			yAxis.y *= scaleBy;
+			//ctx.setTransform(xAxis.x, xAxis.y, yAxis.x, yAxis.y, origin.x, origin.y);
+			ctx.setTransform(xAxis.x, xAxis.y, yAxis.x, yAxis.y, canvas.width/3, origin.y);
+		}
+		
+    	self.scaleForImage();
+    	self.drawCanvas(true, canvas, ctx);
+    	//ctx.imageSmoothingEnabled = false;
+		if(self.isIsometric){
+			ctx.restore();
+		}
+		
+		
+		ctx.save();
+		ctx.globalCompositeOperation = 'destination-over';
+		ctx.fillStyle = self.backgroundColor;
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.restore();
+		
+        var imageType = "image/png";
+        
+    	var image = canvas.toDataURL(imageType);
+		
+		self.backgroundColor = "white";
+		
+		self.dimensions.scaleX = 1;
+		self.dimensions.scaleY = 1;
+  		//Open image in new tab
+		//window.open(image);
+		if(imageType=="image/png" && !fileName.endsWith(".png")){
+			fileName += ".png";
+		}
+        
+        var formData = new FormData(ir.get("fictionalMapsForm"));
+        
+        formData.append("map_file", self.dataURItoBlob(image), fileName);
+        
+        //ir.get("fictionalMapSubmit").click();
+        //window.open("https://fictionalmaps.com/xs-welcome/?token="+claimToken, '_blank');
+        
+        var xhttp = new XMLHttpRequest();
+    	xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				window.open("https://fictionalmaps.com/xs-welcome/?token="+claimToken, '_blank');
+				ir.hide("exportWait");
+			}
+  		};
+  		xhttp.open("POST", "https://fictionalmaps.com/wp-content/plugins/fictional-maps-handler/php/receiver/xs_receiver.php", true);
+  		xhttp.send(formData);
+        
+        
+        
+        
+		
+  		self.isRunning = true;
+		self.zoomLevel = self.oldZoomLevel;
+  		//self.shutdownEditor();    
+		try{
+			track("Publishing Image", fileName, parseInt(image.length/1000)/1000 + " MB");
+		}catch(e){}
+    },
+    dataURItoBlob: function(dataURI) {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type:mimeString});
     },
     scaleForImage:function(){
 		
@@ -2716,7 +2880,7 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = false;
+		var isBeta = true;
         //Change in above func too
 		var passwd = "letsdraw";
 		var storedPwd = irstore.get("doodlePwd");
@@ -2788,6 +2952,14 @@ var doodler = (function(){
         self.renderImage();
       }
       //view.stopWaiting();    
+    },
+    showAboutPopup: function(){
+        self.popupShowing = true;
+        ir.show("aboutPopup");
+    },
+    showHowToPopup: function(){
+        self.popupShowing = true;
+        ir.show("howToPopup");
     },
     showDimensionPopup: function(){
     	/*ir.show("dimensionPopup");

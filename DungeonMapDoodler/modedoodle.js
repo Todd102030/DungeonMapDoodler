@@ -184,7 +184,7 @@ var Doodle = (function(){
 				self.doodleStartY = ypos;
 			}
 		},
-		mouseUp: function(xpos, ypos){
+		mouseUp: function(xpos, ypos, data){
 			self.isDoodling = false;
 			doodler.updateUndoStack();
             self.doodleStartX = 0;
