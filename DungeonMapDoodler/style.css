@@ -154,6 +154,7 @@ table{
 .floatingBtns {
 	/*resize:horizontal;
 	overflow: auto;*/
+    font-size: 0;
 }
 
 .floatingControlsLeft{
@@ -435,6 +436,63 @@ ul#navigation ul li a {
     width:140px;
 }
 /* End navigation menu*/
+
+
+/* Styled tooltip popups */
+.tooltip {
+    display:inline-block;
+    position:relative;
+    text-align:left;
+}
+
+.tooltip .left {
+    min-width:200px; 
+    top:50%;
+    right:100%;
+    margin-right:20px;
+    transform:translate(0, -50%);
+    padding:10px 20px;
+    color:#444444;
+    background-color:#EEEEEE;
+    font-weight:normal;
+    font-size:13px;
+    border-radius:8px;
+    position:fixed;
+    z-index:999999;
+    box-sizing:border-box;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+    visibility:hidden; opacity:0; transition:opacity 0.8s;
+}
+
+.tooltip:hover .left {
+    visibility:visible; opacity:1;
+}
+
+.tooltip .left ul {
+    padding-left: 8px;
+}
+
+.tooltip .left i {
+    position:absolute;
+    top:50%;
+    left:100%;
+    margin-top:-12px;
+    width:12px;
+    height:24px;
+    overflow:hidden;
+}
+
+.tooltip .left i::after {
+    content:'';
+    position:absolute;
+    width:12px;
+    height:12px;
+    left:0;
+    top:50%;
+    transform:translate(-50%,-50%) rotate(-45deg);
+    background-color:#EEEEEE;
+    box-shadow:0 1px 8px rgba(0,0,0,0.5);
+}
 
 @media(max-width:680px){
 	ul#navigation li {

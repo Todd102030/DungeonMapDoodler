@@ -166,12 +166,14 @@ var StampTool = (function(){
             var zoom = doodler.zoomLevel;
             var offX = doodler.globalOffsetX;
             var offY = doodler.globalOffsetY;
+            xpos = xpos*zoom+offX;
+            ypos = ypos*zoom+offY;
 			var border=self.borderSize;
 			var ctx = data.hatchCtx;
 			var newimg = new Image();
 			newimg.src = self.chosenStampImg.src;
 			var stampobj = null;
-			if(self.isSnapping || doodler.shiftDown){
+			if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
 				var gridxy = getGridXY(xpos, ypos);
 				
 				if(self.stampRatio<1){
@@ -181,18 +183,9 @@ var StampTool = (function(){
 					gridxy.stepx = gridxy.step * self.stampRatio;
 					gridxy.stepy = gridxy.step;
 				}
-				
-				//var ratioImg = new Image();
-				//ratioImg.onload = function(){
-					//ctx.drawImage(self.chosenStampImg, gridxy.xpos*zoom, gridxy.ypos*zoom, gridxy.step/zoom, gridxy.step/zoom);	
-					stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
-					
-					doodler.stamps.push(stampobj);
-				//}
-				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
-				
-				
-
+				stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.currentLayer);
+				doodler.stamps.push(stampobj);
+                doodler.updateFrameBuffer();
 			}
 			else{
 				
@@ -203,15 +196,12 @@ var StampTool = (function(){
 					self.stepx = self.size * self.stampRatio;
 					self.stepy = self.size;
 				}
-				//var ratioImg = new Image();
-				//ratioImg.onload = function(){
-					stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle);
-					
-					doodler.stamps.push(stampobj);
-				//}
-				//ratioImg.src = self.chosenStamp.path||self.chosenStamp.src;
+				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.currentLayer);
+				doodler.stamps.push(stampobj);
+                doodler.updateFrameBuffer();
 				
 			}
+            
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			if(self.chosenStampImg==null){
@@ -224,11 +214,12 @@ var StampTool = (function(){
             var zoom = doodler.zoomLevel;
 			var offX = doodler.globalOffsetX;
 			var offY = doodler.globalOffsetY;
+            
 			self.stampMoveHit = doodler.hitTestStamps({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
 			if(self.stampMoveHit == null && !self.isMovingStamp && self.stampSelected==null && !self.stampRotater && !self.rotatingStamp){
-				if(self.isSnapping || doodler.shiftDown){
+				if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
 					var gridxy = getGridXY(xpos, ypos);
 					if(self.stampRatio<1){
 						gridxy.stepx = gridxy.step;
@@ -468,7 +459,7 @@ var StampTool = (function(){
             var offX = doodler.globalOffsetX;
             var offY = doodler.globalOffsetY;
 			var border=self.borderSize;
-			if(self.isSnapping || doodler.shiftDown){
+			if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
 				var gridxy = getGridXY2(xpos, ypos);
 				//stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.step/zoom, gridxy.step/zoom, newimg, self.angle);
 				
@@ -481,6 +472,7 @@ var StampTool = (function(){
 				st.x = ((xpos))-self.offsetX;
 				st.y = ((ypos))-self.offsetY;
 			}
+            doodler.updateFrameBuffer();
 		},
 		mouseDown: function(xpos, ypos, data){
 			
@@ -556,6 +548,7 @@ var StampTool = (function(){
             if(self.stampHit != null){
                 self.stampSelected = self.stampHit;
             }
+            doodler.reloadLayerPreview(doodler.currentLayer);
 			self.placingStamp = false;
 			self.isMovingStamp = false;
             self.doodleStartX = 0;
@@ -604,6 +597,7 @@ var StampTool = (function(){
             ctx.rotate(-angleInRadians);
 			ctx.translate(-x-width/2, -y-height/2);
 			ctx.stroke();
+            doodler.updateFrameBuffer();
         },
         getAngle: function(cx, cy, ex, ey) {
             var dy = ey - cy;
@@ -611,8 +605,8 @@ var StampTool = (function(){
             var theta = Math.atan2(dy, dx); // range (-PI, PI]
             theta *= 180 / Math.PI; // rads to degs, range (-180, 180]
             if (theta < 0) theta = 360 + theta; // range [0, 360)
-            if(self.isSnapping || doodler.shiftDown){
-                theta = parseInt(theta / 45)*45;
+            if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
+                theta = parseInt(Math.round(parseFloat(theta / 45)))*45;
             }
             
             return theta;

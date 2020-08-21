@@ -49,6 +49,13 @@ Changelog 1.3:
 Interior wall tool
 Improvements to stamp tool
 Added some info on how to use the program 
+DonJon import support
+
+Changelog 1.4:
+Added tooltips to tools on mouseover
+Changed stamps to be layer specific
+First version of dungeon generation released
+
 
 
 ** Stamps to Buy **

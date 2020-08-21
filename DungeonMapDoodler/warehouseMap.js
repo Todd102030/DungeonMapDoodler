@@ -151,6 +151,13 @@ var doodler = (function(){
 			return
 		}
 		self.layers.swap(self.currentLayer, self.currentLayer+1);
+        self.stamps.forEach(function(s){
+            if(s.layer == self.currentLayer){
+                s.layer+=1
+            }else if(s.layer == self.currentLayer+1){
+                s.layer -=1
+            }
+        })
 		self.currentLayer += 1;
 		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
         self.updateFrameBuffer();
@@ -160,15 +167,27 @@ var doodler = (function(){
 			return
 		}
 		self.layers.swap(self.currentLayer, self.currentLayer-1);
+        self.stamps.forEach(function(s){
+            if(s.layer == self.currentLayer){
+                s.layer-=1
+            }else if(s.layer == self.currentLayer-1){
+                s.layer +=1
+            }
+        })
 		self.currentLayer -= 1;
 		self.loadLayerList(self.layers[self.currentLayer].layerIndex);
         self.updateFrameBuffer();
 	},
 	deleteLayer: function(){
 		if(self.layers.length>1){
-			self.layers.splice(self.currentLayer, 1);
-			self.switchLayer(self.layers[0].layerIndex);
-            self.updateFrameBuffer();
+            if(confirm("Are you sure you want to delete this layer? This cannot be undone")){
+                self.layers.splice(self.currentLayer, 1);
+                self.switchLayer(self.layers[0].layerIndex);
+                self.updateFrameBuffer();
+                self.stamps = self.stamps.filter(function(a){
+                    return a.layer != self.currentLayer;
+                })
+            }
 		}	
 	},
 	switchLayer: function(layerIndex){
@@ -238,7 +257,7 @@ var doodler = (function(){
         }
         self.walls.push(new Wall(Number(sx.toFixed(2)), Number(sy.toFixed(2)), Number((ex-sx).toFixed(2)), Number((ey-sy).toFixed(2))));
     },
-	applyDimensions: function(callback){   
+	applyDimensions: function(callback, skipHatchImg){   
         doodler.popupShowing=false;
 		ir.hide("dimensionPopup");
     	var xfeet = ir.vn("dimensionPopupX");
@@ -346,16 +365,6 @@ var doodler = (function(){
     	self.textFields.splice(id, 1);
     	self.enableButtons(true);
     },
-    applyEditTextPopup: function(){
-    	ir.hide("textEditPopup");
-    	var text = self.textFields[ir.vn("textEditId")];
-		self.popupShowing = false;
-    	text.text = ir.v("textEditVal");
-    	text.vert = ir.bool("textEditVert");
-    	text.f = ir.vn("textEditFontSize");
-    	text.font = ir.v("textEditFont");
-    	//self.enableButtons(true);
-    },
     applyCancelLocPopup: function(){
     	ir.hide("locEditPopup");
 		
@@ -402,6 +411,17 @@ var doodler = (function(){
     	wall.h = (ir.vn("wallEditHeight")/self.dimensions.scaleY).f2();
     	self.enableButtons(true);
     },
+    applyEditTextPopup: function(){
+    	ir.hide("textEditPopup");
+    	var text = self.textFields[ir.vn("textEditId")];
+		self.popupShowing = false;
+    	text.text = ir.v("textEditVal");
+    	text.vert = ir.bool("textEditVert");
+    	text.f = ir.vn("textEditFontSize");
+    	text.font = ir.v("textEditFont");
+        text.justify = ir.v("textEditJustify");
+    	//self.enableButtons(true);
+    },
     applyTextPopup: function(){
         self.popupShowing = false;
     	var text = ir.get("textPopupVal").value;
@@ -412,8 +432,8 @@ var doodler = (function(){
 	    	var isVert = ir.get("drawVerticalText").checked;
 	    	var fontSize = ir.vn("textPopupFontSize");
 	    	var font = ir.v("textPopupFont");
-		
-	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font));
+		    var justify = ir.v("textPopupJustify");
+	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font, justify));
 	    	self.textId = self.textFields.length-1;
     	}
     },
@@ -530,6 +550,7 @@ var doodler = (function(){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
 			self.drawFloorMask(canvas, ctx, index);	
+            self.drawStamps(canvas, ctx, index);
 		})
 		self.drawGrid(canvas, ctx);
         self.ctx.strokeStyle = "rgb(255,0,0)";
@@ -570,10 +591,12 @@ var doodler = (function(){
             }
         }
         
-		self.drawStamps(canvas, ctx);
+        
+		//self.drawStamps(canvas, ctx);
         
         self.drawTextFields(canvas, ctx);
         if(!self.pinchZoom){
+            
             self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
         }
         
@@ -915,6 +938,41 @@ var doodler = (function(){
     	//ctx.msImageSmoothingEnabled = true;
     	//ctx.imageSmoothingEnabled = true;
     },
+    drawGridPoint: function(x, y, bord, ins, fill, wall){
+        var size = 50;
+        var border= bord || 3;
+        var ctx = self.hatchCtx;
+        var hatchSize = 30;
+
+
+        var dim = doodler.dimensions;
+        var xfeet = dim.wf;
+        var yfeet = dim.hf;
+        var sx = dim.scaleX;
+        var sy = doodler.dimensions.scaleY;
+        var step = dim.footPixel * dim.stepSize / sx;
+        var zoom = doodler.zoomLevel;
+        // Radii of the white glow.
+        var innerRadius = size * 0.15;
+        var outerRadius = size*2+hatchSize;
+        // Radius of the entire circle.
+        var radius = self.size*2.1+hatchSize;
+
+        ModeHelper.drawCrossHatchCircle(ctx,x*step+step/2,y*step+step/2,size*4,border,hatchSize);
+        var inset= ins || 0;
+
+        //Path Drawing
+        ctx = self.doodleCtx;
+        ctx.fillStyle = fill || "white";
+        ctx.fillRect(x*step-inset, y*step-inset, step+inset*2, step+inset*2);
+
+        //Outline Drawing
+        ctx = self.outlineCtx;
+        ctx.fillStyle = wall || "black";
+        ctx.fillRect(x*step-border-inset, y*step-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step);
+
+        doodler.updateFrameBuffer();
+    },
     drawHitTest : function(rect1, rect2) {
 		if (rect1.x < rect2.x + rect2.w && rect1.x + rect1.w > rect2.x
 				&& rect1.y < rect2.y + rect2.h && rect1.h + rect1.y > rect2.y) {
@@ -1015,7 +1073,7 @@ var doodler = (function(){
             self.globalOffsetY+imgLoc.y*self.zoomLevel+((imgLoc.h*self.zoomLevel)/1.5));
         }
     },
-	drawStamps: function(canv,ct){
+	drawStamps: function(canv,ct, index, skipZoomPos){
 		var ctx = ct || self.ctx;
         var stamps = self.stamps;
         var sX =self.dimensions.scaleX;
@@ -1023,11 +1081,18 @@ var doodler = (function(){
         
         for(var i=0,z=stamps.length;i<z;i++){
             var st = stamps[i];
+            if(st.layer != index){
+                continue;
+            }
+            if((!self.layers[index].visible) && !skipZoomPos){
+                continue;
+            }
 			if(st.img == null){
 				st.img = new Image();
 				st.img.src = st.path;
 			}
-			Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
+			//Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
+			Modes.StampTool.drawImageRotated(ctx,st.img, st.x, st.y, st.w, st.h, st.angle);
         }
     },
     drawTextFields: function(canv,ct){
@@ -1036,7 +1101,7 @@ var doodler = (function(){
       for(var i=0;i<self.textFields.length;i++){
         var textField = self.textFields[i];            
         ctx.fillStyle = "#000";
-        self.setFont(textField.f * self.zoomLevel, textField.font, ctx);
+        self.setFont(textField.f * self.zoomLevel, textField.font, ctx, textField.justify);
         var text = textField.text;
         var textLines = text.split(/\r?\n/g);
         var id = self.textId;
@@ -1276,6 +1341,9 @@ var doodler = (function(){
 	  var a = self.stamps;
 		for(var i=0,z=a.length;i<z;i++){
 			var b = a[i]
+            if(b.layer != self.currentLayer){
+                continue;
+            }
 			//if(self.hitTest(mrect,{x:b.x-b.w/2, y:b.y-b.h/2, w:b.w, h:b.h})){
 			if(self.hitTest(mrect,b)){
 				return i;
@@ -1377,6 +1445,7 @@ var doodler = (function(){
 			
 			
 	        document.getElementById("imageUpload").addEventListener("change", self.readImage, false);
+	        document.getElementById("donJonUpload").addEventListener("change", self.readDonJon, false);
 			document.getElementById("stampUpload").addEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.addEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.addEventListener("DOMMouseScroll", self.handleMouseScroll);	        
@@ -1415,6 +1484,10 @@ var doodler = (function(){
 			self.canvas.width = w;
 			self.canvas.height = h-4;
             self.updateFrameBuffer();
+            //ir.get("loadingPopup").style.opacity=0;
+            //setTimeout(function(){ir.hide("loadingPopup")},500)
+            //document.body.classList.add("loaded");
+            //ir.get("appContent").classList.add("loaded");
 			
 	        //Set up animation, using requestAnimationFrame is the smoothest option, works a lot better than a setTimeout/setInterval
 	        window.requestAnimFrame = function(){
@@ -1438,9 +1511,557 @@ var doodler = (function(){
         var delta = Math.max(-1, Math.min(1, (evn.wheelDelta || -evn.detail)));
         self.zoom(delta);
     },
+    loadDonJon: function(data, border, inset, fill, wall){
+        doodler.loadingSave = true;
+        //data.length is y height, 
+        //data[0].length is x width
+        if(!data || data.length==0 || data[0].length == 0){
+            alert("Unable to process data from map file, please ensure you're using the TSV export from https://donjon.bin.sh/d20/dungeon/");
+            return;
+        }
+        
+        //Only want to reset dimensions if we need to, if we keep using the same ones, we don't want to lose 
+        //doodles already made on other layers - we still need to clear current layer though
+        //Clear out stamps on current layer too
+        
+        ir.set("dimensionPopupX", data[0].length*self.dimensions.stepSize);
+        ir.set("dimensionPopupY", data.length*self.dimensions.stepSize);
+        ir.set("dimensionPopupStep", self.dimensions.stepSize);
+        ir.set("dimensionPopupBoxSize", self.dimensions.footPixel * self.dimensions.stepSize);
+        
+        self.applyDimensions(function(){
+            var data = doodler.donJonData;
+            //doodler.stamps = [];
+            for(var y=0;y<data.length;y++){
+                for(var x=0;x<data[y].length;x++){
+                    var point = data[y][x];
+                    if(point.length > 0){
+                        doodler.drawGridPoint(x, y, border, inset, fill, wall);
+                    }
+                    var up=null, down=null, left=null,right=null;
+                    
+                    try{
+                        up = data[y-1][x];
+                        down = data[y+1][x];
+                        left = data[y][x-1];
+                        right = data[y][x+1];
+                    }catch(e){}
+                        
+                    if(point.startsWith("D")){
+                        var st = StampConstants.Door;
+                        var angleOffset = 0;
+                        if(point.startsWith("DS")){
+                            st = StampConstants.DoorSecret;
+                        }
+                        if(point.startsWith("DP")){
+                            st = StampConstants.DoorPortcullis;
+                            angleOffset = 90;
+                        }
+                        
+                        if(up != null && up.length > 0 && down != null && down.length > 0){
+                            self.addStamp(x, y, st, 90+angleOffset);
+                        }else{
+                            self.addStamp(x, y, st, 0+angleOffset);
+                        }
+                    }
+                    if(point == "SD" || point == "SU"){
+                        var angle = 0;
+                        var xp = 0;
+                        var yp = 0;
+                        if(point == "SU" && left == "SUU"){
+                            angle = 0;
+                            xp = -1;
+                        }
+                        if(point == "SU" && up == "SUU"){
+                            angle = 90;
+                            yp = -1;
+                        }
+                        if(point == "SU" && right == "SUU"){
+                            angle = 180;
+                            xp = 1;
+                        }
+                        if(point == "SU" && down == "SUU"){
+                            angle = 270;
+                            yp = 1;
+                        }
+                        
+                        if(point == "SD" && left == "SDD"){
+                            angle = 180;
+                            xp = -1;
+                        }
+                        if(point == "SD" && up == "SDD"){
+                            angle = 270;
+                            yp = -1;
+                        }
+                        if(point == "SD" && right == "SDD"){
+                            angle = 0;
+                            xp = 1;
+                        }
+                        if(point == "SD" && down == "SDD"){
+                            angle = 90;
+                            yp = 1;
+                        }
+                        
+                        self.addStamp(x, y, StampConstants.Stairs, angle);
+                        self.addStamp(x+xp, y+yp, StampConstants.Stairs, angle);
+                    }
+                    if(point == "STAR"){
+                        self.addStamp(x-0.5, y-0.5, StampConstants.Star, angle);
+                    }
+                    if(point == "Throne"){
+                        self.addStamp(x-1, y-0.5, StampConstants.Throne, angle, 2);
+                    }
+                    if(point == "Barrel"){
+                        self.addStamp(x, y, StampConstants.Barrel, angle);
+                    }
+                    if(point == "Crack"){
+                        self.addStamp(x, y, StampConstants.Crack, angle);
+                    }
+                    if(point == "Chest"){
+                        self.addStamp(x, y, StampConstants.Chest, angle);
+                    }
+                    if(point == "Bed"){
+                        self.addStamp(x, y, StampConstants.Bed, angle);
+                    }
+                    if(!isNaN(parseInt(point))){
+                        var asNum = parseInt(point);
+                        var tens = Math.floor(asNum/10);
+                        var ones = asNum - tens*10;
+                        
+                        if(tens > 0){
+                            self.addStamp(x-1, y, StampConstants["Num"+tens], angle);
+                        }
+                        if(tens == 0){
+                            self.addStamp(x-0.5, y, StampConstants["Num"+ones], angle);
+                        }
+                        else{
+                            self.addStamp(x, y, StampConstants["Num"+ones], angle);
+                        }
+                        
+                        
+                    }
+                }
+            }
+            doodler.donJonData = null;
+            doodler.popupShowing = false;
+            doodler.reloadLayerPreview(self.currentLayer);
+            ir.hide("donJonPopup");
+        });
+        
+    },
+    addStamp: function(x,y, stamp, angle, mult){
+        var newimg = new Image();
+        newimg.src = stamp.path;
+        var stampobj = null;
+        var gridxy = getGridXY(x, y);
+        var dim = doodler.dimensions;
+        var step = dim.footPixel * dim.stepSize;
+        var multiply = mult || 1;
+        var ang = angle || 0;
+        //Assume stamps are squares
+        stampobj = new StampObj(x*step, y*step, step*multiply, step*multiply, newimg, stamp.path, ang, self.currentLayer);
+        doodler.stamps.push(stampobj);
+    },
+    showGenerateDungeonPopup: function(){
+        ir.show("randomGenPopup");  
+    },
+    generateDungeon: function(){
+        ir.hide("randomGenPopup");
+        //Options from user
+        //Width
+        //Height
+        //Linear/Sprawling
+        var width = ir.vn("randomGenWidth");
+        var height = ir.vn("randomGenHeight");
+        self.genRoomW = width;
+        self.genRoomH = height;
+        var linear = true;
+        var numRooms = ir.vn("randomGenNumRooms");
+        var roomSize = ir.vn("randomGenRoomSize")/2;
+        
+        //Decent size for big one = 50x50 size, 20 rooms, roomsize of 5
+        //Good for small = 20x20 size, 5 rooms, roomsize of 2
+        
+        var grid = [];
+        var rooms = [];
+        
+        for(var y=0;y<height;y++){
+            grid[y] = [];
+            for(var x=0;x<width;x++){
+                grid[y][x] = "";
+            }
+        }
+        
+        //current X and Y position;
+        var cX = parseInt(width/2);
+        var cY = height - 1;
+        var entrySide = Side.Bottom;
+        var leavingSide = Side.Bottom;
+        //generate a room, draw a line or two to the next, generate another room
+        for(var i = 0; i < numRooms; i++){
+            
+            //center position of room
+            var roomX = Math.round(Math.random()*width);
+            var roomY = Math.round(Math.random()*height);
+            var sizeX = Math.round(Math.random()*roomSize)+1;
+            var sizeY = Math.round(Math.random()*roomSize)+1;
+            
+            if(roomX - sizeX < 1){roomX=Math.round(sizeX)+1}
+            if(roomY - sizeY < 1){roomY=Math.round(sizeY)+1}
+            if(roomX+sizeX >= self.genRoomW-1){roomX=self.genRoomW-2-sizeX}
+            if(roomY+sizeY >= self.genRoomH-1){roomY=self.genRoomH-2-sizeY}
+            
+            
+            var roomFits = self.testRoomFit(grid, roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
+            var testLoop = 0;
+            
+            while(!roomFits && testLoop <= 50){
+                roomX = Math.round(Math.random()*width);
+                roomY = Math.round(Math.random()*height);
+                sizeX = Math.round(Math.random()*roomSize)+1;
+                sizeY = Math.round(Math.random()*roomSize)+1;
+
+                if(roomX - sizeX < 1){roomX=Math.round(sizeX)+1}
+                if(roomY - sizeY < 1){roomY=Math.round(sizeY)+1}
+                if(roomX+sizeX >= self.genRoomW-1){roomX=self.genRoomW-2-sizeX}
+                if(roomY+sizeY >= self.genRoomH-1){roomY=self.genRoomH-2-sizeY}
+                testLoop ++;
+                if(testLoop == 50){
+                    console.log("Failed to fit room, should continue", roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
+                }
+                roomFits = self.testRoomFit(grid, roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
+            }
+            rooms[i] = {cX:roomX, cY:roomY, w:sizeX, h:sizeY};
+            self.generateRoom(grid, roomX-sizeX, roomY-sizeY, sizeX*2, sizeY*2);
+            grid[roomY][roomX] = "SD";
+            
+           
+            //After figuring out side we leave on, figure out how far to move left/right and up/down to figure out new entrySide
+            var xDist = parseInt(Math.random()*20-10);
+            var yDist = parseInt(Math.random()*20-10);
+            //if both xDist and yDist are less than 0, could be coming from left or bottom, need to make a decision on that ourselves
+            
+        }
+        
+        rooms = rooms.sort(function(a,b){
+            var ret = a.cX-b.cX;
+            if(ret==0){
+                ret = a.cY - b.cY;
+            }
+            return ret;
+        });
+        
+        //Rooms sorted now, but we need to sort into closest rooms
+        var roomsClose = [];
+        roomsClose.push(rooms.shift());
+        var allRoomsUsed = false;
+        //Until all rooms are used in new array, keep going
+        while(rooms.length > 0){
+            var closestIdx = 0;
+            var closestDist = 5000;
+            //last added room to roomsClose
+            var room1 = roomsClose[roomsClose.length-1];
+            
+            for(var r=0;r<rooms.length;r++){
+                var room2 = rooms[r];
+                var thisDist = Math.hypot(room1.cX-room2.cX, room1.cY-room2.cY)
+                if(thisDist<closestDist){
+                    closestIdx = r;
+                    closestDist = thisDist;
+                }
+            }
+            console.log("Taking room", closestIdx, " and shoving it into roomsClose");
+            roomsClose.push(rooms.splice(closestIdx, 1)[0]);
+        }
+        
+        
+        console.log("Sorted rooms", roomsClose);
+        //Connect center points from list of rooms
+        for(var i=0;i<roomsClose.length-1;i++){
+            var room1 = roomsClose[i];
+            var room2 = roomsClose[i+1];
+            
+            //X is always going to be smaller or the same as X2
+            //Y might be smaller or the same as Y2
+            var startX = room1.cX;
+            var startY = room1.cY;
+            var endX = room2.cX;
+            var endY = room2.cY;
+            
+            if(startX <= endX){
+                if(startY <= endY){
+                    for(var x = startX; x<=endX; x++){
+                        if(grid[endY][x] == ""){
+                            grid[endY][x] = "F";
+                        }
+                    }
+                    for(var y = startY; y<=endY; y++){
+                        if(grid[y][startX] == ""){
+                            grid[y][startX] = "F";
+                        }
+                    }
+                }
+                else{
+                    for(var x = startX; x<=endX; x++){
+                        if(grid[endY][x] == ""){
+                            grid[endY][x] = "F";
+                        }
+                    }
+                    for(var y = endY; y<=startY; y++){
+                        if(grid[y][startX] == ""){
+                            grid[y][startX] = "F";
+                        }
+                    }
+                }
+            }else{
+                if(startY <= endY){
+                    for(var x = endX; x<=startX; x++){
+                        if(grid[endY][x] == ""){
+                            grid[endY][x] = "F";
+                        }
+                    }
+                    for(var y = startY; y<=endY; y++){
+                        if(grid[y][startX] == ""){
+                            grid[y][startX] = "F";
+                        }
+                    }
+                }
+                else{
+                    for(var x = endX; x<=startX; x++){
+                        if(grid[endY][x] == ""){
+                            grid[endY][x] = "F";
+                        }
+                    }
+                    for(var y = endY; y<=startY; y++){
+                        if(grid[y][startX] == ""){
+                            grid[y][startX] = "F";
+                        }
+                    }
+                }
+            }
+            if(i==0){
+                grid[room1.cY][room1.cX] = "STAR";
+            }else{
+                grid[room1.cY][room1.cX] = i+"";
+            }
+            if(i == roomsClose.length - 2){
+                grid[room2.cY][room2.cX] = (i+1)+"";
+            }
+            
+        }
+        
+        var largestRoomIdx = 0;
+        var largestRoom = 0;
+        
+        roomsClose.forEach(function(room, i){
+            if(room.w*2 * room.h*2 > largestRoom){
+                largestRoom = room.w*2 * room.h*2;
+                largestRoomIdx = i;
+            }
+        })
+        
+        //Largest room assuming it's big enough is a throne room
+        var largestRoom = roomsClose[largestRoomIdx];
+        //Check if up 2 or left 1 and up 20 is floor, if so, push left or right
+        console.log("largest room is ", largestRoom)
+        if(largestRoom.w * 2 * largestRoom.h * 2 > 30){
+            if((grid[largestRoom.cY-largestRoom.h-1][largestRoom.cX] != "" || grid[largestRoom.cY-largestRoom.h-1][largestRoom.cX-1] != "") && largestRoom.w*2 > 6){
+                grid[largestRoom.cY-largestRoom.h+1][largestRoom.cX+2] = "Throne";
+            }
+            else{
+                grid[largestRoom.cY-largestRoom.h+1][largestRoom.cX] = "Throne";
+            }
+        }
+        
+        //Cellar room (barrels)
+        //Treasure room
+        //Bed room
+        //traps randomly placed
+        
+        
+        //Cellar Room
+        var cellarIdx = Math.floor(Math.random()*roomsClose.length);
+        if(cellarIdx == largestRoomIdx){cellarIdx --};
+        if(cellarIdx < 0){
+            cellarIdx = 0;
+        }
+        var cellarRoom = roomsClose[cellarIdx];
+        if(cellarRoom.w>=2 && cellarRoom.h>=2){
+            for (var y=cellarRoom.cY-cellarRoom.h;y<cellarRoom.cY+cellarRoom.h;y++){
+                for (var x=cellarRoom.cX-cellarRoom.w;x<cellarRoom.cX+cellarRoom.w;x++){
+                    if(self.isRoomCorner(grid, cellarRoom, x, y, "Barrel") && Math.random()>0.4){
+                        grid[y][x] = "Barrel";
+                    }
+                }
+            }
+        }
+        
+        //Throw some random cracks around
+        for(var i=0;i<numRooms*0.7;i++){
+            var x = Math.floor(Math.random()*width);
+            var y = Math.floor(Math.random()*height);
+            if(grid[y][x] == "F"){
+                grid[y][x] = "Crack";
+            }
+        }
+        
+        //Treasure Room
+        var chestIdx = Math.floor(Math.random()*roomsClose.length);
+        if(chestIdx == largestRoomIdx){chestIdx --};
+        if(chestIdx < 0){
+            chestIdx = 0;
+        }
+        var chestRoom = roomsClose[chestIdx];
+        if(chestRoom.w>=1 && chestRoom.h>=2){
+            console.log("Creating chest room");
+            for (var x=chestRoom.cX-chestRoom.w;x<chestRoom.cX+chestRoom.w;x++){
+                if(self.isRoomCorner(grid, chestRoom, x, chestRoom.cY-chestRoom.h, "Chest") && Math.random()>0.5){
+                    grid[chestRoom.cY-chestRoom.h][x] = "Chest";
+                }
+            }
+            
+        }
+        
+        //Bed Room
+        var bedIdx = Math.floor(Math.random()*roomsClose.length);
+        if(bedIdx == largestRoomIdx){bedIdx --};
+        if(bedIdx < 0){
+            bedIdx = 0;
+        }
+        var bedRoom = roomsClose[bedIdx];
+        if(bedRoom.w>2 && bedRoom.h>=2){
+            console.log("Creating bed room");
+            for (var x=bedRoom.cX-bedRoom.w;x<bedRoom.cX+bedRoom.w;x++){
+                if(self.isRoomCorner(grid, bedRoom, x, bedRoom.cY-bedRoom.h, "Bed") && Math.random()>0.5){
+                    grid[bedRoom.cY-bedRoom.h][x] = "Bed";
+                }
+            }
+            
+        }
+        
+        //Doors
+         
+        for(var y=2;y<height-2;y++){
+            for(var x=2;x<width-2;x++){
+                if(Math.random()>0.3){
+                    self.tryDoorSpot(grid, x, y);
+                }
+            }
+        }
+        
+        
+        
+        console.log("Grid", grid);
+        self.donJonData = null;
+        self.donJonData = grid;
+        self.loadDonJon(grid, 3, 0);
+    },
+    tryDoorSpot: function(grid, x, y){
+        //If 2/9 spots are "", put a door between 
+        var emptySpots = 0;
+        for(var yy = y-1;yy<=y+1;yy++){
+            for(var xx = x-1;xx<=x+1;xx++){
+                if(grid[yy][xx] == ""){
+                    emptySpots ++;
+                }
+            }
+        }
+        if(emptySpots == 2){
+            //top
+            if(grid[y-1][x-1] == "" && grid[y-1][x+1] == ""){
+                grid[y-1][x] = "DR"
+            }
+            //bottom
+            if(grid[y+1][x-1] == "" && grid[y+1][x+1] == ""){
+                grid[y+1][x] = "DR"
+            }
+            //left
+            if(grid[y-1][x-1] == "" && grid[y+1][x-1] == ""){
+                grid[y][x-1] = "DR"
+            }
+            //right
+            if(grid[y-1][x+1] == "" && grid[y+1][x+1] == ""){
+                grid[y][x+1] = "DR"
+            }
+        }
+        
+        //return false;
+        
+    },
+    isRoomCorner: function(grid, room, x, y, ignore){
+        //This could technically return true for a hallway too, but we're only calling it from scope of a room currently
+        //A corner needs 2 out of 4 sides blocked
+        var sideCount = 0;
+        if(grid[y-1][x] == "" ){
+            sideCount ++;
+        }
+        if(grid[y][x-1] == ""){
+            sideCount ++;
+        }
+        if(grid[y+1][x] == "" ){
+            sideCount ++;
+        }
+        if(grid[y][x+1] == "" ){
+            sideCount ++;
+        }
+        if(grid[y][x] != "" && (sideCount == 2 || sideCount == 1) ){
+            console.log("Found a corner")
+            return true;
+        }else{
+            return false;
+        }
+    },
+    testRoomFit: function(grid, xS, yS, w, h){
+        if(xS < 0 || yS < 0 || h+yS > self.genRoomH || w+xS > self.genRoomW){
+            console.log("Code went out of range at testRoomFit", xS, yS, w, h);
+            return false;
+        }
+        for(var y = yS; y < h+yS; y++){
+            for(var x = xS; x < w+xS; x++){
+                //console.log("Checking grid at ", x, y);
+                if(grid[y][x] == "F"){
+                    //one already existing floor tile means we're overlapping another room
+                    return false;
+                }
+                
+            }
+        }
+        console.log("Room fit well");
+        return true;
+    },
+    genRoomW:20,
+    genRoomH: 20,
+    generateRoom: function(grid, xS, yS, w, h, entryPoint){
+        console.log("Making room from ", xS, yS, " to ", w+xS, h+yS);
+        
+        if(xS < 0 || yS < 0 || h+yS >= self.genRoomH || w+xS >= self.genRoomW){
+            console.log("Code went out of range");
+            return;
+        }
+        for(var y = yS; y < h+yS; y++){
+            for(var x = xS; x < w+xS; x++){
+                grid[y][x] = "F";
+                //if(y == yS || y == h+yS-1 || x == xS || x == w+xS){
+                    //Create a border of empty space around each room
+                    //grid[y][x] = "";
+                //}
+            }
+        }
+    },
+    generateLine: function(grid, xS, yS, xE, yE, entryPoint){
+        
+        
+        for(var y = yS; y <= yE; y++){
+            for(var x = xS; x <= xE; x++){
+                if(y==yS || x==xE){
+                    grid[y][x] = "F";
+                }
+            }
+        }
+    },
 	loadFile: function(data){
 		//console.log("load file called");
-			//JSON parse data into objects
+        //JSON parse data into objects
 		
 		try{
 			var obj = JSON.parse(data);
@@ -1472,6 +2093,7 @@ var doodler = (function(){
                             floorStyle: obj.floorStyle,
                             showFloor: obj.showFloor,
                             floorGenerated: false,
+                            
 						}
 					obj.layers = [stLay];
 					//self.layers = [stLay];
@@ -1560,7 +2182,9 @@ var doodler = (function(){
 						st.img.src = st.path;
 						
 					}
+                    //Place to fill in possibly missing data from old save files
 					st.ratio = st.ratio || 1;
+                    st.layer = st.layer || 0;
 				})
 				self.textFields = JSON.parse(obj.textFields || "[]") 
 			});
@@ -1641,6 +2265,7 @@ var doodler = (function(){
 		self.drawCrossHatchMask(canv, ctx, i, true);
 		self.drawDoodleMap(canv, ctx, i, true);	
 		self.drawFloorMask(canv, ctx, i, true);
+		self.drawStamps(canv, ctx, i, true);
 		
 		var canvSmall = document.createElement("canvas");
 		var ctxSmall = canvSmall.getContext("2d");
@@ -1948,6 +2573,25 @@ var doodler = (function(){
 				self.mouseMode.deleteFn();
 			}
 		}
+        
+        if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
+			self.generateDungeon();
+		}
+        
+        if(evt.ctrlKey && evt.key.toLowerCase() == "z" && !evt.shiftKey){
+			self.undo();
+		}
+        
+        if((evt.shiftKey && evt.ctrlKey && evt.key.toLowerCase() == "z") || (evt.ctrlKey && evt.key.toLowerCase() == "y")){
+			self.redo();
+		}
+        
+        if(evt.key.toLowerCase() == "+"){
+			self.zoom(1);
+		}
+        if(evt.key.toLowerCase() == "-" || evt.key.toLowerCase() == "_"){
+			self.zoom(-1);
+		}
 		
 		if(evt.key.toLowerCase() == "m"){
 			self.clickMode({target:ir.get("modeMove")});
@@ -1978,6 +2622,9 @@ var doodler = (function(){
 		}
 		if(evt.key.toLowerCase() == "t"){
 			self.clickMode({target:ir.get("modeTextTool")});
+		}
+        if(evt.key.toLowerCase() == "w"){
+			self.clickMode({target:ir.get("modeWall")});
 		}
 	},
     onMouseMove: function(evt){
@@ -2111,6 +2758,9 @@ var doodler = (function(){
             self.pinchZoom = false;
             return;
         }
+        
+        var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
+        var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel;  
 		
         var mode = self.mode;
         self.mouseIsDown = false;
@@ -2162,11 +2812,11 @@ var doodler = (function(){
         
 		
 		if (evt.ctrlKey){
-			Modes.Move.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			Modes.Move.mouseUp(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 			Modes.Move.endMode();
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseUp(self.mouseX, self.mouseY, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			self.mouseMode.mouseUp(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
         
     },
@@ -2363,6 +3013,25 @@ var doodler = (function(){
             FR.readAsText( this.files[0] );
         }
     },
+    readDonJon: function(){
+        if ( this.files && this.files[0] ) {
+            var FR= new FileReader();
+            FR.onload = function(e) {
+                doodler.popupShowing = true;
+                ir.show("donJonPopup");
+                self.donJonData = tsvJSON(e.target.result)
+				
+            };       
+            FR.readAsText( this.files[0] );
+        }
+    },
+    applyDonJonPopup: function(){
+        var border = ir.vn("donJonBorder");
+        var inset = ir.vn("donJonInset");
+        var fill = ir.v("donJonFillColor");
+        var wall = ir.v("donJonWallColor");
+        doodler.loadDonJon(self.donJonData, border, inset, fill, wall);
+    },
     redoDimensionPopup: function(){
     	self.dimensions.sx = null;
     	self.dimensions.sy = null;
@@ -2443,6 +3112,9 @@ var doodler = (function(){
   		xhttp.send(formdata);
  
     },
+    showDonJonLoad: function(){
+		  ir.get("donJonUpload").click();
+	},
 	showFileLoad: function(){
 		  ir.get("imageUpload").click();
 	},
@@ -2811,10 +3483,12 @@ var doodler = (function(){
     		text.y = map(text.y, 0, defY, 0, newY);
     	}
     },
-    setFont:function(pixelSize,other, otherCtx) {
-		
+    setFont:function(pixelSize,other, otherCtx, justify) {
+		var just = justify || "left";
+        self.ctx.textAlign = just;
 		self.ctx.font = Math.round(pixelSize) + "px '" + (other||"" + "' 'Arial'");
 		if(otherCtx){
+            otherCtx.textAlign = just;
 			otherCtx.font = Math.round(pixelSize) + "px '" + (other||"" + "' 'Arial'");
 		}
     	//self.ctx.font = Math.min(40,Math.max(self.minFontPx,Math.round(pixelSize))) + "px Arial " + (other||"");
@@ -2985,6 +3659,7 @@ var doodler = (function(){
     	//Clear out all listeners on canvas
     	if(self.isRunning){
 	    	document.getElementById("imageUpload").removeEventListener("change", self.readImage, false);
+	    	document.getElementById("donJonUpload").removeEventListener("change", self.readDonJon, false);
 			document.getElementById("stampUpload").removeEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.removeEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.removeEventListener("DOMMouseScroll", self.handleMouseScroll);

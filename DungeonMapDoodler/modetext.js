@@ -280,7 +280,8 @@ var TextTool = (function(){
 				var offY = doodler.globalOffsetY;
 				var zoom = doodler.zoomLevel;
 				//self.draw(xpos, ypos, data);
-				doodler.popupTextInput((xpos-offX)/zoom, (ypos-offX)/zoom);
+				doodler.popupTextInput(xpos, ypos);
+				//doodler.popupTextInput(xpos, ypos);
 			}
 			self.isPlacingText = false;
 			self.isMovingText = false;

@@ -63,15 +63,6 @@ var SnapToGrid = (function(){
 			// Radius of the entire circle.
 			var radius = self.size*2.1+hatchSize;
 
-			/*var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
-			gradient.addColorStop(0, 'black');
-			gradient.addColorStop(1, 'transparent');
-
-			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
-
-			ctx.fillStyle = gradient;
-			ctx.fill();
-*/
 			ModeHelper.drawCrossHatchCircle(ctx,xpos,ypos,size*4,border,hatchSize);
 			
 			

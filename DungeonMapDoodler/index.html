@@ -11,9 +11,20 @@
       	<!--<link rel="stylesheet" type="text/css" href="style2.css">-->
 		<link rel="manifest" href="manifest.json">
         <link rel="icon" type="image/png"   href="icon-192.png">
+        <style>
+        /*.appContent {
+            transition: opacity 0.5s;
+            opacity: 0;
+        }
+
+        .appContent.loaded {
+            opacity: 1;
+        }*/
+        </style>
     </head>
 <body onload='doodler.show()'>
-	<div class='flex-container'>
+ 
+	<div class='flex-container appContent' id='appContent'>
 		<div class='topBar' style='text-align: right'>
 			<nav id="nav">
 				<ul id="navigation">
@@ -38,6 +49,12 @@
 							<li><a href="#" onclick="doodler.toggleToolDock()">Dock/Undock Tools</a></li>
 						</ul>
 					</li>
+                    <li><a href="#">Tools &raquo;</a>
+						<ul>
+							<li><a href="#" onclick="doodler.showDonJonLoad()">Import donjon Map</a></li>
+							<li><a href="#" onclick="doodler.showGenerateDungeonPopup()">Generate Dungeon</a></li>
+						</ul>
+					</li>
                     <li><a href="#" class="last">Info &raquo;</a>
                         <ul>
 							<li><a href="#" onclick="doodler.showAboutPopup()">About</a></li>
@@ -50,10 +67,9 @@
 		
 		<div id='doodler'>
 			<canvas id="warehouseCanvas" width="800" height="800" ></canvas>  
-			<div style='display:none'><br>
-
-			<br>
+			<div style='display:none'>
 			<input type='file' id="imageUpload" accept=".dmd"/>
+			<input type='file' id="donJonUpload" accept=".tsv, .txt"/>
 			<div style="display:inline-block">
 				<label id='whImgLabel' for="whImgSlider">Background Visibility 40%</label><br>
 				<input id="whImgSlider" type="range" min="0" max="1" step="0.01" value="0.40">
@@ -183,6 +199,17 @@
 			<td class='tdr'>Font Size</td>
 			<td class='tdl'><input type='number' value='40' id='textPopupFontSize'/></td>
 		</tr>
+        <tr>
+			<td class='tdr'>Justification:</td>
+			<td class='tdl'>
+				<input type="radio" id="textPopupLeft" checked='checked' name="textPopupJustify" value="left" >
+				<label for="textPopupLeft">Left</label>
+				<input type="radio" id="textPopupCenter" name="textPopupJustify" value="center" >
+				<label for="textPopupCenter">Center</label>
+				<input type="radio" id="textPopupRight" name="textPopupJustify" value="right" >
+				<label for="textPopupRight">Right</label>
+			</td>
+		</tr>
 		<tr>
 			<td class='tdr'>Font</td>
 			<td class='tdl'><select id="textPopupFont" onchange="Modes.TextTool.changeFontPopup(event, 'textPopupVal')">
@@ -225,6 +252,17 @@
 		<tr>
 			<td class='tdr'>Font Size</td>
 			<td class='tdl'><input type='number' value=14 id='textEditFontSize'/></td>
+		</tr>
+        <tr>
+			<td class='tdr'>Justification:</td>
+			<td class='tdl'>
+				<input type="radio" id="textEditLeft" checked='checked' name="textEditJustify" value="left" >
+				<label for="textEditLeft">Left</label>
+				<input type="radio" id="textEditCenter" name="textEditJustify" value="center" >
+				<label for="textEditCenter">Center</label>
+				<input type="radio" id="textEditRight" name="textEditJustify" value="right" >
+				<label for="textEditRight">Right</label>
+			</td>
 		</tr>
 		<tr>
 			<td class='tdr'>Font</td>
@@ -356,6 +394,71 @@
 	<button type="button" class="canvBtn" onclick="ir.hide('imageExportPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
     
+<div id='randomGenPopup' class='popupPanel' style='display:none;text-align: center'>
+	<h2>Generate Random Dungeon</h2>
+	<table><!-- //Options from user
+        //Width
+        //Height
+        //Linear/Sprawling, number of rooms, room size -->
+        <!--<tr><td colspan="2">Use these parameters to edit </td></tr>-->
+        <tr><td colspan="2">Use this to create a randomly generated dungeon. Changing the parameters below will affect the generated dungeon. You can also use Ctrl 0 to keep generating new ones without returning to this popup.</td></tr>
+		<tr>
+			<td class='tdr'>Width:</td>
+			<td class='tdl'>
+				<input type="number" id="randomGenWidth" value='30' min="15" >
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Height:</td>
+			<td class='tdl'>
+				<input type="number" id="randomGenHeight" value='30' min="15" >
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Number of Rooms:</td>
+			<td class='tdl'>
+				<input type="number" id="randomGenNumRooms" value='15' >
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Room Size:</td>
+			<td class='tdl'>
+				<input type="number" id="randomGenRoomSize" value='6' >
+			</td>
+		</tr>
+		
+        <div style='width:100%'><div id="exportWait" class="loader" style="display:none;"></div></div>
+	</table>
+	<button type="button" class="canvBtn" onclick="doodler.generateDungeon()">Generate</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('randomGenPopup');doodler.popupShowing=false;">Cancel</button>
+</div>
+    
+    
+<div id='donJonPopup' class='popupPanel' style='display:none;text-align: center'>
+	<h2>Import donjon Dungeon</h2>
+	<table>
+        <tr><td colspan="2">Edit any parameters before importing map from donjon</td></tr>
+		<tr>
+			<td class='tdr'>Wall Thickness:</td>
+			<td class='tdl'><input type="number" id="donJonBorder" value='3' ></td>
+		</tr>
+        <tr>
+			<td class='tdr'>Grid Outset:</td>
+			<td class='tdl'><input type="number" id="donJonInset" value='0' ></td>
+		</tr>
+		<tr>
+			<td class='tdr'>Fill Colour:</td>
+			<td class='tdl'><input type='color' value='#ffffff' id='donJonFillColor'></td>
+		</tr>
+		<tr>
+			<td class='tdr'>Wall Colour:</td>
+			<td class='tdl'><input type='color' value='#000000' id='donJonWallColor'></td>
+		</tr>
+	</table>
+	<button type="button" class="canvBtn" onclick="doodler.applyDonJonPopup()">Okay</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('donJonPopup');doodler.popupShowing=false;">Cancel</button>
+</div>
+    
 <div style='display: none'>
     <form id='fictionalMapsForm' action="https://fictionalmaps.com/wp-content/plugins/fictional-maps-handler/php/receiver/xs_receiver.php" method="post" enctype="multipart/form-
     data">
@@ -433,7 +536,17 @@
 			<summary>Tool Options</summary>
 			<div id='toolFlexbox' style='display:flex'>
 				<div class='floatingBtns'>
-                    <div class='modeBtn' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class='modeBtn' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div><div class='modeBtn' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div><div class='modeBtn' title="Line" id='modeLine' onclick='doodler.clickMode(event)'><img id='imgmLine' src="line.png" width='32px' height='32px'></div><div class='modeBtn' title="Wall Tool" id='modeWall' onclick='doodler.clickMode(event)'><img id='imgmWall' src="wall.png" width='32px' height='32px'></div><div class='modeBtn' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div><div class='modeBtn' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div><div class='modeBtn' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div><div class='modeBtn' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div><div class='modeBtn' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><img id='imgmErase' src="erase.png" width='32px' height='32px'></div><div class='modeBtn' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Move" id='modeMove' onclick='doodler.clickMode(event)'><div class="left"><h3>Move</h3><ul><li>[M] to select tool</li><li>Click and drag to pan around canvas</li></ul><i></i></div><img id='imgmMove' src="move.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Free Draw" id='modeDoodle' onclick='doodler.clickMode(event)'><div class="left"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Snap To Grid" id='modeSnapToGrid' onclick='doodler.clickMode(event)'><div class="left"><h3>Snap To Grid</h3><ul><li>[G] to select tool</li><li>Draw locked to the grid</li></ul><i></i></div><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Line Tool" id='modeLine' onclick='doodler.clickMode(event)'><div class="left"><h3>Line Tool</h3><ul><li>[L] to select tool</li><li>Click and drag to draw straight line</li></ul><i></i></div><img id='imgmLine' src="line.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Wall Tool" id='modeWall' onclick='doodler.clickMode(event)'><div class="left"><h3>Interior Wall Tool</h3><ul><li>[W] to select tool</li><li>Click and drag to draw straight walls inside of a room</li></ul><i></i></div><img id='imgmWall' src="wall.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Room Tool</h3><ul><li>[R] to select tool</li><li>Click and drag to select entire room at once, release to draw</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Shape Tool</h3><ul><li>[P] to select tool</li><li>Click and drag to draw shape, starting point will be the center of the shape, drag outwards to change size and rotation</li></ul><i></i></div><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><div class="left"><h3>Hatching</h3><ul><li>[H] to select tool</li><li>Draw hatching layer without drawing anything else. Change hatching style and floor tile for selected layer here</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Stamps</h3><ul><li>[S] to select tool</li><li>Click to place a stamp. Click an already placed stamp to select it. Drag red circle to rotate stamp.</li><li>Hold Shift to toggle between snapping and not</li></ul><i></i></div><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Text Tool</h3><ul><li>[T] to select tool</li><li>Click to create a text object. Click existing text object to edit and delete. Click and drag a text object to move</li></ul><i></i></div><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Erase" id='modeErase' onclick='doodler.clickMode(event)'><div class="left"><h3>Erase</h3><ul><li>[E] to select tool</li><li>Use the erase tool to erase floors, outlines, hatching and stamps. Checkboxes are available to choose exactly what you want to erase</li></ul><i></i></div><img id='imgmErase' src="erase.png" width='32px' height='32px'></div>
 				</div>
 				<div class='paramBox' id='paramBox'></div>
 			</div>

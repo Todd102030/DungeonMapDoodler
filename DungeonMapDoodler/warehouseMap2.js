@@ -25,7 +25,7 @@ function Wall(x, y, w, h) {
     return this;
 };
 
-function StampObj(x, y, w, h, img, imgPath, angle) {
+function StampObj(x, y, w, h, img, imgPath, angle, layer) {
 	var self = this;
 	img.onload = function(){
 		self.ratio = this.naturalWidth/this.naturalHeight;
@@ -37,16 +37,18 @@ function StampObj(x, y, w, h, img, imgPath, angle) {
 	this.img = img;
 	this.path = imgPath;
 	this.angle = angle;
+    this.layer = layer || 0;
     return this;
 };
 
-function TextField(text, x, y, isVertical, fontSize, font){
+function TextField(text, x, y, isVertical, fontSize, font, justify){
 	this.text = text;
 	this.x = x;
 	this.y = y;
 	this.vert = isVertical;
 	this.f = fontSize;
 	this.font = font;
+    this.justify = justify;
 	return this;
 }
 
