@@ -174,6 +174,7 @@ var StampTool = (function(){
                     self.stampSelected = null;
                 }
             }
+            ir.hide("stampsDeleteBtn");
             doodler.updateFrameBuffer();
 		},
 		draw: function(xpos, ypos, data){
@@ -562,6 +563,9 @@ var StampTool = (function(){
 			}
             if(self.stampHit != null){
                 self.stampSelected = self.stampHit;
+                ir.show("stampsDeleteBtn");
+            }else{
+                ir.hide("stampsDeleteBtn");
             }
             doodler.reloadLayerPreview(doodler.currentLayer);
 			self.placingStamp = false;
@@ -640,7 +644,7 @@ var StampTool = (function(){
 						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.StampTool.changeAngle(event)' oninput='Modes.StampTool.changeAngle(event)'><br>
 						<input type='checkbox' id='stampsIsSnapping' onclick='Modes.StampTool.changeSnapping(event)'><label for='stampsIsSnapping'>Snap To Grid</label><br>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
-                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><div class='stampBtn' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
+                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
 						`;
 			
 			htm += `<div style='max-width:150px;'>`

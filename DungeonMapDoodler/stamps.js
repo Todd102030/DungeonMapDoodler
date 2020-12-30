@@ -9,10 +9,11 @@ var StampGroup = {
     Magic: 6,
 	Numbers:7,
 	Structural:8,
-    Custom: 9,
+    Monsters: 9,
+    Custom: 10,
 }
 
-var StampGroupName = ["","Decor", "Doors", "Hazards", "Markers", "Nature", "Magic", "Numbers", "Structural", "Custom"];
+var StampGroupName = ["","Decor", "Doors", "Hazards", "Markers", "Nature", "Magic", "Numbers", "Structural", "Monsters", "Custom"];
 
 var StampConstants = {
     Stairs: {
@@ -167,6 +168,41 @@ var StampConstants = {
 		name: "Bed",
 		alias: "",
 		group: StampGroup.Decor,
+		defMult: 1,
+	},
+    Goblin_Grunt:{
+		path:'stamps/monsters/goblin_grunt.svg',
+		name: "Goblin Grunt",
+		alias: "goblin, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Goblin_Sapper:{
+		path:'stamps/monsters/goblin_sapper.svg',
+		name: "Goblin Sapper",
+		alias: "goblin, sapper, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Ogre:{
+		path:'stamps/monsters/ogre.svg',
+		name: "Ogre",
+		alias: "ogre, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Skeleton_Grunt:{
+		path:'stamps/monsters/skellington_grunt.svg',
+		name: "Skeleton Grunt",
+		alias: "skeleton, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Skeleton_Captain:{
+		path:'stamps/monsters/skellington_capitan.svg',
+		name: "Skeleton Captain",
+		alias: "skeleton, captain, monster",
+		group: StampGroup.Monsters,
 		defMult: 1,
 	},
 }
@@ -1374,6 +1410,41 @@ var Stamps = [
 		alias: "pebbles, stone",
 		group: StampGroup.Nature,
 		defMult: 1,
-	}
+	},
+	{
+		path:'stamps/monsters/goblin_grunt.svg',
+		name: "Goblin Grunt",
+		alias: "goblin, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/goblin_sapper.svg',
+		name: "Goblin Sapper",
+		alias: "goblin, sapper, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/ogre.svg',
+		name: "Ogre",
+		alias: "ogre, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/skellington_grunt.svg',
+		name: "Skeleton Grunt",
+		alias: "skeleton, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/skellington_capitan.svg',
+		name: "Skeleton Captain",
+		alias: "skeleton, captain, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
 ];
 

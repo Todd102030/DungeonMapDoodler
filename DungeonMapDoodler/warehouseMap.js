@@ -1519,7 +1519,7 @@ var doodler = (function(){
 			var ysize = 100;
 			ir.set("dimensionPopupX", xsize);
 			ir.set("dimensionPopupY", ysize);
-			ir.set("dimensionPopupBoxSize", 50);
+			ir.set("dimensionPopupBoxSize", 70);
 			
 			self.applyDimensions();
 			

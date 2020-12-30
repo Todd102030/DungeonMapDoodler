@@ -1,4 +1,4 @@
-var cacheName = 'cache-v12'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
+var cacheName = 'cache-v13'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
 var resourcesToPrecache = [
 	"/",
 "./Bugs.txt",
@@ -458,6 +458,11 @@ var resourcesToPrecache = [
 "./stamps/walls/pillar_sand.svg",
 "./stamps/walls/pillar_sand2.svg",
 "./stamps/walls/pillar2.svg",
+"./stamps/monsters/ogre.svg",
+"./stamps/monsters/goblin_grunt.svg",
+"./stamps/monsters/goblin_sapper.svg",
+"./stamps/monsters/skellington_capitan.svg",
+"./stamps/monsters/skellington_grunt.svg",
 
 ]
 
