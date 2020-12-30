@@ -1,4 +1,4 @@
-var cacheName = 'cache-v5'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
+var cacheName = 'cache-v12'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
 var resourcesToPrecache = [
 	"/",
 "./Bugs.txt",
@@ -21,6 +21,8 @@ var resourcesToPrecache = [
 "./keyedarray.js",
 "./line.png",
 "./manifest.json",
+"./stylepresets.js",
+"./dungeonrooms.js",
 "./modedoodle.js",
 "./modeerase.js",
 "./modehatching.js",
@@ -143,6 +145,20 @@ var resourcesToPrecache = [
 "./images/Table4.png",
 "./images/texttool.png",
 "./images/undo.svg",
+"./overlays/barn-board.jpg",
+"./overlays/black-parchment.jpg",
+"./overlays/brick-texture.jpg",
+"./overlays/charcoal-parchment.jpg",
+"./overlays/gray-parchment.jpg",
+"./overlays/leaf-texture.jpg",
+"./overlays/metal-texture.jpg",
+"./overlays/parchment-paper-light-texture.jpg",
+"./overlays/tan-sandstone-texture.jpg",
+"./overlays/textured-stucco-wall-white.jpg",
+"./overlays/white-parchment-paper-texture.jpg",
+"./overlays/white-woven-fabric-close-up-texture.jpg",
+"./overlays/wood-grain.jpg",
+"./overlays/blueprint.png",
 "./stamps/AL3/al_door.svg",
 "./stamps/AL3/al_door_1way.svg",
 "./stamps/AL3/al_door_1way_trans.svg",
@@ -401,6 +417,16 @@ var resourcesToPrecache = [
 "./stamps/hazards/cracks.png",
 "./stamps/hazards/pit.png",
 "./stamps/hazards/pit.svg",
+"./stamps/hazards/beartrap.svg",
+"./stamps/hazards/maneatingflower.svg",
+"./stamps/hazards/quicksand.svg",
+"./stamps/hazards/slime.svg",
+"./stamps/hazards/spikes.svg",
+"./stamps/hazards/wallspike.svg",
+"./stamps/hazards/web1.svg",
+"./stamps/hazards/web2.svg",
+"./stamps/hazards/web3.svg",
+"./stamps/hazards/web4.svg",
 "./stamps/markers/city.png",
 "./stamps/markers/compass_polearm.svg",
 "./stamps/markers/compass_spear.svg",
@@ -451,10 +477,23 @@ self.addEventListener('install', event => {
 self.addEventListener("activate", event => {
   console.log('Activate!');
 });
-self.addEventListener('fetch', function(event) {
+
+//Network first
+self.addEventListener('fetch', (event) => {
+  event.respondWith(async function() {
+    try {
+      return await fetch(event.request);
+    } catch (err) {
+      return caches.match(event.request);
+    }
+  }());
+});
+
+//Cache first
+/*self.addEventListener('fetch', function(event) {
   event.respondWith(
    caches.match(event.request).then(function(response) {
      return response || fetch(event.request);
    })
  );
-});
+});*/

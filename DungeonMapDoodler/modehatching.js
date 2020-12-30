@@ -7,6 +7,7 @@ var Hatching = (function(){
 		outlineColor: "black",
 		imageStyle: "hatchingImg",
 		floorStyle: "hatchingImgJPStone",
+        fullHatch: false,
 		hatchSize: 30,
 		renderScale: 1,
 		id:8,
@@ -38,6 +39,10 @@ var Hatching = (function(){
 			layer.floorStyle = self.floorStyle;
 			layer.floorImg = null;
 			layer.floorGenerated = false;
+            doodler.updateFrameBuffer();
+		},
+        changeFullHatch: function(){
+			self.fullHatch = ir.v("hatchingFullHatch");
             doodler.updateFrameBuffer();
 		},
 		changeHatchSize: function(evt, fromInput){
@@ -135,7 +140,8 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200"  value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Scale: </div><input type='number' min='0.125' max='4' step='0.125' style='width:60px' id='hatchingScaleLabel' value="${self.renderScale}" onchange='Modes.Hatching.changeScaleAndRender(event, true)' oninput='Modes.Hatching.changeScale(event, true)'><br>
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
-						`;
+						<input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Hatching</label><br>
+                        `;
 			
 			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' style='max-width:100px;' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
@@ -191,6 +197,7 @@ var Hatching = (function(){
 						//<label for="hatchingColor">Hatching Color</label><br>
 			container.innerHTML = htm;
 			
+			ir.set("hatchingFullHatch", self.fullHatch);
 			ir.set("hatchImageStyle", doodler.layers[doodler.currentLayer].hatchStyle);
 			ir.set("hatchFloorStyle", doodler.layers[doodler.currentLayer].floorStyle);
 			

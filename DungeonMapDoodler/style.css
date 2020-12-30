@@ -113,6 +113,10 @@ table{
     text-align: right;
 }
 
+#dockOpenCloseBtn{
+    background-color: ghostwhite !important;
+}
+
 .docked{
 	right:0;
 	-ms-transform: translateX(calc(100% - 38px));
@@ -239,6 +243,7 @@ table{
 	max-width: 300px;
     max-height: 500px;
     overflow: auto;
+    width:100%;
 }
 
 .paramBox > label {

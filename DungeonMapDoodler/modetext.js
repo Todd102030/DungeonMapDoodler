@@ -10,7 +10,7 @@ var TextTool = (function(){
 		chosenStamp: "star.png",
 		chosenStampImg: null,
 		id:8,
-		isSnapping: true,
+		isSnapping: false,
 		multiplyer:1,
 		size: 30,
 		stampRatio: 1,
@@ -137,10 +137,16 @@ var TextTool = (function(){
             var zoom = doodler.zoomLevel;
 			var offX = doodler.globalOffsetX;
 			var offY = doodler.globalOffsetY;
-			self.stampMoveHit = doodler.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+			self.textMoveHit = doodler.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
-			if(self.stampMoveHit == null && !self.isMovingText){
+			if(self.textMoveHit == null && !self.isMovingText){
+                ctx.fillStyle = "#000";
+                
+                var msg = "Click to place text";
+                var size = ctx.measureText(msg);
+                doodler.setFont(16, "Arial", ctx, "center");
+                ctx.fillText(msg, xpos, ypos);
 				if(self.isSnapping){
 					var gridxy = getGridXY(xpos, ypos);
 					if(self.stampRatio<1){
@@ -164,29 +170,48 @@ var TextTool = (function(){
 				}
 				
 			}
-			else{
-				//self.drawMoveHighlight(doodler.ctx,xpos, ypos,data);
+			else if(self.textMoveHit != null){
+				self.drawMoveHighlight(doodler.ctx,xpos, ypos,data, doodler.textFields[self.textMoveHit]);
 			}
+            
+            if(self.stampSelected != null){
+                self.drawMoveHighlight(doodler.ctx,xpos, ypos,data, doodler.textFields[self.stampSelected]);
+                self.drawResizeMarkers(doodler.ctx,xpos, ypos,data, doodler.textFields[self.stampSelected]);
+                
+
+            }
 			ctx.stroke();
 			
 		},
-		drawMoveHighlight : function(ctx, xpos, ypos, data){
-			if(self.stampMoveHit == null){
+		drawMoveHighlight : function(ctx, xpos, ypos, data, text){
+            if(text == null){
+                return;
+            }
+			if(self.textMoveHit == null){
 				return;
 			}
-			var st = doodler.textFields[self.stampMoveHit];
+			
+           
+          
+            var txt = text.text;
+            var txtSize = ctx.measureText(txt);
+            txtSize.height = txt.split(/\r?\n/g).length * text.f;
+            doodler.setFont(text.f * self.zoomLevel, text.font, ctx, text.justify);
+            
             var zoom = doodler.zoomLevel;
-			var wh = doodler
-			var sX =wh.dimensions.scaleX;
-			var sY =wh.dimensions.scaleY;
+			var wh = doodler;
+            
+            var rect = doodler.getTextBounds(text);
+			
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.fillStyle = "rgba(60,200,200,0.3)";
 			ctx.beginPath();
+            
 			
 			//ctx.fillRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
 			//ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
-			ctx.fillRect(wh.globalOffsetX +st.x * zoom, wh.globalOffsetY + st.y * zoom, 100 * wh.zoomLevel*(1/sX), 100 * wh.zoomLevel*(1/sY));	
-			ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), 100 * wh.zoomLevel*(1/sX), 100 * wh.zoomLevel*(1/sY));	
+			ctx.fillRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel, rect.h * wh.zoomLevel);	
+			ctx.strokeRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel, rect.h * wh.zoomLevel);	
 			
 			ctx.stroke();
 		},

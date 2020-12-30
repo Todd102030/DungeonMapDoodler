@@ -109,9 +109,10 @@ var RoomTool = (function(){
 						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
 				ctx.restore();
 			}else{
-				ctx.drawImage(ir.get("squarefuzzImg"),Math.min(self.doodleStartX,self.doodleEndX)-border-hatchSize, Math.min(self.doodleStartY,self.doodleEndY)-border-hatchSize, 
+                for(var i=0;i<4;i++){
+				    ctx.drawImage(ir.get("squarefuzzImg"),Math.min(self.doodleStartX,self.doodleEndX)-border-hatchSize, Math.min(self.doodleStartY,self.doodleEndY)-border-hatchSize, 
 					   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2+hatchSize*2), Math.abs(self.doodleStartY-self.doodleEndY)+(border*2+hatchSize*2))
-
+                }
 				//Path Drawing
 				ctx = data.doodleCtx;
 				ctx.fillStyle = self.fillColor;

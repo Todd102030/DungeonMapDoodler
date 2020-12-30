@@ -20,6 +20,7 @@ var StampTool = (function(){
 		multiplyer:1,
 		size: 50,
 		stampRatio: 1,
+        recentStamps: [],
 		title: "Stamp Settings",
 		addStamp: function(fromPopup){
 			ir.get("stampUpload").click();
@@ -119,20 +120,33 @@ var StampTool = (function(){
 		},
 		changeStamp: function(stamp, hidePopup){
             if(hidePopup){  
-                self.chosenStamp = self.sortedStamps[stamp];	
+                self.chosenStamp = self.sortedStamps[stamp];
+                
+                //insert into recentstamps if not already there
+                var doinsert = true;
+                self.recentStamps.forEach(function(st, i){
+                    if(st.path == self.chosenStamp.path && st.name == self.chosenStamp.name){
+                        doinsert = false;
+                    }
+                })
+                if(doinsert){
+                    self.recentStamps.unshift(self.chosenStamp);
+                }
             }else{
-                self.chosenStamp = Stamps[stamp];
+                self.chosenStamp = self.recentStamps[stamp];
             }
 			if(self.chosenStampImg==null){
 				self.chosenStampImg = new Image();
 			}
 			self.chosenStampImg.src = self.chosenStamp.path || self.chosenStamp.src;
+            
 			self.multiplyer = self.chosenStamp.defMult;
 			ir.set("stampSizeMultLabel", self.chosenStamp.defMult);
 			ir.set("stampSizeMult", self.chosenStamp.defMult);
             ir.get("stampsCurrentStamp").src = self.chosenStampImg.src;
             ir.get("stampsCurrentStampBtn").title = self.chosenStamp.name;
             if(hidePopup){
+                self.setParameterBox(ir.get("paramBox"));
                 ir.hide("stampPopup");
             }
             doodler.popupShowing = false;
@@ -160,6 +174,7 @@ var StampTool = (function(){
                     self.stampSelected = null;
                 }
             }
+            doodler.updateFrameBuffer();
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
@@ -183,7 +198,7 @@ var StampTool = (function(){
 					gridxy.stepx = gridxy.step * self.stampRatio;
 					gridxy.stepy = gridxy.step;
 				}
-				stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.currentLayer);
+				stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 			}
@@ -196,7 +211,7 @@ var StampTool = (function(){
 					self.stepx = self.size * self.stampRatio;
 					self.stepy = self.size;
 				}
-				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.currentLayer);
+				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 				
@@ -635,16 +650,20 @@ var StampTool = (function(){
 			});
             self.sortedStamps = sortedStamps;
 			//console.log("Sorted stamps is ", sortedStamps);
-			
-			sortedStamps.forEach(function(stamp, i){
-				if(i==0 || sortedStamps[i-1].group != stamp.group){
-					htm += `<details ${i==0?"open":""}><summary>${StampGroupName[stamp.group]}</summary>`;
-				}
+            
+            var recentStamps = self.recentStamps;
+            if(recentStamps.length>0){
+			 htm += `<div class='paramTitle'>Recent Stamps</div><br>`
+            }
+			recentStamps.forEach(function(stamp, i){
+				//if(i==0 || sortedStamps[i-1].group != stamp.group){
+				//	htm += `<details ${i==0?"open":""}><summary>${StampGroupName[stamp.group]}</summary>`;
+				//}
 				
 				htm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' ></div>`;
-				if(sortedStamps[i+1]==null || ( sortedStamps[i+1] && sortedStamps[i+1].group != stamp.group)){
-					htm += `</details>`;
-				}
+				//if(sortedStamps[i+1]==null || ( sortedStamps[i+1] && sortedStamps[i+1].group != stamp.group)){
+				//	htm += `</details>`;
+				//}
 			});
 			htm += `</div>`;
 			

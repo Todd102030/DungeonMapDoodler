@@ -52,9 +52,13 @@ Added some info on how to use the program
 DonJon import support
 
 Changelog 1.4:
+Built in dungeon generation
+Image Overlays
+Blend Modes
+Style Presets
 Added tooltips to tools on mouseover
 Changed stamps to be layer specific
-First version of dungeon generation released
+
 
 
 
@@ -77,3 +81,110 @@ When stamp is selected, draw outline and button to rotate stamp
 When stamp is selected, clicking off stamp will unselect stamp but not place a stamp
 
 When stamp is selected, clicking and dragging it should move the stamp
+
+Sept 2:
+- Add option to random dungeon gen for "no stuff, some stuff, lots of stuff, etc"
+
+Overlay styles:
+Parchment paper X
+Leather X
+Blueprint
+Lattice/woven paper X
+Large leaf ribbing X
+Oil cloth
+Wood grain
+Burnt Paper
+
+Not really overlay style specific:
+Invert Colour option?
+
+
+
+
+
+
+Style Presets:
+Light Parchment
+{
+    overlay: parchment-yellow
+    blend: hue
+    hatch: hatching
+    floor: none
+}
+
+Light Parchment
+{
+    overlay: parchment-yellow
+    blend: multiply
+    hatch: hatching
+    floor: none
+}
+
+Dark Parchment
+{
+    overlay: parchment-black
+    blend: difference
+    hatch: hatching
+    floor: none
+}
+
+Space
+{
+    overlay: parchment-black
+    blend: lighten
+    hatch: space1
+    floor: cartoon metal
+}
+
+[
+    {
+        name: "Light Parchment",
+        overlay: "overlays/parchment-paper-light-texture.jpg",
+        blend: "hue",
+        hatch: "hatchingImg",
+        floor: ""
+    },
+    {
+        name: "Light Parchment 2",
+        overlay: "overlays/parchment-paper-light-texture.jpg",
+        blend: "multiply",
+        hatch: "hatchingImg",
+        floor: ""
+    },
+    {
+        name: "Dark Parchment",
+        overlay: "overlays/black-parchment.jpg",
+        blend: "difference",
+        hatch: "hatchingImg",
+        floor: ""
+    },
+    {
+        name: "Outer Space",
+        overlay: "overlays/black-parchment.jpg",
+        blend: "lighten",
+        hatch: "space1",
+        floor: "metal1"
+    },
+
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

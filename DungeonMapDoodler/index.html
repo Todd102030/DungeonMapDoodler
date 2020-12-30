@@ -3,6 +3,7 @@
     <head>
 		<title>Dungeon Map Doodler</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta property="og:image" content="https://dungeonmapdoodler.ca/images/background.png" />
       	<link rel="stylesheet" type="text/css" href="style.css">
         <link rel="apple-touch-icon" href="touch-icon-iphone.png">
         <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
@@ -24,6 +25,7 @@
     </head>
 <body onload='doodler.show()'>
  
+    
 	<div class='flex-container appContent' id='appContent'>
 		<div class='topBar' style='text-align: right'>
 			<nav id="nav">
@@ -41,6 +43,7 @@
 					<li><a href="#">Grid &raquo;</a>
 						<ul>
 							<li><a href="#" onclick="return doodler.toggleGridOutside()">Toggle Outer Grid</a></li>
+							<li><a href="#" onclick="return doodler.toggleGrid()">Toggle Entire Grid</a></li>
 							<li><a href="#" onclick="ir.show('dimensionPopup');doodler.popupShowing=true;">Change Grid Dimensions</a></li>
 						</ul>
 					</li>
@@ -426,6 +429,23 @@
 				<input type="number" id="randomGenRoomSize" value='6' >
 			</td>
 		</tr>
+        <tr>
+			<td class='tdr'>Amount of Content:</td>
+			<td class='tdl'>
+                <input type="radio" id="randomGenStuffNone" checked='checked' name="randomGenStuff" value="0" >
+				<label for="randomGenStuffNone">None</label>
+				<input type="radio" id="randomGenStuffSome" name="randomGenStuff" value="1" >
+				<label for="randomGenStuffSome">Some</label>
+				<input type="radio" id="randomGenStuffLots" name="randomGenStuff" value="2" >
+				<label for="randomGenStuffLots">Lots</label>
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Include Monsters:</td>
+			<td class='tdl'>
+				<input type="checkbox" id="randomGenAddMonsters"  >
+			</td>
+		</tr>
 		
         <div style='width:100%'><div id="exportWait" class="loader" style="display:none;"></div></div>
 	</table>
@@ -510,11 +530,11 @@
 </div>
 	
 <div class='floatingControlsLeft'>
-	<div class='floatBtn' onclick="doodler.zoom(1, true)"><img title="Zoom In" src='images/plus.svg' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="doodler.zoom(-1, true)"><img title="Zoom Out" src='images/minus.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(1, true)"><img title="Zoom In" src='images/plus.png' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(-1, true)"><img title="Zoom Out" src='images/minus.png' width='40px' height='40px'></div>
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
-	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.svg' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.svg' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.png' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.png' width='40px' height='40px'></div>
 	
 	
 </div>	
@@ -523,13 +543,50 @@
 	
 	
 <div class="floatingModes popup" id='floatingModes'>
-	<button id='dockOpenCloseBtn' class='modeBtn' style='padding:0;margin-left: 0px;float:left;outline:none;' type="button" onclick="doodler.toggleDockOpen()"><img id='dockOpenCloseImg' src="close.png" width='32px' height='32px'></button>
+	<button id='dockOpenCloseBtn' class='modeBtn' style='background-color:ghostwhite;padding:0;margin-left: 0px;float:left;outline:none;' type="button" onclick="doodler.toggleDockOpen()"><img id='dockOpenCloseImg' src="close.png" width='32px' height='32px'></button>
 	<div class='floatingContainer'>
+        <details id='globalDetails'>
+            <summary>Global Options</summary>
+            <div class='paramTitle'>Style Preset</div><select id='stylePresetSelect' style='max-width:140px;' onchange='doodler.changeStylePreset(event)'>
+            </select><br>
+            <div class='paramTitle'>Overlay</div><br><select id='overlayStyle' style='max-width:140px;' onchange='doodler.changeOverlayStyle(event)'>
+			<option name='' value=''>None</option>
+			<option name='Parchment White' value='overlays/white-parchment-paper-texture.jpg'>Parchment White</option>
+			<option name='Parchment Yellow' value='overlays/parchment-paper-light-texture.jpg'>Parchment Yellow</option>
+			<option name='Parchment Charcoal' value='overlays/charcoal-parchment.jpg'>Parchment Charcoal</option>
+			<option name='Parchment Gray' value='overlays/gray-parchment.jpg'>Parchment Gray</option>
+			<option name='Parchment Black' value='overlays/black-parchment.jpg'>Parchment Black</option>
+			<!--<option name='Leaf' value='overlays/leaf-texture.jpg'>Leaf</option>-->
+			<option name='Sandstone' value='overlays/tan-sandstone-texture.jpg'>Sandstone</option>
+			<option name='Wood' value='overlays/wood-grain.jpg'>Wood Grain</option>
+			<option name='Barn' value='overlays/barn-board.jpg'>Barn Board</option>
+			<option name='Metal' value='overlays/metal-texture.jpg'>Metal</option>
+			<option name='Brick' value='overlays/brick-texture.jpg'>Brick</option>
+			<option name='Stucco' value='overlays/textured-stucco-wall-white.jpg'>Stucco Wall</option>
+			<option name='Woven' value='overlays/white-woven-fabric-close-up-texture.jpg'>Woven Fabric</option>
+			<option name='Blueprint' value='overlays/blueprint.png'>Blueprint</option>
+            </select><br>
+            <div class='paramTitle'>Blend Mode</div><br><select id='overlayBlend' style='max-width:140px;' onchange='doodler.changeOverlayBlend(event)'>
+			<option name='Multiply' value='multiply'>Multiply</option>
+			<option name='Lighter' value='lighter'>Lighter</option>
+			<option name='Lighten' value='lighten'>Lighten</option>
+			<option name='Screen' value='screen'>Screen</option>
+			<option name='Darken' value='darken'>Darken</option>
+			<option name='Overlay' value='overlay'>Overlay</option>
+			<option name='Colour Dodge' value='color-dodge'>Colour Dodge</option>
+			<option name='Colour Burn' value='color-burn'>Colour Burn</option>
+			<option name='Difference' value='difference'>Difference</option>
+			<option name='Hue' value='hue'>Hue</option>
+			<option name='Saturation' value='saturation'>Saturation</option>
+			<option name='Colour' value='color'>Colour</option>
+			<option name='Luminosity' value='luminosity'>Luminosity</option>
+            </select>
+        </details>
 		<details open id='layerDetails'>
 			<summary>Layer Options</summary>
 			<div id="layerList"></div>
 			<div class='layerBtns'>
-				<div class='modeBtn' title="Add Layer" onclick='doodler.addLayer()'><img src="images/plus.svg" width='32px' height='32px'></div><div class='modeBtn' title="Delete Layer" onclick='doodler.deleteLayer()'><img src="images/delete.png" width='32px' height='32px'></div><div class='modeBtn' title="Raise Layer" onclick='doodler.raiseLayer()'><img src="images/raise.png" width='32px' height='32px'></div><div class='modeBtn' title="Lower Layer" onclick='doodler.lowerLayer()'><img src="images/lower.png" width='32px' height='32px'></div>
+				<div class='modeBtn' title="Add Layer" onclick='doodler.addLayer()'><img src="images/layeradd.png" width='32px' height='32px'></div><div class='modeBtn' title="Delete Layer" onclick='doodler.deleteLayer()'><img src="images/layerdelete.png" width='32px' height='32px'></div><div class='modeBtn' title="Raise Layer" onclick='doodler.raiseLayer()'><img src="images/raise.png" width='32px' height='32px'></div><div class='modeBtn' title="Lower Layer" onclick='doodler.lowerLayer()'><img src="images/lower.png" width='32px' height='32px'></div>
 				</div>
 		</details>
 		<details open id='toolDetails'>
@@ -542,7 +599,7 @@
                     <div class='modeBtn tooltip' title="Line Tool" id='modeLine' onclick='doodler.clickMode(event)'><div class="left"><h3>Line Tool</h3><ul><li>[L] to select tool</li><li>Click and drag to draw straight line</li></ul><i></i></div><img id='imgmLine' src="line.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Wall Tool" id='modeWall' onclick='doodler.clickMode(event)'><div class="left"><h3>Interior Wall Tool</h3><ul><li>[W] to select tool</li><li>Click and drag to draw straight walls inside of a room</li></ul><i></i></div><img id='imgmWall' src="wall.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Room Tool" id='modeRoomTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Room Tool</h3><ul><li>[R] to select tool</li><li>Click and drag to select entire room at once, release to draw</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div>
-                    <div class='modeBtn tooltip' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Shape Tool</h3><ul><li>[P] to select tool</li><li>Click and drag to draw shape, starting point will be the center of the shape, drag outwards to change size and rotation</li></ul><i></i></div><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Shape Tool" id='modeShapeTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Shape Tool</h3><ul><li>[P] to select tool</li><li>Click and drag to draw shape, starting point will be the center of the shape, drag outwards to change size and rotation</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Hatching" id='modeHatching' onclick='doodler.clickMode(event)'><div class="left"><h3>Hatching</h3><ul><li>[H] to select tool</li><li>Draw hatching layer without drawing anything else. Change hatching style and floor tile for selected layer here</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Stamps" id='modeStampTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Stamps</h3><ul><li>[S] to select tool</li><li>Click to place a stamp. Click an already placed stamp to select it. Drag red circle to rotate stamp.</li><li>Hold Shift to toggle between snapping and not</li></ul><i></i></div><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Text Tool" id='modeTextTool' onclick='doodler.clickMode(event)'><div class="left"><h3>Text Tool</h3><ul><li>[T] to select tool</li><li>Click to create a text object. Click existing text object to edit and delete. Click and drag a text object to move</li></ul><i></i></div><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
@@ -565,7 +622,7 @@
 			<td class='tdl'><input type='text'  id='passwordPromptInput'/></td>
 		</tr>
 		<tr>
-			<td colspan='2' class='tdr' id='passwordError'></td>
+			<td colspan='2' class='tdc' id='passwordError'></td>
 		</tr>
 		<tr>
 			<td><button type="button" class="canvBtn" onclick="doodler.showPasswordPromptCallback()">Okay</button></td>
@@ -573,6 +630,8 @@
 	</table></div>
 	
 </div>
+    
+
 	
 <script type="text/javascript">
     window.onbeforeunload = function() {
@@ -585,7 +644,9 @@
 <script src='keyedarray.js'></script>
 <script src='smoothpopup.js'></script>
 <script src='dmd.js'></script>
+<script src='stylepresets.js'></script>
 <script src='stamps.js'></script>
+<script src='dungeonrooms.js'></script>
 <script src='modedoodle.js'></script>
 <script src='modeerase.js'></script>
 <script src='modehatching.js'></script>

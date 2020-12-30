@@ -150,10 +150,10 @@ var ShapeTool = (function(){
 				Ycenter = self.doodleStartY;
 				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
 		
-				
-				ctx.drawImage(ir.get("circlefuzzImg"),Xcenter-border-hatchSize-size, Ycenter-border-hatchSize-size, 
+				for(var i=0;i<4;i++){
+				    ctx.drawImage(ir.get("circlefuzzImg"),Xcenter-border-hatchSize-size, Ycenter-border-hatchSize-size, 
 					   size*2+(border*2+hatchSize*2), size*2+(border*2+hatchSize*2))
-
+                }
 				//Path Drawing
 				ctx = data.doodleCtx;
 				ctx.fillStyle = self.fillColor;

@@ -645,6 +645,77 @@ var Stamps = [
 		group: StampGroup.Markers,
 		defMult: 2.5,
 	},
+    //AL4
+    {
+		path:'stamps/hazards/beartrap.svg',
+		name: "Bear Trap",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/maneatingflower.svg',
+		name: "Man Eating Flower",
+		alias: "venus fly trap",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/quicksand.svg',
+		name: "Quicksand",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/slime.svg',
+		name: "Green Slime",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/spikes.svg',
+		name: "Spikes",
+		alias: "floor",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/wallspike.svg',
+		name: "Arrow Trap",
+		alias: "wall spikes",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/web1.svg',
+		name: "Spider Web",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/web2.svg',
+		name: "Spider Web",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/web3.svg',
+		name: "Spider Web",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
+    {
+		path:'stamps/hazards/web4.svg',
+		name: "Spider Web",
+		alias: "",
+		group: StampGroup.Hazards,
+		defMult: 1,
+	},
 	
 	//DungeonStuff
 	

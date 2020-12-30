@@ -29,6 +29,7 @@ var doodler = (function(){
 	dockedTools: true,
     dimensionsOld: null,
 	drawGridOutside: true,
+    drawGridLines: true,
     editMode:false,
     fontSizes: [],
     globalOffsetX: 0,
@@ -86,6 +87,9 @@ var doodler = (function(){
     //Keep track of offset from mouse coords to top left of warehouse image
     offsetX: 0,
     offsetY: 0,
+    overlayImg: null,
+    overlayImgStyle: "",
+    overlayBlend: "multiply",
     /** Warehouse object */
     rec:{Row:0,Name:"Warehouse Name"},
     /** SeedPickup objects for this warehouse */
@@ -181,11 +185,12 @@ var doodler = (function(){
 	deleteLayer: function(){
 		if(self.layers.length>1){
             if(confirm("Are you sure you want to delete this layer? This cannot be undone")){
+                var index = doodler.layers[doodler.currentLayer].layerIndex;
                 self.layers.splice(self.currentLayer, 1);
                 self.switchLayer(self.layers[0].layerIndex);
                 self.updateFrameBuffer();
                 self.stamps = self.stamps.filter(function(a){
-                    return a.layer != self.currentLayer;
+                    return a.layer != index;
                 })
             }
 		}	
@@ -455,6 +460,40 @@ var doodler = (function(){
     	//self.setMode(Mode.MOVE);
     	//self.enableButtons(true);
     },
+    changeStylePreset: function(evt){
+        var style = stylePresets[ir.v("stylePresetSelect")];
+        if(style!=null){
+            self.overlayBlend = style.blend;
+            self.overlayImgStyle = style.overlay;
+            self.overlayImg = null;
+            Modes.Hatching.fullHatch = style.fullHatch;
+            ir.set("hatchingFullHatch", Modes.Hatching.fullHatch);
+            self.layers.forEach(function(lay, i){
+                lay.floorStyle = style.floor;
+                lay.floorGenerated = false;
+                lay.hatchStyle = style.hatch
+                lay.hatchGenerated = false;
+            })
+            
+            ir.set("overlayStyle", style.overlay);
+            ir.set("overlayBlend", style.blend);
+            ir.set("hatchImageStyle", style.hatch);
+            ir.set("hatchFloorStyle", style.floor);
+            
+        }
+        self.overlayImg = null;
+        //self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+        doodler.updateFrameBuffer();
+    },
+    changeOverlayStyle: function(evt){
+        self.overlayImgStyle = ir.v("overlayStyle");
+        self.overlayImg = null;
+        doodler.updateFrameBuffer();
+    },
+    changeOverlayBlend: function(evt){
+        self.overlayBlend = ir.v("overlayBlend");
+        doodler.updateFrameBuffer();
+    },
     clear: function(){
     	if(self.ctx){
     		self.ctx.clearRect(0,0,self.canvas.width, self.canvas.height);
@@ -553,6 +592,7 @@ var doodler = (function(){
             self.drawStamps(canvas, ctx, index);
 		})
 		self.drawGrid(canvas, ctx);
+        self.drawOverlay(canvas, ctx);
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
         self.lastFBUpdate = new Date().getTime();
@@ -703,25 +743,35 @@ var doodler = (function(){
 		
         
 		if(layer.hatchImg && layer.hatchImg.complete && layer.hatchCanvas){
-			var tmpCt = self.tmpCtx;
-			tmpCt.save();
-			// draw the overlay
-			tmpCt.clearRect(0,0,self.tmpCanvas.width, self.tmpCanvas.height);
-			tmpCt.drawImage(layer.hatchImg, 0,0, layer.hatchImg.width, layer.hatchImg.height);
+            if(Modes.Hatching.fullHatch){
+                if(skipZoomPos){
+                    ct.drawImage(layer.hatchImg, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
 
-			tmpCt.globalCompositeOperation = "destination-in";
+                }else{
+                    ct.drawImage(layer.hatchImg, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+                }
+            }else{
+                var tmpCt = self.tmpCtx;
+                //tmpCt.save();
+                // draw the overlay
+                tmpCt.clearRect(0,0,self.tmpCanvas.width, self.tmpCanvas.height);
+                tmpCt.drawImage(layer.hatchImg, 0,0, layer.hatchImg.width, layer.hatchImg.height);
 
-			// draw the full logo
-			tmpCt.drawImage(layer.hatchCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
-			// restore the context to it's original state
-			tmpCt.restore();
-			
-			if(skipZoomPos){
-				ct.drawImage(self.tmpCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
-				
-			}else{
-				ct.drawImage(self.tmpCanvas, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
-			}
+                tmpCt.globalCompositeOperation = "destination-in";
+
+                // draw the full logo
+                tmpCt.drawImage(layer.hatchCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+                // restore the context to it's original state
+                //tmpCt.restore();
+                tmpCt.globalCompositeOperation = "source-over";
+
+                if(skipZoomPos){
+                    ct.drawImage(self.tmpCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+
+                }else{
+                    ct.drawImage(self.tmpCanvas, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+                }
+            }
 		}
     },
 	drawDoodleMap: function(canv, ct, index, skipZoomPos){
@@ -893,7 +943,7 @@ var doodler = (function(){
     },
     drawGrid: function(canv, ct){
 		var ctx = ct || self.ctx;
-    	ctx.globalAlpha = self.warehouseAlpha;
+    	//ctx.globalAlpha = self.warehouseAlpha;
     	//ctx.mozImageSmoothingEnabled = false;
     	//ctx.webkitImageSmoothingEnabled = false;
     	//ctx.msImageSmoothingEnabled = false;
@@ -902,21 +952,30 @@ var doodler = (function(){
 		var sX =self.dimensions.scaleX;
 		var sY =self.dimensions.scaleY;
     	var img = self.gridImg;
+        
     	if(img != null){
-			
+			if(!self.drawGridLines){
+                return;
+            }
 			if(!self.drawGridOutside){
 				//self.gridCtx.mozImageSmoothingEnabled = false;
 				//self.gridCtx.webkitImageSmoothingEnabled = false;
 				//self.gridCtx.msImageSmoothingEnabled = false;
 				//self.gridCtx.imageSmoothingEnabled = false;
 				
-				self.gridCtx.fillStyle = "#fff";
-				self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height)
-	        	self.gridCtx.drawImage(img,0,0,img.width*(1/sX),img.height*(1/sY));
-				self.gridCtx.globalCompositeOperation = "destination-atop";
-				self.gridCtx.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width, self.doodleCanvas.height);
-    			self.gridCtx.globalCompositeOperation = "source-over";
-				ctx.drawImage(self.gridCanvas,
+                //self.gridCtx.globalAlpha = 0.5;
+                var tmpCt = self.tmpCtx;
+                tmpCt.globalAlpha = 0.8;
+				//tmpCt.fillStyle = "#fff";
+				tmpCt.clearRect(0,0,self.gridCanvas.width,self.gridCanvas.height)
+                
+				tmpCt.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width, self.doodleCanvas.height);
+				tmpCt.globalCompositeOperation = "source-in";
+                
+	        	tmpCt.drawImage(img,0,0,img.width*(1/sX),img.height*(1/sY));
+    			tmpCt.globalCompositeOperation = "source-over";
+           
+                ctx.drawImage(self.tmpCanvas,
 					0, 
 					0, 
 					self.gridCanvas.width,
@@ -925,18 +984,56 @@ var doodler = (function(){
 				self.gridCtx.webkitImageSmoothingEnabled = true;
 				self.gridCtx.msImageSmoothingEnabled = true;
 				self.gridCtx.imageSmoothingEnabled = true;
+                self.gridCtx.globalAlpha = 1;
+                tmpCt.globalAlpha = 1;
 			}else{
+                ctx.globalAlpha = 0.5;
 				ctx.drawImage(img,0,0, 
 				self.gridCanvas.width,
 				self.gridCanvas.height);
+                ctx.globalAlpha = 1;
 			}
 			
 		}
-    	ctx.globalAlpha = 1;
+    	//ctx.globalAlpha = 1;
     	//ctx.mozImageSmoothingEnabled = true;
     	//ctx.webkitImageSmoothingEnabled = true;
     	//ctx.msImageSmoothingEnabled = true;
     	//ctx.imageSmoothingEnabled = true;
+    },
+    drawOverlay: function(canv, ct){
+		var ctx = ct || self.ctx;
+    	//ctx.globalAlpha = self.warehouseAlpha;
+    	//ctx.mozImageSmoothingEnabled = false;
+    	//ctx.webkitImageSmoothingEnabled = false;
+    	//ctx.msImageSmoothingEnabled = false;
+    	//ctx.imageSmoothingEnabled = false;
+		
+		var sX =self.dimensions.scaleX;
+		var sY =self.dimensions.scaleY;
+    	var img = self.overlayImg;
+        
+    	if(img != null && self.overlayImgStyle.length > 0){
+			
+            ct.globalAlpha = 1;
+            ct.fillStyle = "#fff";
+            ct.globalCompositeOperation = self.overlayBlend;
+            ct.drawImage(img, 0, 0, self.doodleCanvas.width, self.doodleCanvas.height);
+            ct.globalCompositeOperation = "source-over";
+            ct.mozImageSmoothingEnabled = true;
+            ct.webkitImageSmoothingEnabled = true;
+            ct.msImageSmoothingEnabled = true;
+            ct.imageSmoothingEnabled = true;
+            ct.globalAlpha = 1;
+		}
+        else if(img == null){
+            self.overlayImg = new Image();
+            self.overlayImg.onload = function(){
+                self.updateFBDraw();
+            }
+            self.overlayImg.src = self.overlayImgStyle;
+            
+        }
     },
     drawGridPoint: function(x, y, bord, ins, fill, wall){
         var size = 50;
@@ -1078,10 +1175,11 @@ var doodler = (function(){
         var stamps = self.stamps;
         var sX =self.dimensions.scaleX;
 		var sY =self.dimensions.scaleY;
+        var layerIdx = self.layers[index].layerIndex;
         
         for(var i=0,z=stamps.length;i<z;i++){
             var st = stamps[i];
-            if(st.layer != index){
+            if(st.layer != layerIdx){
                 continue;
             }
             if((!self.layers[index].visible) && !skipZoomPos){
@@ -1286,7 +1384,8 @@ var doodler = (function(){
       return "#" + color;
     },
     getTextBounds: function(textField){
-    	self.setFont(textField.f * self.zoomLevel);
+        self.setFont(textField.f * self.zoomLevel, textField.font, null, textField.justify);
+        
   		var textLines = textField.text.split(/\r?\n/g);
   		var textSizeArray = [];
   		for (var n=0;n<textLines.length; n++){
@@ -1304,7 +1403,16 @@ var doodler = (function(){
   			neww = Array.max(textSizeArray)/self.zoomLevel;
   			newh = textField.f*textLines.length;//*self.zoomLevel;
   		}
-  		return {x:newx.f2(), y:newy.f2(), w:neww.f2(), h:newh.f2()};
+        if(textField.justify == "left"){
+            return {x:newx.f2(), y:newy.f2(), w:neww.f2(), h:newh.f2()};
+        }
+        else if(textField.justify == "center"){
+            return {x:newx.f2()-neww/2, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+        }
+        else{
+            return {x:newx.f2()-neww, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+        }
+  		
     },
     getScaledTextBounds: function(textField){
      	self.setFont(textField.f * self.zoomLevel);
@@ -1484,6 +1592,7 @@ var doodler = (function(){
 			self.canvas.width = w;
 			self.canvas.height = h-4;
             self.updateFrameBuffer();
+            self.loadStylePresets();
             //ir.get("loadingPopup").style.opacity=0;
             //setTimeout(function(){ir.hide("loadingPopup")},500)
             //document.body.classList.add("loaded");
@@ -1531,7 +1640,7 @@ var doodler = (function(){
         
         self.applyDimensions(function(){
             var data = doodler.donJonData;
-            //doodler.stamps = [];
+            doodler.stamps = [];
             for(var y=0;y<data.length;y++){
                 for(var x=0;x<data[y].length;x++){
                     var point = data[y][x];
@@ -1659,7 +1768,7 @@ var doodler = (function(){
         var multiply = mult || 1;
         var ang = angle || 0;
         //Assume stamps are squares
-        stampobj = new StampObj(x*step, y*step, step*multiply, step*multiply, newimg, stamp.path, ang, self.currentLayer);
+        stampobj = new StampObj(x*step, y*step, step*multiply, step*multiply, newimg, stamp.path, ang, doodler.layers[doodler.currentLayer].layerIndex);
         doodler.stamps.push(stampobj);
     },
     showGenerateDungeonPopup: function(){
@@ -1678,6 +1787,8 @@ var doodler = (function(){
         var linear = true;
         var numRooms = ir.vn("randomGenNumRooms");
         var roomSize = ir.vn("randomGenRoomSize")/2;
+        var amountOfStuff = ir.vn("randomGenStuff");
+        var includeMonsters = ir.bool("randomGenAddMonsters");
         
         //Decent size for big one = 50x50 size, 20 rooms, roomsize of 5
         //Good for small = 20x20 size, 5 rooms, roomsize of 2
@@ -1727,7 +1838,7 @@ var doodler = (function(){
                 if(roomY+sizeY >= self.genRoomH-1){roomY=self.genRoomH-2-sizeY}
                 testLoop ++;
                 if(testLoop == 50){
-                    console.log("Failed to fit room, should continue", roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
+                    //console.log("Failed to fit room, should continue", roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
                 }
                 roomFits = self.testRoomFit(grid, roomX-sizeX-1, roomY-sizeY-1, sizeX*2+2, sizeY*2+2);
             }
@@ -1886,15 +1997,7 @@ var doodler = (function(){
             cellarIdx = 0;
         }
         var cellarRoom = roomsClose[cellarIdx];
-        if(cellarRoom.w>=2 && cellarRoom.h>=2){
-            for (var y=cellarRoom.cY-cellarRoom.h;y<cellarRoom.cY+cellarRoom.h;y++){
-                for (var x=cellarRoom.cX-cellarRoom.w;x<cellarRoom.cX+cellarRoom.w;x++){
-                    if(self.isRoomCorner(grid, cellarRoom, x, y, "Barrel") && Math.random()>0.4){
-                        grid[y][x] = "Barrel";
-                    }
-                }
-            }
-        }
+        dungeonRooms.Cellar.fillRoom(grid, cellarRoom, amountOfStuff, includeMonsters);
         
         //Throw some random cracks around
         for(var i=0;i<numRooms*0.7;i++){
@@ -1912,15 +2015,7 @@ var doodler = (function(){
             chestIdx = 0;
         }
         var chestRoom = roomsClose[chestIdx];
-        if(chestRoom.w>=1 && chestRoom.h>=2){
-            console.log("Creating chest room");
-            for (var x=chestRoom.cX-chestRoom.w;x<chestRoom.cX+chestRoom.w;x++){
-                if(self.isRoomCorner(grid, chestRoom, x, chestRoom.cY-chestRoom.h, "Chest") && Math.random()>0.5){
-                    grid[chestRoom.cY-chestRoom.h][x] = "Chest";
-                }
-            }
-            
-        }
+        dungeonRooms.Treasure.fillRoom(grid, chestRoom, amountOfStuff, includeMonsters);
         
         //Bed Room
         var bedIdx = Math.floor(Math.random()*roomsClose.length);
@@ -1929,15 +2024,8 @@ var doodler = (function(){
             bedIdx = 0;
         }
         var bedRoom = roomsClose[bedIdx];
-        if(bedRoom.w>2 && bedRoom.h>=2){
-            console.log("Creating bed room");
-            for (var x=bedRoom.cX-bedRoom.w;x<bedRoom.cX+bedRoom.w;x++){
-                if(self.isRoomCorner(grid, bedRoom, x, bedRoom.cY-bedRoom.h, "Bed") && Math.random()>0.5){
-                    grid[bedRoom.cY-bedRoom.h][x] = "Bed";
-                }
-            }
-            
-        }
+        dungeonRooms.Bedroom.fillRoom(grid, bedRoom, amountOfStuff, includeMonsters);
+        
         
         //Doors
          
@@ -2112,10 +2200,10 @@ var doodler = (function(){
 							name: layer.name,
 							hatchImg: layer.hatchImg,
 							hatchGenerated: layer.hatchGenerated,
-							visible: obj.visible||true,
-							hatchVisible: obj.hatchVisible||true,
-                            floorStyle: obj.floorStyle || "",
-                            showFloor: obj.showFloor||true,
+							visible: layer.visible||true,
+							hatchVisible: layer.hatchVisible||true,
+                            floorStyle: layer.floorStyle || "",
+                            showFloor: layer.showFloor||true,
                             floorGenerated: false,
 						}
 						
@@ -2187,10 +2275,15 @@ var doodler = (function(){
                     st.layer = st.layer || 0;
 				})
 				self.textFields = JSON.parse(obj.textFields || "[]") 
+                self.overlayBlend = obj.overlayBlend || "multiply";
+                self.overlayImgStyle = obj.overlayImgStyle || "";
+                ir.set("overlayStyle", self.overlayImgStyle);
+                ir.set("overlayBlend", self.overlayBlend);
+                self.overlayImg = null;
 			});
 		}
 		catch(e){
-			throw(e);
+			//throw(e);
 			return;
 		}
 	},
@@ -2220,6 +2313,14 @@ var doodler = (function(){
 		
 		ir.get("layerList").innerHTML = htm;
 	},
+    loadStylePresets: function(){
+        var selectBox = ir.get("stylePresetSelect");
+        var htm = "";
+        stylePresets.forEach(function(style, i){
+            htm += `<option name='${style.name}' value='${i}' >${style.name}</option>`;
+        })
+        selectBox.innerHTML = htm;
+    },
 	changeLayerName: function(index, evt){
 		self.layers[index].name = evt.target.value;
 	},
@@ -3176,7 +3277,9 @@ var doodler = (function(){
 			//outlineCanvas: self.outlineCanvas.toDataURL("image/png"),
 			//hatchImg: self.hatchImg.src,
 			stamps: JSON.stringify(self.stamps),
-			textFields: JSON.stringify(self.textFields)
+			textFields: JSON.stringify(self.textFields),
+            overlayBlend: self.overlayBlend,
+            overlayImgStyle: self.overlayImgStyle,
 		}
 		
 		self.layers.forEach(function(layer, i){
@@ -3540,7 +3643,7 @@ var doodler = (function(){
         }
     },
 	showPasswordPromptCallback: function(){
-		var passwd = "letsdraw";
+		var passwd = "betamapper";
 		var enteredPwd = ir.v("passwordPromptInput")
 		if(enteredPwd == passwd){
 			self.editMode = true;
@@ -3554,9 +3657,9 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = true;
+		var isBeta = false;
         //Change in above func too
-		var passwd = "letsdraw";
+		var passwd = "betamapper";
 		var storedPwd = irstore.get("doodlePwd");
 		var enteredPwd = "";
 		if(storedPwd != passwd && isBeta){
@@ -3716,6 +3819,10 @@ var doodler = (function(){
         }
         return lines;
     },
+    toggleGrid: function(){
+		self.drawGridLines = !self.drawGridLines;
+        self.updateFrameBuffer();
+	},
 	toggleGridOutside: function(){
 		self.drawGridOutside = !self.drawGridOutside;
         self.updateFrameBuffer();
@@ -3747,10 +3854,12 @@ var doodler = (function(){
 			ir.get("floatingModes").style.top = "";
 			ir.get("floatingModes").style.left = "";
 			ir.show("layerDetails");
+			ir.show("globalDetails");
 		}else{
 			ir.get("dockOpenCloseImg").src = "open.png";
 			ir.get("floatingModes").classList.remove("openDock");
 			ir.hide("layerDetails");
+			ir.hide("globalDetails");
 		}
 		self.openDock = !self.openDock;
 		
