@@ -9,7 +9,6 @@ var RoomTool = (function(){
 		size:30,
 		fillColor: "#ffffff",
 		outlineColor: "#000000",
-		hatchSize: 30,
 		shape: Shape.Square,
 		isSnapping: true,
 		isSubtractive: false,

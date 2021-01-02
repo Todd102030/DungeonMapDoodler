@@ -5,7 +5,7 @@ var SnapToGrid = (function(){
 		borderSize: 3,
 		fillColor: "#ffffff",
 		outlineColor: "#000000",
-		hatchSize: 35,
+		hatchSize: 50,
 		id:8,
 		inset:0,
 		size: 25,

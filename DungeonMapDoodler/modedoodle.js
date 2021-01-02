@@ -7,7 +7,7 @@ var Doodle = (function(){
 		outlineColor: "#000000",
 		hatchSize: 50,
 		id:8,
-		size: 50,
+		size: 70,
 		shape: Shape.Circle,
 		title: "Pen Settings",
 		changeColor: function(evt, type){

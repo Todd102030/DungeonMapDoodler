@@ -316,9 +316,12 @@ var doodler = (function(){
 			self.fbCanvas.width = xsize;
 			self.fbCanvas.height = ysize;
 		}
+        
+        
     	//dim.scaleX = dim.wf / (dim.ex-dim.sx);
     	//dim.scaleY = dim.hf / (dim.ey-dim.sy);
-    	self.generateGrid(callback);    	
+    	self.generateGrid(callback);  
+        
     	
     },
     applyDimensionPopup: function(){  
@@ -1035,6 +1038,65 @@ var doodler = (function(){
             
         }
     },
+    drawShape: function(x, y, bord, fill, wall, numberOfSides, radius, angle){
+        var size = 50;
+        var border= bord || 3;
+        var ctx = self.hatchCtx;
+        var hatchSize = 50;
+        var wh = doodler;
+            var offX = wh.globalOffsetX;
+            var offY = wh.globalOffsetY;
+            var zoom = wh.zoomLevel;
+			// Radii of the white glow.
+			var innerRadius = self.size * 0.15;
+			var outerRadius = self.size*2+hatchSize;
+			// Radius of the entire circle.
+			//var radius = self.size*2.1+hatchSize;
+			var inset=0;
+        var dim = doodler.dimensions;
+        var xfeet = dim.wf;
+        var yfeet = dim.hf;
+        var sx = dim.scaleX;
+        var sy = doodler.dimensions.scaleY;
+        var step = dim.footPixel * dim.stepSize / sx;
+
+        ctx = self.hatchCtx;
+        ctx.fillStyle = "black";
+        var Xcenter = x*step - step/2;
+        var Ycenter = y*step - step/2;
+        
+        size = radius * step //Math.hypot(Xcenter, Ycenter);
+        var angleRad = angle;// Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
+
+        for(var i=0;i<4;i++){
+            ctx.drawImage(ir.get("circlefuzzImg"),Xcenter-border-hatchSize-size*1.5, Ycenter-border-hatchSize-size*1.5, 
+               size*3+(border*2+hatchSize*2), size*3+(border*2+hatchSize*2))
+        }
+        //Path Drawing
+        ctx = self.doodleCtx;
+        ctx.fillStyle = fill;
+        ctx.beginPath();
+        ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
+
+        for (var i = 1; i <= numberOfSides;i += 1) {
+          ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+        }
+        ctx.fill();
+
+
+        //Outline Drawing
+        ctx = self.outlineCtx;
+        ctx.fillStyle = wall;
+        size += border + inset;
+        ctx.beginPath();
+        ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
+
+        for (var i = 1; i <= numberOfSides;i += 1) {
+          ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+        }
+        ctx.fill();
+        doodler.updateFrameBuffer();
+    },
     drawGridPoint: function(x, y, bord, ins, fill, wall){
         var size = 50;
         var border= bord || 3;
@@ -1325,6 +1387,10 @@ var doodler = (function(){
 		//By foot count
 		canv.width = xfeet*dim.footPixel+1;
     	canv.height = yfeet*dim.footPixel+1;
+        
+        //self.globalOffsetX = (self.canvas.width / 2) - (self.dimensions.footPixel * self.dimensions.wf / 2);
+        //self.globalOffsetY = 0;
+        
 		//console.log("Generating grid of size ", canv.width, canv.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
 		var ctx = canv.getContext("2d");
     	ctx.lineWidth = 2;
@@ -1355,6 +1421,8 @@ var doodler = (function(){
     	ctx.stroke();
     	var img = new Image();
     	var dataurl = canv.toDataURL();
+        self.stamps = [];
+        self.textFields = [];
     	img.onload = function() {
             img.width = xfeet*dim.footPixel;
             img.height = yfeet*dim.footPixel;
@@ -1368,6 +1436,7 @@ var doodler = (function(){
 			}else{
                 doodler.updateFrameBuffer();
             }
+            
         };
         img.src = dataurl;
     },
@@ -1515,16 +1584,22 @@ var doodler = (function(){
 			
 	  		//self.dimensions.ex = self.canvas.width-20;
 	  		//self.dimensions.ey = self.canvas.height-20;
-			var xsize = 200;
+			var xsize = 100;
 			var ysize = 100;
 			ir.set("dimensionPopupX", xsize);
 			ir.set("dimensionPopupY", ysize);
 			ir.set("dimensionPopupBoxSize", 70);
-			
-			self.applyDimensions();
+
+            self.applyDimensions();
+
+            
+            //Don't automatically start, let people create map
+            ir.show('dimensionPopup');
+            doodler.popupShowing=true;
 			
 			self.zoom(0,true);
 			
+            
 			self.addLayer();
 			
 			xsize = self.dimensions.footPixel * self.dimensions.wf;
@@ -1732,6 +1807,40 @@ var doodler = (function(){
                     if(point == "Bed"){
                         self.addStamp(x, y, StampConstants.Bed, angle);
                     }
+                    if(point == "Ogre"){
+                        self.addStamp(x-1, y-1, StampConstants.Ogre, angle, 2);
+                    }
+                    if(point == "Mon_Draconid"){
+                        self.addStamp(x-1, y-1, StampConstants.Draconid, angle, 2);
+                    }
+                    if(point == "Elf"){
+                        self.addStamp(x, y, StampConstants.Elf, angle, 1);
+                    }
+                    if(point == "Halfling_Gnome"){
+                        self.addStamp(x, y, StampConstants.Halfling_Gnome, angle, 1);
+                    }
+                    if(point == "Orc"){
+                        self.addStamp(x, y, StampConstants.Orc, angle, 1);
+                    }
+                    if(point == "Giant"){
+                        self.addStamp(x-1, y-1, StampConstants.Giant, angle, 2);
+                    }
+                    if(point == "Goblin_Grunt"){
+                        self.addStamp(x, y, StampConstants.Goblin_Grunt, angle);
+                    }
+                    if(point == "Goblin_Sapper"){
+                        self.addStamp(x-1, y-1, StampConstants.Goblin_Sapper, angle, 2);
+                    }
+                    if(point == "Skeleton_Captain"){
+                        self.addStamp(x-1, y-1, StampConstants.Skeleton_Captain, angle, 2);
+                    }
+                    if(point == "Skeleton_Grunt"){
+                        self.addStamp(x, y, StampConstants.Skeleton_Grunt, angle);
+                    }
+                    if(point == "ShapedRoom"){
+                        //function(x, y, bord, fill, wall, numberOfSides, radius, angle)
+                        doodler.drawShape(x, y, border, fill, wall, Math.abs(Math.random()*6)+3, Math.abs(Math.random()*5), 0);
+                    }
                     if(!isNaN(parseInt(point))){
                         var asNum = parseInt(point);
                         var tens = Math.floor(asNum/10);
@@ -1881,12 +1990,12 @@ var doodler = (function(){
                     closestDist = thisDist;
                 }
             }
-            console.log("Taking room", closestIdx, " and shoving it into roomsClose");
+            //console.log("Taking room", closestIdx, " and shoving it into roomsClose");
             roomsClose.push(rooms.splice(closestIdx, 1)[0]);
         }
         
         
-        console.log("Sorted rooms", roomsClose);
+        //console.log("Sorted rooms", roomsClose);
         //Connect center points from list of rooms
         for(var i=0;i<roomsClose.length-1;i++){
             var room1 = roomsClose[i];
@@ -1974,7 +2083,7 @@ var doodler = (function(){
         //Largest room assuming it's big enough is a throne room
         var largestRoom = roomsClose[largestRoomIdx];
         //Check if up 2 or left 1 and up 20 is floor, if so, push left or right
-        console.log("largest room is ", largestRoom)
+        //console.log("largest room is ", largestRoom)
         if(largestRoom.w * 2 * largestRoom.h * 2 > 30){
             if((grid[largestRoom.cY-largestRoom.h-1][largestRoom.cX] != "" || grid[largestRoom.cY-largestRoom.h-1][largestRoom.cX-1] != "") && largestRoom.w*2 > 6){
                 grid[largestRoom.cY-largestRoom.h+1][largestRoom.cX+2] = "Throne";
@@ -2026,6 +2135,31 @@ var doodler = (function(){
         var bedRoom = roomsClose[bedIdx];
         dungeonRooms.Bedroom.fillRoom(grid, bedRoom, amountOfStuff, includeMonsters);
         
+        if(includeMonsters){
+            //Bed Room
+            var monIdx = Math.floor(Math.random()*roomsClose.length);
+            if(monIdx == largestRoomIdx){monIdx --};
+            if(monIdx < 0){
+                monIdx = 0;
+            }
+            var monRoom = roomsClose[monIdx];
+            dungeonRooms.Monsters.fillRoom(grid, monRoom, amountOfStuff, includeMonsters);
+            
+            roomsClose.forEach(function(room){
+                if(Math.random()*3<=amountOfStuff && amountOfStuff > 0){
+                    dungeonRooms.Monsters.fillRoom(grid, room, amountOfStuff, includeMonsters);
+                }
+            })
+        }
+        
+        
+        
+        //Shaped Rooms
+        /*for(var i=0;i<roomsClose.length;i++){
+            if(Math.random()>0.4){
+                grid[roomsClose[i].cY][roomsClose[i].cX] = "ShapedRoom";
+            }
+        }*/
         
         //Doors
          
@@ -2280,6 +2414,7 @@ var doodler = (function(){
                 ir.set("overlayStyle", self.overlayImgStyle);
                 ir.set("overlayBlend", self.overlayBlend);
                 self.overlayImg = null;
+                setTimeout(function(){self.updateFrameBuffer()},1000);
 			});
 		}
 		catch(e){
@@ -3657,7 +3792,7 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = false;
+		var isBeta = true;
         //Change in above func too
 		var passwd = "betamapper";
 		var storedPwd = irstore.get("doodlePwd");

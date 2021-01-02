@@ -21,11 +21,25 @@
         .appContent.loaded {
             opacity: 1;
         }*/
+            .loaderr {
+              position: fixed;
+              left: 0px;
+              top: 0px;
+              width: 100%;
+              height: 100%;
+              z-index: 9999;
+              background-color: rgb(196, 196, 196);
+            }
         </style>
     </head>
 <body onload='doodler.show()'>
+ <div class="loaderr" id='loaderr' style='text-align: center;display:flex;flex-direction: row;flex-wrap: wrap;justify-content: center;align-content: center;align-items: center;'><div><img src='icon-192.png'><h1 >Dungeon Map Doodler</h1><div class='loader'></div><br>Loading...</div></div>
+    <script type="text/javascript">
+        window.addEventListener("load",function(){
+            document.getElementById("loaderr").style.display = "none";
+        });
  
-    
+</script>
 	<div class='flex-container appContent' id='appContent'>
 		<div class='topBar' style='text-align: right'>
 			<nav id="nav">
@@ -33,6 +47,7 @@
 					<li><a href="/">Dungeon Map Doodler</a></li>
 					<li><a href="#">File &raquo;</a>
 						<ul>
+                            <li><a href="#" onclick="ir.show('dimensionPopup');doodler.popupShowing=true;">New Map</a></li>
 							<li><a href="#" onclick="return doodler.saveFile()">Save</a></li>
 							<li><a href="#" onclick="return doodler.showFileLoad()">Load</a></li>
 							<li><a href="#" onclick="return doodler.saveImage()">Export Image</a></li>
@@ -119,7 +134,7 @@
 <div id='aboutPopup' class='popupPanel' style='display:none;text-align: left;padding:20px;'>
     <div id="aboutPopupContent" style="max-height: calc( 100% - 38px ); overflow: auto;">
         <h3>About</h3>
-        <p>Dungeon Map Doodler is a program designed to easily create tabletop RPG maps created by Todd Ross (<a target="_blank" rel="noopener noreferrer" href='https://twitter.com/ToddRossDIY'>ToddRossDIY</a>). This project is in early development stages and there will likely be bugs and other issues with it. I appreciate your patience in using this software and look forward to continuing to improve it!</p>
+        <p>Dungeon Map Doodler is a program designed to easily create tabletop RPG maps created by Todd Ross (<a target="_blank" rel="noopener noreferrer" href='https://twitter.com/ToddRossDIY'>@ToddRossDIY</a>). This project is in early development stages and there will likely be bugs and other issues with it. I appreciate your patience in using this software and look forward to continuing to improve it!</p>
         
         <h3>Commercial Use Policy</h3>
         <p>Any maps you create with the intention of distributing for free whether by itself or as a part of a larger project can be included under the same licensing that the rest of your content is being released as. 
@@ -127,6 +142,16 @@
         If you are making money with your creations, I ask that you become a patron of the $5 tier or higher to help support continued development of the project. If you're not a patron already, you can join at (<a target="_blank" rel="noopener noreferrer" href='https://www.patreon.com/bePatron?u=17254686'>https://www.patreon.com/bePatron?u=17254686</a>). If this small cost is prohibitive to you, please contact me and we can work something out!
         <br><br>
         While not mandatory, I would appreciate if you give credit so that people can see where the maps were made and have the opportunity to try the software out themselves. This can be as simple as a footnote along the lines of "Maps created at dungeonmapdoodler.com"</p>
+        
+        <h3>Credits</h3>
+        Most Stamps, Interface Icons:<br>
+        Andrew Landmine<br>
+        <a href='https://twitter.com/landmine752'>@landmine752</a>
+        <br><br>
+        Monster Stamps:<br>
+        Rene Carbonell<br>
+        Reneplicant@protonmail.com<br>
+        
         
         <h3>Contact Us</h3>
         <p>For any questions, bug reports or other comments, please email me at <a target="_blank" rel="noopener noreferrer" href='mailto:tross5000@gmail.com?subject=Dungeon Map Doodler Inquiry'>tross5000@gmail.com</a></p>
@@ -432,18 +457,18 @@
         <tr>
 			<td class='tdr'>Amount of Content:</td>
 			<td class='tdl'>
-                <input type="radio" id="randomGenStuffNone" checked='checked' name="randomGenStuff" value="0" >
+                <input type="radio" id="randomGenStuffNone"  name="randomGenStuff" value="0" >
 				<label for="randomGenStuffNone">None</label>
 				<input type="radio" id="randomGenStuffSome" name="randomGenStuff" value="1" >
 				<label for="randomGenStuffSome">Some</label>
-				<input type="radio" id="randomGenStuffLots" name="randomGenStuff" value="2" >
+				<input type="radio" id="randomGenStuffLots" checked='checked' name="randomGenStuff" value="2" >
 				<label for="randomGenStuffLots">Lots</label>
 			</td>
 		</tr>
         <tr>
 			<td class='tdr'>Include Monsters:</td>
 			<td class='tdl'>
-				<input type="checkbox" id="randomGenAddMonsters"  >
+				<input type="checkbox" checked='checked' id="randomGenAddMonsters"  >
 			</td>
 		</tr>
 		
@@ -498,8 +523,8 @@
     <a href='https://www.freepik.com/free-photos-vectors/background'>Background vector created by 0melapics - www.freepik.com</a>
 </div>
 
-<div id='dimensionPopup' class='popupPanel' style='display:none;text-align: center'>
-    <h2>Change Grid/Image Size</h2>
+<div id='dimensionPopup' class='newPopupPanel' style='display:none;text-align: center'>
+    <h2>Create New Map</h2>
 	<table>
 		<tr>
 			<td class='tdr'>Width in Feet:</td>
@@ -517,7 +542,7 @@
 			<td class='tdr'>Box Size in Pixels:</td>
 			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize" ></td>
 		</tr>
-        <tr><td colspan='2'>Warning: this will clear out any doodles you currently have</td></tr>
+        <tr id='newMapWarn' style='display:none;'><td colspan='2'>Warning: this will clear out any doodles you currently have, be sure to save</td></tr>
 	</table>
     
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>

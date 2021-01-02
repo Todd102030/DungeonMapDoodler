@@ -205,6 +205,41 @@ var StampConstants = {
 		group: StampGroup.Monsters,
 		defMult: 1,
 	},
+    Giant:{
+		path:'stamps/monsters/giant.svg',
+		name: "Giant",
+		alias: "giant, monster",
+		group: StampGroup.Monsters,
+		defMult: 2,
+	},
+	Orc:{
+		path:'stamps/monsters/orc.svg',
+		name: "Orc",
+		alias: "orc, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Elf:{
+		path:'stamps/monsters/elf.svg',
+		name: "Elf",
+		alias: "monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Halfling_Gnome:{
+		path:'stamps/monsters/halfling-gnome.svg',
+		name: "Halfling Gnome",
+		alias: "monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	Draconid:{
+		path:'stamps/monsters/draconid.svg',
+		name: "Draconid",
+		alias: "dragon, monster",
+		group: StampGroup.Monsters,
+		defMult: 2,
+	},
 }
 
 
@@ -1430,7 +1465,7 @@ var Stamps = [
 		name: "Ogre",
 		alias: "ogre, monster",
 		group: StampGroup.Monsters,
-		defMult: 1,
+		defMult: 2,
 	},
 	{
 		path:'stamps/monsters/skellington_grunt.svg',
@@ -1445,6 +1480,41 @@ var Stamps = [
 		alias: "skeleton, captain, monster",
 		group: StampGroup.Monsters,
 		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/giant.svg',
+		name: "Giant",
+		alias: "giant, monster",
+		group: StampGroup.Monsters,
+		defMult: 2,
+	},
+	{
+		path:'stamps/monsters/orc.svg',
+		name: "Orc",
+		alias: "orc, monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/elf.svg',
+		name: "Elf",
+		alias: "monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/halfling-gnome.svg',
+		name: "Halfling Gnome",
+		alias: "monster",
+		group: StampGroup.Monsters,
+		defMult: 1,
+	},
+	{
+		path:'stamps/monsters/draconid.svg',
+		name: "Draconid",
+		alias: "dragon, monster",
+		group: StampGroup.Monsters,
+		defMult: 2,
 	},
 ];
 

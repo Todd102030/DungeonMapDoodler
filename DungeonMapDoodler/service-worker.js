@@ -463,6 +463,11 @@ var resourcesToPrecache = [
 "./stamps/monsters/goblin_sapper.svg",
 "./stamps/monsters/skellington_capitan.svg",
 "./stamps/monsters/skellington_grunt.svg",
+"./stamps/monsters/giant.svg",
+"./stamps/monsters/draconid.svg",
+"./stamps/monsters/elf.svg",
+"./stamps/monsters/halfling-gnome.svg",
+"./stamps/monsters/orc.svg",
 
 ]
 
