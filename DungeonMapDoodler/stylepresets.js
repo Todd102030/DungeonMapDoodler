@@ -1,6 +1,7 @@
 var stylePresets = [
     {
         name: "Hand Drawn",
+		img: "images/HandDrawn.png",
         overlay: "",
         blend: "multiply",
         hatch: "hatchingImg",
@@ -9,6 +10,7 @@ var stylePresets = [
     },
     {
         name: "Light Parchment",
+		img: "images/LightParchment.png",
         overlay: "overlays/parchment-paper-light-texture.jpg",
         blend: "hue",
         hatch: "hatchingImg",
@@ -17,6 +19,7 @@ var stylePresets = [
     },
     {
         name: "Light Parchment 2",
+		img: "images/LightParchment2.png",
         overlay: "overlays/parchment-paper-light-texture.jpg",
         blend: "multiply",
         hatch: "hatchingImg",
@@ -25,6 +28,7 @@ var stylePresets = [
     },
     {
         name: "Dark Parchment",
+		img: "images/DarkParchment.png",
         overlay: "overlays/black-parchment.jpg",
         blend: "difference",
         hatch: "hatchingImg",
@@ -33,6 +37,7 @@ var stylePresets = [
     },
     {
         name: "Outer Space",
+		img: "images/OuterSpace.png",
         overlay: "overlays/black-parchment.jpg",
         blend: "lighten",
         hatch: "space1",
@@ -41,6 +46,7 @@ var stylePresets = [
     },/////
     {
         name: "Cartoon Lava",
+		img: "images/CartoonLava.png",
         overlay: "",
         blend: "multiply",
         hatch: "magma1",
@@ -49,6 +55,7 @@ var stylePresets = [
     },
     {
         name: "Underwater Depths",
+		img: "images/UnderwaterDepths.png",
         overlay: "overlays/metal-texture.jpg",
         blend: "darken",
         hatch: "water1",
@@ -57,6 +64,7 @@ var stylePresets = [
     },
     {
         name: "Beach",
+		img: "images/Beach.png",
         overlay: "",
         blend: "multiply",
         hatch: "water1",
@@ -65,6 +73,7 @@ var stylePresets = [
     },
     {
         name: "Psychedelic",
+		img: "images/Psychedelic.png",
         overlay: "overlays/metal-texture.jpg",
         blend: "hue",
         hatch: "water1",
@@ -73,6 +82,7 @@ var stylePresets = [
     },
     {
         name: "Wood Forest",
+		img: "images/WoodForest.png",
         overlay: "",
         blend: "multiply",
         hatch: "hatchingImgGrass",
@@ -81,6 +91,7 @@ var stylePresets = [
     },
     {
         name: "Blueprint",
+		img: "images/Blueprint.png",
         overlay: "overlays/blueprint.png",
         blend: "screen",
         hatch: "hatchingImg",

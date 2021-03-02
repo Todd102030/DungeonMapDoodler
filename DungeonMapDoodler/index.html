@@ -210,7 +210,13 @@
     </div>
 </div>
 
-
+<div id='stylePresetPopup' class='popupPanel' style='display:none;text-align: center'>
+    <h2>Choose Style Preset</h2>
+    <div id="stylePresetPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;"></div>
+    <div class='popupFooter' style='padding-top: 8px'>
+        <button type="button" class="canvBtn" onclick="ir.hide('stylePresetPopup');doodler.popupShowing = false;">Cancel</button>
+    </div>
+</div>
 
 
 <div id='textPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;max-width:600px;height:auto;position:fixed;left:35%; top:20%'>
@@ -570,9 +576,10 @@
 <div class="floatingModes popup" id='floatingModes'>
 	<button id='dockOpenCloseBtn' class='modeBtn' style='background-color:ghostwhite;padding:0;margin-left: 0px;float:left;outline:none;' type="button" onclick="doodler.toggleDockOpen()"><img id='dockOpenCloseImg' src="close.png" width='32px' height='32px'></button>
 	<div class='floatingContainer'>
-        <details id='globalDetails'>
+        <details open id='globalDetails'>
             <summary>Global Options</summary>
-            <div class='paramTitle'>Style Preset</div><select id='stylePresetSelect' style='max-width:140px;' onchange='doodler.changeStylePreset(event)'>
+			<button type='button' onclick='doodler.showStylePopup()'>Choose Style</button>
+            <div class='paramTitle' style='display:none'>Style Preset</div><select id='stylePresetSelect' style='max-width:140px;display:none' onchange='doodler.changeStylePreset(event)'>
             </select><br>
             <div class='paramTitle'>Overlay</div><br><select id='overlayStyle' style='max-width:140px;' onchange='doodler.changeOverlayStyle(event)'>
 			<option name='' value=''>None</option>

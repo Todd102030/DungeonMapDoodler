@@ -463,8 +463,19 @@ var doodler = (function(){
     	//self.setMode(Mode.MOVE);
     	//self.enableButtons(true);
     },
-    changeStylePreset: function(evt){
-        var style = stylePresets[ir.v("stylePresetSelect")];
+	showStylePopup: function(){
+		doodler.popupShowing = true;
+		var container = ir.get("stylePresetPopupList");
+		var htm = "";
+		for(var i=0;i<stylePresets.length;i++){
+			var style = stylePresets[i];
+			htm += `<div class='stampBtn' style='width:200px;height:200px;line-height:200px;' title='${style.name}' onclick='doodler.changeStylePreset(null, ${i})'><img src='${style.img}' ></div>`;
+		}
+		container.innerHTML = htm;
+		ir.show("stylePresetPopup");	
+	},
+    changeStylePreset: function(evt, id){
+        var style = stylePresets[evt!=null?ir.v("stylePresetSelect"):id];
         if(style!=null){
             self.overlayBlend = style.blend;
             self.overlayImgStyle = style.overlay;
@@ -485,6 +496,10 @@ var doodler = (function(){
             
         }
         self.overlayImg = null;
+		if(id){
+			ir.hide("stylePresetPopup");
+			doodler.popupShowing = false;
+		}
         //self.loadLayerList(self.layers[self.currentLayer].layerIndex);
         doodler.updateFrameBuffer();
     },
