@@ -269,6 +269,8 @@ var doodler = (function(){
     	var yfeet = ir.vn("dimensionPopupY");
     	var stepsize = ir.vn("dimensionPopupStep");
     	var boxsize = ir.vn("dimensionPopupBoxSize");
+    	self.drawRough = ir.bool("dimensionPopupBoxIsRough");
+		ir.set("drawRoughCheck", self.drawRough);
     	var dim = self.dimensions;
     	dim.isSet = true;
     	dim.wf = xfeet;
@@ -474,6 +476,9 @@ var doodler = (function(){
 		container.innerHTML = htm;
 		ir.show("stylePresetPopup");	
 	},
+	changeBackgroundColor: function(evt){
+		  self.backgroundColor = evt.target.value;
+	},
     changeStylePreset: function(evt, id){
         var style = stylePresets[evt!=null?ir.v("stylePresetSelect"):id];
         if(style!=null){
@@ -496,7 +501,7 @@ var doodler = (function(){
             
         }
         self.overlayImg = null;
-		if(id){
+		if(id!= null){
 			ir.hide("stylePresetPopup");
 			doodler.popupShowing = false;
 		}
@@ -512,6 +517,9 @@ var doodler = (function(){
         self.overlayBlend = ir.v("overlayBlend");
         doodler.updateFrameBuffer();
     },
+	checkRough: function(evt){
+		self.drawRough = ir.bool("drawRoughCheck");
+	},
     clear: function(){
     	if(self.ctx){
     		self.ctx.clearRect(0,0,self.canvas.width, self.canvas.height);
@@ -522,20 +530,21 @@ var doodler = (function(){
 			self.mouseMode.endMode();
 		}
 		var modeName = evt.target.id.substring(4,evt.target.id.length);
-		
-		self.mouseMode = Modes[modeName];
-		self.mouseMode.setParameterBox(ir.get("paramBox"));
-		
-		var btns = document.getElementsByClassName("modeBtn");
-		for(var i=0;i<btns.length;i++){
-			btns[i].style.border = "";
-			btns[i].style.backgroundColor = "";
-			
-			//#f8f8ff
+		if(Modes[modeName] != null){
+			self.mouseMode = Modes[modeName];
+			self.mouseMode.setParameterBox(ir.get("paramBox"));
+
+			var btns = document.getElementsByClassName("modeBtn");
+			for(var i=0;i<btns.length;i++){
+				btns[i].style.border = "";
+				btns[i].style.backgroundColor = "";
+
+				//#f8f8ff
+			}
+			var myBtn = ir.get("mode"+modeName);
+			myBtn.style.border = "2px inset darkred";
+			myBtn.style.backgroundColor = "#ddd";
 		}
-		var myBtn = ir.get("mode"+modeName);
-		myBtn.style.border = "2px inset darkred";
-		myBtn.style.backgroundColor = "#ddd";
 	},
     close:function() {
       view.showPrevious();
@@ -1138,12 +1147,23 @@ var doodler = (function(){
         //Path Drawing
         ctx = self.doodleCtx;
         ctx.fillStyle = fill || "white";
-        ctx.fillRect(x*step-inset, y*step-inset, step+inset*2, step+inset*2);
-
+		if(!doodler.drawRough){
+        	ctx.fillRect(x*step-inset, y*step-inset, step+inset*2, step+inset*2);
+		}else{
+			var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:fill||"white", fillStyle:'solid', stroke:"none"};
+			var rc = rough.canvas(ctx.canvas);
+			rc.rectangle(x*step-inset, y*step-inset, step+inset*2, step+inset*2, rcopts);
+		}
         //Outline Drawing
         ctx = self.outlineCtx;
         ctx.fillStyle = wall || "black";
-        ctx.fillRect(x*step-border-inset, y*step-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step);
+		if(!doodler.drawRough){
+			ctx.fillRect(x*step-border-inset, y*step-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step);
+		}else{
+			var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:wall||"black", fillStyle:'solid'};
+			var rc = rough.canvas(ctx.canvas);
+			rc.rectangle(x*step-border-inset, y*step-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step, rcopts);
+		}
 
         doodler.updateFrameBuffer();
     },
@@ -1394,6 +1414,11 @@ var doodler = (function(){
 		var stepX = xfeet/dim.stepSize;
 		var stepY = yfeet/dim.stepSize;
     	var canv = document.createElement("canvas");
+		var rcopts = { roughness: 5, bowing:0.5, strokeLineDash:[20, 3, 3, 3, 3, 3, 3, 3], disableMultiStroke:true};
+		var rc = rough.canvas(canv);
+		
+		
+		
     	//canv.width = dim.w;
     	//canv.height = dim.h;
     	//By box count
@@ -1425,12 +1450,32 @@ var doodler = (function(){
 		}*/
 		//Based on w/h being the amount of feet you enter
 		for(var x=0;x<stepX;x+=1){
-			ctx.moveTo(Math.floor(x*step/dim.scaleX), 0);
-    		ctx.lineTo(Math.floor(x*step/dim.scaleX), canv.height);
+			if(self.drawRough){
+				var dash = [];
+				for(var i=0;i<20;i++){
+					dash.push(parseInt(Math.random()*50));
+					dash.push(parseInt(Math.random()*5));
+				}
+				rcopts.strokeLineDash = dash;
+				rc.line(Math.floor(x*step/dim.scaleX), 0,Math.floor(x*step/dim.scaleX), canv.height, rcopts);
+			}else{
+				ctx.moveTo(Math.floor(x*step/dim.scaleX), 0);
+    			ctx.lineTo(Math.floor(x*step/dim.scaleX), canv.height);
+			}
 		}
-		for(var y=0;y<stepY;y+=1){			
-			ctx.moveTo(0, Math.floor(y*step/dim.scaleY));
-    		ctx.lineTo(canv.width, Math.floor(y*step/dim.scaleY));
+		for(var y=0;y<stepY;y+=1){	
+			if(self.drawRough){
+				var dash = [];
+				for(var i=0;i<20;i++){
+					dash.push(parseInt(Math.random()*50));
+					dash.push(parseInt(Math.random()*5));
+				}
+				rcopts.strokeLineDash = dash;
+				rc.line(0, Math.floor(y*step/dim.scaleY),canv.width, Math.floor(y*step/dim.scaleY), rcopts);
+			}else{
+				ctx.moveTo(0, Math.floor(y*step/dim.scaleY));
+    			ctx.lineTo(canv.width, Math.floor(y*step/dim.scaleY));
+			}
 		}
 		
     	ctx.stroke();
@@ -1606,7 +1651,7 @@ var doodler = (function(){
 			ir.set("dimensionPopupBoxSize", 70);
 
             self.applyDimensions();
-
+			ir.set("drawRoughCheck", self.drawRough);
             
             //Don't automatically start, let people create map
             ir.show('dimensionPopup');
@@ -3807,7 +3852,7 @@ var doodler = (function(){
 		}
 	},
     show:function(){
-		var isBeta = true;
+		var isBeta = false;
         //Change in above func too
 		var passwd = "betamapper";
 		var storedPwd = irstore.get("doodlePwd");
@@ -4200,7 +4245,7 @@ var doodler = (function(){
 		//self.updateCurrentImage();
 		//console.log("end of redo", self.redoStack);
 	},
-    zoom: function(zoom, suppressOffset){
+    zoom: function(zoom, suppressOffset, useCenter){
         if(self.lastZoomTime && new Date().getTime() - self.lastZoomTime < 100){
             return;
         }
@@ -4215,9 +4260,15 @@ var doodler = (function(){
             //to where your mouse cursor is, rather than zooming on the origin (top left of image)
             var z = self.zoomLevel;
 
+			
+			
             if(!suppressOffset){
                 var mx = self.mouseX;
                 var my = self.mouseY;
+				/*if(useCenter){
+					mx = self.canvas.width/2;
+					my = self.canvas.height/2;
+				}*/
                 self.globalOffsetX = ((xpos*z)-mx)*-1;
                 self.globalOffsetY = ((ypos*z)-my)*-1;
             }else{

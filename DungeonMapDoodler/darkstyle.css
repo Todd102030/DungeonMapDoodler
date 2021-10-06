@@ -1,0 +1,30 @@
+.modeBtn img{
+  background-color: white;
+  -webkit-filter: invert(90%); /* Safari/Chrome */
+    filter: invert(90%);
+}
+.floatBtn img, .layerPreview img{
+  background-color: #bbb;
+  -webkit-filter: invert(90%); /* Safari/Chrome */
+    filter: invert(90%);
+}
+
+.tooltip .left{
+  background-color: #444;
+}
+
+.layerRow{
+  background-color: #333;
+}
+.layerRow img{
+  
+}
+
+.floatingModes{
+  background-color: #383838;
+}
+
+*{
+  background-color: #424242;
+  color: #eee;
+}

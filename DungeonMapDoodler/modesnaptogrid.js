@@ -70,12 +70,23 @@ var SnapToGrid = (function(){
 			//Path Drawing
 			ctx = data.doodleCtx;
 			ctx.fillStyle = self.fillColor;
-			ctx.fillRect(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2);
-
+			if(!doodler.drawRough){
+				ctx.fillRect(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2);
+			}else{
+				var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+				var rc = rough.canvas(ctx.canvas);
+				rc.rectangle(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2, rcopts);
+			}
 			//Outline Drawing
 			ctx = data.outlineCtx;
 			ctx.fillStyle = self.outlineColor;
-			ctx.fillRect(xgridtop-border-inset, ygridtop-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step);
+			if(!doodler.drawRough){
+				ctx.fillRect(xgridtop-border-inset, ygridtop-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step);
+			}else{
+				var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.outlineColor, fillStyle:'solid'};
+				var rc = rough.canvas(ctx.canvas);
+				rc.rectangle(xgridtop-border-inset, ygridtop-border-inset, ((border+inset)*2)+step, ((border+inset)*2)+step, rcopts);
+			}
 
             doodler.updateFrameBuffer();
 		},

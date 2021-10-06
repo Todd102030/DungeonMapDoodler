@@ -5,6 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta property="og:image" content="https://dungeonmapdoodler.ca/images/background.png" />
       	<link rel="stylesheet" type="text/css" href="style.css">
+      	<!--<link rel="stylesheet" type="text/css" href="darkstyle.css">-->
         <link rel="apple-touch-icon" href="touch-icon-iphone.png">
         <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
         <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
@@ -548,6 +549,10 @@
 			<td class='tdr'>Box Size in Pixels:</td>
 			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize" ></td>
 		</tr>
+		<tr>
+			<td class='tdr'>Rough Grid Lines:</td>
+			<td class='tdl'><input type="checkbox" id="dimensionPopupBoxIsRough" ></td>
+		</tr>
         <tr id='newMapWarn' style='display:none;'><td colspan='2'>Warning: this will clear out any doodles you currently have, be sure to save</td></tr>
 	</table>
     
@@ -561,8 +566,8 @@
 </div>
 	
 <div class='floatingControlsLeft'>
-	<div class='floatBtn' onclick="doodler.zoom(1, true)"><img title="Zoom In" src='images/plus.png' width='40px' height='40px'></div>
-	<div class='floatBtn' onclick="doodler.zoom(-1, true)"><img title="Zoom Out" src='images/minus.png' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(1, true, true)"><img title="Zoom In" src='images/plus.png' width='40px' height='40px'></div>
+	<div class='floatBtn' onclick="doodler.zoom(-1, true, true)"><img title="Zoom Out" src='images/minus.png' width='40px' height='40px'></div>
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
 	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.png' width='40px' height='40px'></div>
 	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.png' width='40px' height='40px'></div>
@@ -613,6 +618,8 @@
 			<option name='Colour' value='color'>Colour</option>
 			<option name='Luminosity' value='luminosity'>Luminosity</option>
             </select>
+			<div class='paramTitle'><label for='drawRoughCheck'>Rougher Lines</label></div><input type='checkbox' id='drawRoughCheck' onchange='doodler.checkRough(event);'>
+			<div class='paramTitle'>Background Colour</div><input type='color' id='backgroundColor' onchange='doodler.changeBackgroundColor(event)'>
         </details>
 		<details open id='layerDetails'>
 			<summary>Layer Options</summary>
@@ -691,6 +698,7 @@
 <script src='modetext.js'></script>
 <script src='modestamps.js'></script>
 <script src='modes.js'></script>
+<script src='rough.js'></script>
 <script src="warehouseMap.js"></script>  
 <script src="warehouseMap2.js"></script>
 <script>

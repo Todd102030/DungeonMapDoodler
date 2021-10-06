@@ -159,27 +159,47 @@ var ShapeTool = (function(){
 				ctx.fillStyle = self.fillColor;
 				//ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
 				//		   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
-				
-				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
+				if(!doodler.drawRough){
+					ctx.beginPath();
+					ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
-				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+					for (var i = 1; i <= numberOfSides;i += 1) {
+					  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+					}
+					ctx.fill();
+				}else{
+					var poly = [];
+					poly.push([Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad)])
+					for (var i = 1; i <= numberOfSides;i += 1) {
+					  poly.push([Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad)]);
+					}
+					
+					var rcopts = { roughness: 2, bowing:3, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+					var rc = rough.canvas(ctx.canvas);
+					rc.polygon(poly, rcopts);
 				}
-				ctx.fill();
-				
 				
 				//Outline Drawing
 				ctx = data.outlineCtx;
 				ctx.fillStyle = self.outlineColor;
 				size += border + inset;
-				ctx.beginPath();
-				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
+				if(!doodler.drawRough){
+					ctx.beginPath();
+					ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
-				for (var i = 1; i <= numberOfSides;i += 1) {
-				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+					for (var i = 1; i <= numberOfSides;i += 1) {
+					  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
+					}
+					ctx.fill();
+				}else{
+					poly.push([Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad)])
+					for (var i = 1; i <= numberOfSides;i += 1) {
+					  poly.push([Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad)]);
+					}
+					var rcopts = { roughness: 2, bowing:3, disableMultiStroke:false, fill:self.outlineColor, fillStyle:'solid', strokeWidth:border};
+					var rc = rough.canvas(ctx.canvas);
+					rc.polygon(poly, rcopts);
 				}
-				ctx.fill();
 			}
             doodler.updateFrameBuffer();
 				

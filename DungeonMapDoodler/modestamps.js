@@ -17,7 +17,10 @@ var StampTool = (function(){
 		chosenStampImg: null,
 		id:8,
 		isSnapping: true,
+		isPaintMode: false,
 		multiplyer:1,
+		paintVariance: 0,
+		paintDistance: 50,
 		size: 50,
 		stampRatio: 1,
         recentStamps: [],
@@ -157,6 +160,28 @@ var StampTool = (function(){
 				self.fillColor = evt.target.value;
 			}else{
 				self.outlineColor = evt.target.value;
+			}
+		},
+		changePaintMode: function(evt){
+			self.isPaintMode = ir.bool("stampsIsPaintMode");
+            
+       
+			ir.show("stampPaintStuff",self.isPaintMode);
+		},
+		changePaintVariance: function(evt, fromInput){
+			self.paintVariance = parseFloat(evt.target.value);   
+			if(!fromInput){
+				ir.set("stampPaintVarianceLabel", self.paintVariance);
+			}else{
+				ir.set("stampPaintVariance", self.paintVariance);
+			}
+		},
+		changePaintDistance: function(evt, fromInput){
+			self.paintDistance = parseFloat(evt.target.value);  
+			if(!fromInput){
+				ir.set("stampPaintDistanceLabel", self.paintDistance);
+			}else{
+				ir.set("stampPaintDistance", self.paintDistance);
 			}
 		},
 		deleteFn: function(fromBtn){
@@ -497,7 +522,7 @@ var StampTool = (function(){
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
 			//self.draw(xpos, ypos, data);
-            
+            self.isDoodling = true;
 			
             if(self.stampSelected != null){
                 //Hit test stamp rotater here
@@ -542,22 +567,42 @@ var StampTool = (function(){
 		},
 		mouseMove: function(xpos, ypos, data){
             self.moved = true;
+			
+			
 			if(self.isMovingStamp){
 				self.moveStamp(self.stampHit,xpos, ypos);
 			}
             else if(self.rotatingStamp){
                 self.rotateStamp(self.stampSelected, xpos, ypos);
             }
+			else if(self.isPaintMode && self.isDoodling){
+				self.doodleEndX = xpos;
+				self.doodleEndY = ypos;
+				var distSinceLast = Math.hypot((self.paintX||0)-xpos, (self.paintY||0)-ypos);
+				if(self.paintX == null || distSinceLast > self.paintDistance){
+					
+					var angle = self.angle;
+					self.angle = angle + (Math.random()*self.paintVariance*2*360) - (self.paintVariance*360);
+					self.draw(xpos, ypos, data);
+					
+					self.angle = angle;
+					self.paintX = xpos;
+					self.paintY = ypos;
+				}
+				
+			}
 			else if (self.placingStamp){
 				var wh = doodler;
 				//self.draw(xpos*wh.zoomLevel+wh.globalOffsetX, ypos*wh.zoomLevel+wh.globalOffsetY, data);
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
-				self.doodleStartX = xpos;
-				self.doodleStartY = ypos;
+				//self.doodleStartX = xpos;
+				//self.doodleStartY = ypos;
 			}
+			
 		},
 		mouseUp: function(xpos, ypos, data){
+			self.isDoodling = false;
             if(self.placingStamp && !self.rotatingStamp){
 				self.draw(xpos, ypos, data);
 			}
@@ -643,6 +688,12 @@ var StampTool = (function(){
 						<div class='paramTitle'>Rotate Degrees: </div><br>
 						<input type="number" id="stampAngle" name="stampAngle" min="0" max="360" style='width:60px' value='${self.angle}' onchange='Modes.StampTool.changeAngle(event)' oninput='Modes.StampTool.changeAngle(event)'><br>
 						<input type='checkbox' id='stampsIsSnapping' onclick='Modes.StampTool.changeSnapping(event)'><label for='stampsIsSnapping'>Snap To Grid</label><br>
+						<input type='checkbox' id='stampsIsPaintMode' onclick='Modes.StampTool.changePaintMode(event)'><label for='stampsIsPaintMode'>Paint Mode</label><br>
+						<div id='stampPaintStuff'><div class='paramTitle' id='stampDistTitle'>Paint Distance: </div><input type='number' style='width:60px' step='1' id='stampPaintDistanceLabel' value="${self.paintDistance}" onchange='Modes.StampTool.changePaintDistance(event, true)' oninput='Modes.StampTool.changePaintDistance(event, true)'><br>
+						<input style='width:100px' type="range" id="stampPaintDistance" name="stampPaintDistance" step='1' min="1" max="200" value='${self.paintDistance}' onchange='Modes.StampTool.changePaintDistance(event)' oninput='Modes.StampTool.changePaintDistance(event)'><br>
+						<div class='paramTitle' id='stampVarTitle'>Paint Variance: </div><input type='number' style='width:60px' step='0.01' id='stampPaintVarianceLabel' value="${self.paintVariance}" onchange='Modes.StampTool.changePaintVariance(event, true)' oninput='Modes.StampTool.changePaintVariance(event, true)'><br>
+						<input style='width:100px' type="range" id="stampPaintVariance" name="stampPaintVariance" step='0.01' min="0" max="1" value='${self.paintVariance}' onchange='Modes.StampTool.changePaintVariance(event)' oninput='Modes.StampTool.changePaintVariance(event)'><br>
+						</div>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
                         <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
 						`;
@@ -678,8 +729,11 @@ var StampTool = (function(){
 			container.innerHTML = htm;
 			
 			ir.set("stampsIsSnapping", self.isSnapping);
+			ir.set("stampsIsPaintMode", self.isPaintMode);
             ir.enable("stampSize",!self.isSnapping);
             ir.enable("stampSizeLabel", !self.isSnapping);
+            ir.show("stampPaintStuff", self.isPaintMode);
+            
 		},
         showStampPopup: function(){
             doodler.popupShowing = true;

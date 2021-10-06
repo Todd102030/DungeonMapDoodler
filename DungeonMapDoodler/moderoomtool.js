@@ -115,13 +115,27 @@ var RoomTool = (function(){
 				//Path Drawing
 				ctx = data.doodleCtx;
 				ctx.fillStyle = self.fillColor;
-				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
+				if(!doodler.drawRough){
+					ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
+				}else{
+					var rcopts = { roughness: 2, bowing:2, disableMultiStroke:false, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+					var rc = rough.canvas(ctx.canvas);
+					rc.rectangle(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2, rcopts);
+				}
 				//Outline Drawing
 				ctx = data.outlineCtx;
 				ctx.fillStyle = self.outlineColor;
-				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
+				if(!doodler.drawRough){
+					ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
+				}else{
+					var rcopts = { roughness: 2, bowing:2, disableMultiStroke:false, fill:self.outlineColor, fillStyle:'solid'};
+					var rc = rough.canvas(ctx.canvas);
+					rc.rectangle(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
+						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2, rcopts);
+				}
 			}
             doodler.updateFrameBuffer();
 				

@@ -1,4 +1,4 @@
-var cacheName = 'cache-v13'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
+var cacheName = 'cache-v15'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
 var resourcesToPrecache = [
 	"/",
 "./Bugs.txt",
@@ -49,8 +49,10 @@ var resourcesToPrecache = [
 "./stamp.png",
 "./stamps.js",
 "./star.png",
+"./rough.js",
 "./style.css",
 "./style2.css",
+"./darkstyle.css",
 "./warehouseMap.js",
 "./warehouseMap2.js",
 "./floortiles/brick1.svg",
@@ -468,6 +470,17 @@ var resourcesToPrecache = [
 "./stamps/monsters/elf.svg",
 "./stamps/monsters/halfling-gnome.svg",
 "./stamps/monsters/orc.svg",
+"./stamps/monsters/drow.svg",
+"./stamps/monsters/beholder.svg",
+"./stamps/monsters/fungus-monster.svg",
+"./stamps/monsters/gelatinous-cube.svg",
+"./stamps/monsters/kobold_modern.svg",
+"./stamps/monsters/kobold-classic.svg",
+"./stamps/monsters/lich.svg",
+"./stamps/monsters/mimic.svg",
+"./stamps/monsters/mindflayer.svg",
+"./stamps/monsters/owlbear.svg",
+"./stamps/monsters/rust-monster.svg",
 
 ]
 

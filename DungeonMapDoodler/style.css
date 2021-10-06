@@ -241,7 +241,7 @@ table{
 .paramBox{
 	border: 1px solid black;
 	max-width: 300px;
-    max-height: 500px;
+    /*max-height: 500px;*/
     overflow: auto;
     width:100%;
 }
@@ -306,6 +306,8 @@ table{
     transform: translateX(-50%);
     top:10%;
     max-height: 80%;
+	box-shadow: 0px 5px 20px;
+	border-radius: 15px;
     /*min-width: 50%;*/
 }
 

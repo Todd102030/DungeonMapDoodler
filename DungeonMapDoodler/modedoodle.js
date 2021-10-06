@@ -93,31 +93,48 @@ var Doodle = (function(){
 				ctx = data.doodleCtx;
 				ctx.fillStyle = self.fillColor;
 				ctx.strokeStyle = self.fillColor;
-				ctx.beginPath();
-				ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
-				ctx.fill();
-				ctx.beginPath();
-				ctx.arc(expos, eypos, size/2, 0, 2 * Math.PI);
-				ctx.fill();
-				ctx.beginPath()
-				ctx.lineWidth = size;
-				ctx.moveTo(xpos,ypos);
-    			ctx.lineTo(expos,eypos);
-				ctx.stroke();
+				if(!doodler.drawRough){
+					ctx.beginPath();
+					ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+					ctx.fill();
+					ctx.beginPath();
+					ctx.arc(expos, eypos, size/2, 0, 2 * Math.PI);
+					ctx.fill();
+					ctx.beginPath()
+					ctx.lineWidth = size;
+					ctx.moveTo(xpos,ypos);
+					ctx.lineTo(expos,eypos);
+					ctx.stroke();
+				}
+				else{
+					var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+					var rc = rough.canvas(ctx.canvas);
+					rc.circle(xpos, ypos, size, rcopts);
+					rc.circle(expos, eypos, size, rcopts);
+				}
 
 				//Outline Drawing
 				ctx = data.outlineCtx;
 				ctx.fillStyle = self.outlineColor;
-				ctx.strokeStyle = self.outlineColor;
-				ctx.beginPath();
-				ctx.arc(xpos, ypos, size/2+border, 0, 2 * Math.PI);
-				ctx.arc(expos, eypos, size/2+border, 0, 2 * Math.PI);
-				ctx.fill();
-				ctx.beginPath();
-				ctx.lineWidth = (size)+(border*2);
-				ctx.moveTo(xpos,ypos);
-    			ctx.lineTo(expos,eypos);
-				ctx.stroke();
+				if(!doodler.drawRough){
+					
+					ctx.strokeStyle = self.outlineColor;
+					ctx.beginPath();
+					ctx.arc(xpos, ypos, size/2+border, 0, 2 * Math.PI);
+					ctx.arc(expos, eypos, size/2+border, 0, 2 * Math.PI);
+					ctx.fill();
+					ctx.beginPath();
+					ctx.lineWidth = (size)+(border*2);
+					ctx.moveTo(xpos,ypos);
+					ctx.lineTo(expos,eypos);
+					ctx.stroke();
+				}
+				else{
+					var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.outlineColor, fillStyle:'solid'};
+					var rc = rough.canvas(ctx.canvas);
+					rc.circle(xpos, ypos, size+border*2, rcopts);
+					rc.circle(expos, eypos, size+border*2, rcopts);
+				}
 			}else{
 				//Path Drawing
 				ctx = data.doodleCtx;
