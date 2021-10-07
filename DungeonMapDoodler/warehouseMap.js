@@ -188,10 +188,10 @@ var doodler = (function(){
                 var index = doodler.layers[doodler.currentLayer].layerIndex;
                 self.layers.splice(self.currentLayer, 1);
                 self.switchLayer(self.layers[0].layerIndex);
-                self.updateFrameBuffer();
                 self.stamps = self.stamps.filter(function(a){
                     return a.layer != index;
                 })
+                self.updateFrameBuffer();
             }
 		}	
 	},
@@ -1578,7 +1578,7 @@ var doodler = (function(){
 	  var a = self.stamps;
 		for(var i=0,z=a.length;i<z;i++){
 			var b = a[i]
-            if(b.layer != self.currentLayer){
+            if(b.layer != self.layers[self.currentLayer].layerIndex){
                 continue;
             }
 			//if(self.hitTest(mrect,{x:b.x-b.w/2, y:b.y-b.h/2, w:b.w, h:b.h})){
