@@ -598,6 +598,7 @@ var doodler = (function(){
         self.needsRefresh = true;
     },
     updateFBDraw: function(canv, ct){
+        
         // if(self.lastFBUpdate != null && new Date().getTime() - self.lastFBUpdate < 50){
         //    return;
         //    }
@@ -616,7 +617,11 @@ var doodler = (function(){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
 			self.drawFloorMask(canvas, ctx, index);	
+            if(doodler.stopStamps){
+
+            }else{
             self.drawStamps(canvas, ctx, index);
+            }
 		})
 		self.drawGrid(canvas, ctx);
         self.drawOverlay(canvas, ctx);
@@ -636,17 +641,32 @@ var doodler = (function(){
  
         self.ctx.fillStyle = "#bbb";
         self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
-        
 		if(self.gridImg){
 			ctx.fillStyle = self.backgroundColor || "white";
 			ctx.fillRect(self.globalOffsetX,self.globalOffsetY,self.gridImg.width*self.zoomLevel,self.gridImg.height*self.zoomLevel)
 		}
+        /*
+        ctx.drawImage(self.fbCanvas,
+            self.globalOffsetX,
+            self.globalOffsetY,
+            self.fbCanvas.width,
+            self.fbCanvas.height,
+            Math.floor(self.globalOffsetX), 
+            Math.floor(self.globalOffsetY), 
+            Math.floor(self.fbCanvas.width*self.zoomLevel),
+            Math.floor(self.fbCanvas.height*self.zoomLevel));*/
         
         ctx.drawImage(self.fbCanvas,
-				self.globalOffsetX, 
-				self.globalOffsetY, 
-				self.fbCanvas.width*self.zoomLevel,
-				self.fbCanvas.height*self.zoomLevel);
+                -self.globalOffsetX/self.zoomLevel,
+                -self.globalOffsetY/self.zoomLevel,
+                canvas.width/self.zoomLevel,
+                canvas.height/self.zoomLevel,
+				0, 
+                0, 
+                Math.floor(canvas.width),
+                Math.floor(canvas.height));
+
+        
         
         if(self.movingTouches && self.movingTouches.length){
             self.ctx.strokeStyle = "rgb(255,0,0)";
@@ -749,7 +769,7 @@ var doodler = (function(){
                 ctx2.strokeStyle = "#fff";
                 for(var x=0;x<canv2.width;x+=xplus){
                     for(var y=0;y<canv2.height;y+=yplus){					
-                        ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
+                        ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
                     }
                 }
                 var img2 = new Image();
@@ -872,7 +892,7 @@ var doodler = (function(){
                 ctx2.strokeStyle = "#fff";
                 for(var x=0;x<canv2.width;x+=xplus){
                     for(var y=0;y<canv2.height;y+=yplus){					
-                        ctx2.drawImage(img, x,y,iw*(1/sX), ih*(1/sY));
+                        ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
                     }
                 }
                 console.log("Before loading image todataurl")
@@ -999,7 +1019,7 @@ var doodler = (function(){
 				tmpCt.drawImage(self.doodleCanvas, 0, 0, self.doodleCanvas.width, self.doodleCanvas.height);
 				tmpCt.globalCompositeOperation = "source-in";
                 
-	        	tmpCt.drawImage(img,0,0,img.width*(1/sX),img.height*(1/sY));
+	        	tmpCt.drawImage(img,0,0,Math.floor(img.width*(1/sX)),Math.floor(img.height*(1/sY)));
     			tmpCt.globalCompositeOperation = "source-over";
            
                 ctx.drawImage(self.tmpCanvas,
@@ -1282,12 +1302,17 @@ var doodler = (function(){
             if((!self.layers[index].visible) && !skipZoomPos){
                 continue;
             }
+            
 			if(st.img == null){
-				st.img = new Image();
+				st.img = new Image(st.w, st.h);
 				st.img.src = st.path;
+               // st.img.width = st.w;
+               // st.img.height = st.h;
 			}
+            var im = st.canvas || st.img;
 			//Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
-			Modes.StampTool.drawImageRotated(ctx,st.img, st.x, st.y, st.w, st.h, st.angle);
+			Modes.StampTool.drawImageRotated(ctx,im, st.x, st.y, st.w, st.h, st.angle);
+            //self.updateFrameBuffer
         }
     },
     drawTextFields: function(canv,ct){
@@ -1618,6 +1643,16 @@ var doodler = (function(){
 		}
 		return null;
 	},
+    hoverHelp: function(evt){
+        var parent = evt.target;
+        if(!parent.classList.contains("modeBtn")){
+            parent = parent.parentElement;
+        }
+        var node = parent.firstChild;
+        var pos = parent.getBoundingClientRect();
+        node.style.top = (pos.top - node.clientHeight/2 + 10) + "px";
+        node.style.left = (-30-node.clientWidth) + "px";
+    },
 	imageClick:function(evn) {
 		evn = evn || window.event;
 		if (evn) {
@@ -1682,6 +1717,7 @@ var doodler = (function(){
             self.fbCanvas = document.createElement("canvas");
 			self.fbCanvas.width = xsize;
 			self.fbCanvas.height = ysize;
+            self.fbCanvas.remove();
 			self.fbCtx = self.fbCanvas.getContext("2d");
 			self.fbCtx.fillStyle = "rgba(0,0,0,0)";
             self.fbCtx.fillRect(0,0,self.fbCanvas.width,self.fbCanvas.height);
@@ -2483,6 +2519,7 @@ var doodler = (function(){
 		}
 	},
 	loadLayerList: function(layerSelected){
+        console.log("loading layer list");
 		var htm = "";
 		//self.layers.forEach(function(layer, i){
 		for(var i=self.layers.length-1; i>=0;i--){
@@ -2491,6 +2528,10 @@ var doodler = (function(){
 			htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>
 						<div class='layerPreview'><img id='layerPreview${i}' src="${self.getLayerPreview(i)}" width="50px"><br>`
 			
+            //htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>
+            //<div class='layerPreview'><canvas id='layerPreview${i}'  width="50px" height="30px"></canvas><br>`
+
+
 			if(layerSelect){	
 				htm += `<img id='layerVisible${i}' onclick='doodler.changeVisibility(${i})' src='images/eye${layer.visible?"":"-off"}.png' width='26px' height='26px'>`;
 				htm += `<img id='layerHatchVisible${i}' onclick='doodler.changeHatchVisibility(${i})' src='hatch${layer.hatchVisible?"":"-off"}.png'  width='26px' height='26px'>`;
@@ -2538,16 +2579,21 @@ var doodler = (function(){
         self.updateFrameBuffer();
 	},
 	reloadLayerPreview: function(index){
-		//console.log("Reloading layer ", index);
+		console.log("Reloading layer ", index);
 		setTimeout(function(){
 			var layerImg = ir.get("layerPreview"+index);
 			if(layerImg == null){
 				return;
 			}
 			layerImg.src = self.getLayerPreview(index);
+            //Actually a canvas now
+            //var prev = self.getLayerPreview(index);
+            //var ctx = layerImg.getContext("2d");
+            //ctx.drawImage(prev.canv, 0, 0, layerImg.width, layerImg.height);
 		},5);
 	},
 	getLayerPreview: function(i){
+        console.log("get layer preview");
 		var layer = self.layers[i];
 		if(layer==null || layer.hatchCanvas == null){
 			return;
@@ -2568,8 +2614,8 @@ var doodler = (function(){
 		canvSmall.width = 150;
 		canvSmall.height = canv.height/canv.width*150;
 		ctxSmall.drawImage(canv, 0, 0, canvSmall.width, canvSmall.height);
+		//return {canv:canvSmall, ctx:ctxSmall}; //.toDataURL();
 		return canvSmall.toDataURL();
-		
 	},
     locationDetailsHori: function(locRect, lot){
         self.ctx.strokeStyle = "#000";
@@ -4067,6 +4113,17 @@ var doodler = (function(){
         }
     },*/
 	updateCurrentImage: function(updateRedo){
+
+
+        //Change this whole system to use canvases instead of images
+        if(updateRedo){
+            var layer = self.layers[self.currentLayer];
+            doodler.redoStack.hatch.push(layer.hatchCtx.getImageData(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height));
+            doodler.redoStack.outline.push(layer.outlineCtx.getImageData(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height));
+            doodler.redoStack.doodle.push(layer.doodleCtx.getImageData(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height));
+            doodler.redoStack.layerIndex.push(layer.layerIndex);
+        }
+/*
 		var hImg = new Image();
 		var oImg = new Image();
 		var dImg = new Image();
@@ -4096,6 +4153,7 @@ var doodler = (function(){
 			self.oTempImg = oImg;
 			self.dTempImg = dImg;
 		//},2);
+        */
 	},
 	updateUndoStack: function(){
 		
@@ -4110,6 +4168,14 @@ var doodler = (function(){
 		}
 		//two steps, updating current image, pushing current image to stack
 		//
+        self.updateCurrentImage(true);
+        var redoS = self.redoStack;
+        self.undoStack.hatch.push(redoS.hatch.pop());
+		self.undoStack.outline.push(redoS.outline.pop());
+		self.undoStack.doodle.push(redoS.doodle.pop());
+		self.undoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
+
+        /*
 		if(self.hTempImg != null){
 			self.undoStack.hatch.push(self.hTempImg);
 			self.undoStack.outline.push(self.oTempImg);
@@ -4119,7 +4185,7 @@ var doodler = (function(){
 			//console.log("Pushing to undo stack for layer", self.currentLayer);
 		}else{
 			
-		}
+		}*/
 		
 		if(self.undoStack.hatch.length > 10){
 			self.undoStack.hatch.shift();
@@ -4128,7 +4194,6 @@ var doodler = (function(){
 			self.undoStack.layerIndex.shift();
 		}
 		
-		self.updateCurrentImage(true);
 		
 		
 	},
@@ -4157,19 +4222,22 @@ var doodler = (function(){
 		if(self.undoStack.hatch.length > 0){
 			var lastHatch = self.undoStack.hatch.pop();	
 			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
-			layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
+            layer.hatchCtx.putImageData(lastHatch, 0, 0);
+			//layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.redoStack.hatch.push(lastHatch);
 		}
 		if(self.undoStack.outline.length > 0){
 			var lastOutline = self.undoStack.outline.pop();
 			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
-			layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
+            layer.outlineCtx.putImageData(lastOutline, 0, 0);
+			//layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.redoStack.outline.push(lastOutline);
 		}
 		if(self.undoStack.doodle.length > 0){
 			var lastDoodle = self.undoStack.doodle.pop();
 			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
-			layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)		
+            layer.doodleCtx.putImageData(lastDoodle, 0, 0);
+			//layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)		
 			self.redoStack.doodle.push(lastDoodle);
 		}
 		if(self.undoStack.hatch.length == 0){
@@ -4210,7 +4278,8 @@ var doodler = (function(){
 		if(self.redoStack.hatch.length > 0){
 			var lastHatch = self.redoStack.hatch.pop();	
 			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
-			layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
+            layer.hatchCtx.putImageData(lastHatch, 0, 0);
+			//layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.undoStack.hatch.push(lastHatch);
 		}else{
 			//self.undoStack.hatch.push(self.hTempImg);
@@ -4218,7 +4287,8 @@ var doodler = (function(){
 		if(self.redoStack.outline.length > 0){
 			var lastOutline = self.redoStack.outline.pop();
 			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
-			layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
+            layer.outlineCtx.putImageData(lastOutline, 0, 0);
+			//layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.undoStack.outline.push(lastOutline);
 		}else{
 			//self.undoStack.outline.push(self.oTempImg);
@@ -4226,7 +4296,8 @@ var doodler = (function(){
 		if(self.redoStack.doodle.length > 0){
 			var lastDoodle = self.redoStack.doodle.pop();
 			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
-			layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)			
+            layer.doodleCtx.putImageData(lastDoodle, 0, 0);
+			//layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)			
 			self.undoStack.doodle.push(lastDoodle);
 		}else{
 			//self.undoStack.doodle.push(self.dTempImg);
@@ -4242,7 +4313,7 @@ var doodler = (function(){
 			var layerIndex = self.redoStack.layerIndex.pop();
 			self.reloadLayerPreview(layerIndex);
 		}
-		//self.updateCurrentImage();
+		self.updateCurrentImage();
 		//console.log("end of redo", self.redoStack);
 	},
     zoom: function(zoom, suppressOffset, useCenter){

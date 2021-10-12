@@ -470,9 +470,11 @@ ul#navigation ul li a {
 }
 
 .tooltip .left {
-    min-width:200px; 
+    min-width:250px; 
+    max-width: 250px;
     top:50%;
-    right:100%;
+    left: 50%;
+    /*right:100%;*/
     margin-right:20px;
     transform:translate(0, -50%);
     padding:10px 20px;

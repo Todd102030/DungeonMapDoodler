@@ -340,7 +340,7 @@ var StampTool = (function(){
 			var angleInRadians = angleDeg / 180 * Math.PI;
 			ctx.translate(x+width/2, y+height/2);
 			ctx.rotate(angleInRadians);
-			ctx.drawImage(image, -width / 2, -height / 2, width, height);
+			ctx.drawImage(image, Math.floor(-width / 2), Math.floor(-height / 2), width, height);
 			ctx.rotate(-angleInRadians);
 			ctx.translate(-x-width/2, -y-height/2);
             if(transparent){

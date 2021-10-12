@@ -29,12 +29,20 @@ function StampObj(x, y, w, h, img, imgPath, angle, layer) {
 	var self = this;
 	img.onload = function(){
 		self.ratio = this.naturalWidth/this.naturalHeight;
+		self.ctx.drawImage(this, 0, 0, w, h);
 	}
+	this.canvas = document.createElement("canvas");
+	this.canvas.width = w;
+	this.canvas.height = h;
+
+	this.ctx = this.canvas.getContext("2d")
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
 	this.img = img;
+	this.img.width=w;
+	this.img.height=h;
 	this.path = imgPath;
 	this.angle = angle;
     this.layer = layer || 0;
