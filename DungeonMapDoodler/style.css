@@ -211,6 +211,10 @@ table{
 	box-sizing: content-box;
 }
 
+
+
+
+
 .stampBtn{
 	width:40px;
 	height:40px;
@@ -233,9 +237,12 @@ table{
 	border: 2px inset darkgray;
 }
 
-.modeBtn > img{
-	//width:20px;
-	//height:20px;
+.modeBtn > img:active {
+    transform: scale(0.92);
+}
+
+.layerSmallBtn:active{
+    transform: scale(0.92);
 }
 
 .paramBox{

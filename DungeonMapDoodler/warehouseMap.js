@@ -211,7 +211,7 @@ var doodler = (function(){
 			}
 		}
 		//self.layerIndex = layerIndex;
-		self.updateCurrentImage();
+		//self.updateCurrentImage();
 		self.loadLayerList(layerIndex);
 	},
     addLot: function(sx, sy, ex, ey){
@@ -2533,8 +2533,8 @@ var doodler = (function(){
 
 
 			if(layerSelect){	
-				htm += `<img id='layerVisible${i}' onclick='doodler.changeVisibility(${i})' src='images/eye${layer.visible?"":"-off"}.png' width='26px' height='26px'>`;
-				htm += `<img id='layerHatchVisible${i}' onclick='doodler.changeHatchVisibility(${i})' src='hatch${layer.hatchVisible?"":"-off"}.png'  width='26px' height='26px'>`;
+				htm += `<img id='layerVisible${i}' class='layerSmallBtn' onclick='doodler.changeVisibility(${i})' src='images/eye${layer.visible?"":"-off"}.png' width='26px' height='26px'>`;
+				htm += `<img id='layerHatchVisible${i}' class='layerSmallBtn' onclick='doodler.changeHatchVisibility(${i})' src='hatch${layer.hatchVisible?"":"-off"}.png'  width='26px' height='26px'>`;
 			}			
 			htm +=	`</div>
 						<div><!--<input type='text' onchange='doodler.changeLayerName(${i}, event)' value='${layer.name}'>-->${layer.name} </div>
@@ -2579,7 +2579,6 @@ var doodler = (function(){
         self.updateFrameBuffer();
 	},
 	reloadLayerPreview: function(index){
-		console.log("Reloading layer ", index);
 		setTimeout(function(){
 			var layerImg = ir.get("layerPreview"+index);
 			if(layerImg == null){
@@ -2593,7 +2592,6 @@ var doodler = (function(){
 		},5);
 	},
 	getLayerPreview: function(i){
-        console.log("get layer preview");
 		var layer = self.layers[i];
 		if(layer==null || layer.hatchCanvas == null){
 			return;
@@ -4114,15 +4112,30 @@ var doodler = (function(){
     },*/
 	updateCurrentImage: function(updateRedo){
 
+/*
+        if(self.redoStack.layerIndex.length>0){
+            self.undoStack.hatch.push(self.redoStack.hatch.pop());
+            self.undoStack.outline.push(self.redoStack.outline.pop());
+            self.undoStack.doodle.push(self.redoStack.doodle.pop());
+            self.undoStack.layerIndex.push(self.redoStack.layerIndex.pop());
+            self.redoStack.hatch = [];
+            self.redoStack.outline = [];
+            self.redoStack.doodle = [];
+            self.redoStack.layerIndex = [];
+        }*/
 
         //Change this whole system to use canvases instead of images
-        if(updateRedo){
+        //if(updateRedo){
+        
             var layer = self.layers[self.currentLayer];
-            doodler.redoStack.hatch.push(layer.hatchCtx.getImageData(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height));
-            doodler.redoStack.outline.push(layer.outlineCtx.getImageData(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height));
-            doodler.redoStack.doodle.push(layer.doodleCtx.getImageData(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height));
+            //doodler.redoStack.hatch.push(layer.hatchCtx.getImageData(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height));
+            //doodler.redoStack.outline.push(layer.outlineCtx.getImageData(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height));
+            //doodler.redoStack.doodle.push(layer.doodleCtx.getImageData(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height));
+            doodler.redoStack.hatch.push(self.cloneCanvas(layer.hatchCanvas));
+            doodler.redoStack.outline.push(self.cloneCanvas(layer.outlineCanvas));
+            doodler.redoStack.doodle.push(self.cloneCanvas(layer.doodleCanvas));
             doodler.redoStack.layerIndex.push(layer.layerIndex);
-        }
+        //}
 /*
 		var hImg = new Image();
 		var oImg = new Image();
@@ -4156,7 +4169,6 @@ var doodler = (function(){
         */
 	},
 	updateUndoStack: function(){
-		
 		setTimeout(function(){self.reloadLayerPreview(self.currentLayer)}, 10);
 		
 		//Wipe out redo stack if you draw something
@@ -4168,12 +4180,15 @@ var doodler = (function(){
 		}
 		//two steps, updating current image, pushing current image to stack
 		//
+        console.log("Updating undo stack", self.undoStack, self.redoStack);
         self.updateCurrentImage(true);
         var redoS = self.redoStack;
         self.undoStack.hatch.push(redoS.hatch.pop());
 		self.undoStack.outline.push(redoS.outline.pop());
 		self.undoStack.doodle.push(redoS.doodle.pop());
-		self.undoStack.layerIndex.push(self.layers[self.currentLayer].layerIndex);
+		self.undoStack.layerIndex.push(redoS.layerIndex.pop());//(self.layers[self.currentLayer].layerIndex);
+        console.log("Updated undo stack", self.undoStack, self.redoStack);
+        
 
         /*
 		if(self.hTempImg != null){
@@ -4197,16 +4212,35 @@ var doodler = (function(){
 		
 		
 	},
+    cloneCanvas: function(oldCanvas) {
+
+        //create a new canvas
+        var newCanvas = document.createElement('canvas');
+        var context = newCanvas.getContext('2d');
+    
+        //set dimensions
+        newCanvas.width = oldCanvas.width;
+        newCanvas.height = oldCanvas.height;
+    
+        //apply the old canvas to the new one
+        context.drawImage(oldCanvas, 0, 0);
+    
+        //return the new canvas
+        return newCanvas;
+    },
 	undo: function(){
 		//self.hTempImg = null;
 		//self.oTempImg = null;
 		//self.dTempImg = null;
+        console.log("Undoing", self.undoStack, self.redoStack)
 		var layerIndex = 0;
 		if(self.undoStack.layerIndex.length > 0){
 			var layerIndex = self.undoStack.layerIndex.pop();
 			self.undoStack.layerIndex.push(layerIndex);
 			self.redoStack.layerIndex.push(layerIndex);
 		}
+
+
 		
 		var layer = null;
 		self.layers.forEach(function(lay,i){
@@ -4215,6 +4249,7 @@ var doodler = (function(){
 			}
 		})
 		if(layer == null){
+            console.log("Layer was null in undo")
 			return;
 		}
 		
@@ -4222,21 +4257,21 @@ var doodler = (function(){
 		if(self.undoStack.hatch.length > 0){
 			var lastHatch = self.undoStack.hatch.pop();	
 			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
-            layer.hatchCtx.putImageData(lastHatch, 0, 0);
+            layer.hatchCtx.drawImage(lastHatch, 0, 0);//.putImageData(lastHatch, 0, 0);
 			//layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.redoStack.hatch.push(lastHatch);
 		}
 		if(self.undoStack.outline.length > 0){
 			var lastOutline = self.undoStack.outline.pop();
 			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
-            layer.outlineCtx.putImageData(lastOutline, 0, 0);
+            layer.outlineCtx.drawImage(lastOutline, 0, 0);//.putImageData(lastOutline, 0, 0);
 			//layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.redoStack.outline.push(lastOutline);
 		}
 		if(self.undoStack.doodle.length > 0){
 			var lastDoodle = self.undoStack.doodle.pop();
 			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
-            layer.doodleCtx.putImageData(lastDoodle, 0, 0);
+            layer.doodleCtx.drawImage(lastDoodle, 0, 0);//.putImageData(lastDoodle, 0, 0);
 			//layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)		
 			self.redoStack.doodle.push(lastDoodle);
 		}
@@ -4251,12 +4286,15 @@ var doodler = (function(){
 			var layerIndex = self.undoStack.layerIndex.pop();
 			self.reloadLayerPreview(layerIndex);
 		}
-		self.updateCurrentImage(false);
+        console.log("Undoing", self.undoStack, self.redoStack)
+
+		//self.updateCurrentImage(false);
         
 		//console.log(self.undoStack, self.redoStack);
 	},
 	redo: function(){
-		
+        console.log("Redoing", self.undoStack, self.redoStack)
+
 		var layerIndex = 0;
 		if(self.redoStack.layerIndex.length > 0){
 			var layerIndex = self.redoStack.layerIndex.pop();
@@ -4278,7 +4316,7 @@ var doodler = (function(){
 		if(self.redoStack.hatch.length > 0){
 			var lastHatch = self.redoStack.hatch.pop();	
 			layer.hatchCtx.clearRect(0,0,layer.hatchCanvas.width, layer.hatchCanvas.height);
-            layer.hatchCtx.putImageData(lastHatch, 0, 0);
+            layer.hatchCtx.drawImage(lastHatch, 0, 0);//.putImageData(lastHatch, 0, 0);
 			//layer.hatchCtx.drawImage(lastHatch, 0,0,layer.hatchCanvas.width, layer.hatchCanvas.height)
 			self.undoStack.hatch.push(lastHatch);
 		}else{
@@ -4287,7 +4325,7 @@ var doodler = (function(){
 		if(self.redoStack.outline.length > 0){
 			var lastOutline = self.redoStack.outline.pop();
 			layer.outlineCtx.clearRect(0,0,layer.outlineCanvas.width, layer.outlineCanvas.height);
-            layer.outlineCtx.putImageData(lastOutline, 0, 0);
+            layer.outlineCtx.drawImage(lastOutline, 0, 0);//.putImageData(lastOutline, 0, 0);
 			//layer.outlineCtx.drawImage(lastOutline, 0,0,layer.outlineCanvas.width, layer.outlineCanvas.height)
 			self.undoStack.outline.push(lastOutline);
 		}else{
@@ -4296,7 +4334,7 @@ var doodler = (function(){
 		if(self.redoStack.doodle.length > 0){
 			var lastDoodle = self.redoStack.doodle.pop();
 			layer.doodleCtx.clearRect(0,0,layer.doodleCanvas.width, layer.doodleCanvas.height);
-            layer.doodleCtx.putImageData(lastDoodle, 0, 0);
+            layer.doodleCtx.drawImage(lastDoodle, 0, 0);//.putImageData(lastDoodle, 0, 0);
 			//layer.doodleCtx.drawImage(lastDoodle, 0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)			
 			self.undoStack.doodle.push(lastDoodle);
 		}else{
@@ -4313,7 +4351,7 @@ var doodler = (function(){
 			var layerIndex = self.redoStack.layerIndex.pop();
 			self.reloadLayerPreview(layerIndex);
 		}
-		self.updateCurrentImage();
+		//self.updateCurrentImage();
 		//console.log("end of redo", self.redoStack);
 	},
     zoom: function(zoom, suppressOffset, useCenter){
