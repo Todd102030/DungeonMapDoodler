@@ -230,7 +230,7 @@ var RoomTool = (function(){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
 			
-			doodler.updateUndoStack();
+			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

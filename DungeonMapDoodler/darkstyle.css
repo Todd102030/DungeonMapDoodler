@@ -4,7 +4,7 @@
     filter: invert(90%);
 }
 .floatBtn img, .layerPreview img{
-  background-color: #bbb;
+  background-color: #ccc;
   -webkit-filter: invert(90%); /* Safari/Chrome */
     filter: invert(90%);
 }
@@ -16,8 +16,8 @@
 .layerRow{
   background-color: #333;
 }
-.layerRow img{
-  
+.layerPreviewImg{
+  filter: inherit !important;
 }
 
 .floatingModes{
@@ -27,4 +27,61 @@
 *{
   background-color: #424242;
   color: #eee;
+}
+
+.newPopupPanel, .popupPanel, .topBar, ul#navigation li a{
+  background-color: #424242;
+
+}
+
+
+
+ul#navigation li a {
+  padding:10px 25px;
+  color:#e3e3e3;
+  text-shadow:none;
+  text-decoration:none;
+  display:inline-block;
+  border-right:1px solid #777;
+  border-left:1px solid #C2C2C2;
+  background: #424242;
+
+  -webkit-transition:color 0.2s linear, background 0.2s linear;
+  -moz-transition:color 0.2s linear, background 0.2s linear;
+  -o-transition:color 0.2s linear, background 0.2s linear;
+  transition:color 0.2s linear, background 0.2s linear;
+}
+
+ul#navigation li a:hover {
+  background:#424242;
+  color:#ddd;
+}
+
+ul#navigation li a.first {
+  border-left: 0 none;
+}
+
+ul#navigation li a.last {
+  border-right: 0 none;
+}
+
+ul#navigation li:hover > a {
+  background:#555;
+}
+
+ul#navigation ul li a {
+  background:none;
+  padding:7px 15px;
+  color:#e3e3e3;
+  text-shadow: none;
+  text-decoration:none;
+  display:inline-block;
+  border:0 none;
+  float:left;
+  clear:both;
+  width:140px;
+}
+
+.loaderr {
+  background-color: #424242 !important;
 }

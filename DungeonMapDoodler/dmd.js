@@ -98,8 +98,8 @@ function getGridXY(xpos, ypos){
 	var xgridtop = Math.floor((xpos-offx)/step)*step+offx;
 	var ygridtop = Math.floor((ypos-offy)/step)*step+offy;
 	
-	var xgridmid = Math.floor((xpos-offx)/step*2)*step/2+offx;
-	var ygridmid = Math.floor((ypos-offy)/step*2)*step/2+offy;
+	var xgridmid = Math.round((xpos-offx)/step*2)*step/2+offx;
+	var ygridmid = Math.round((ypos-offy)/step*2)*step/2+offy;
 	return {xpos:xgridtop, ypos:ygridtop, step:step, xgridmid: xgridmid, ygridmid: ygridmid};
 }
 
@@ -113,8 +113,8 @@ function getGridXY2(xpos, ypos){
 	var zoom = doodler.zoomLevel;
 	var xgridtop = Math.floor(xpos/step)*step;
 	var ygridtop = Math.floor(ypos/step)*step;
-	var xgridmid = Math.floor((xpos)/step*2)*step/2;
-	var ygridmid = Math.floor((ypos)/step*2)*step/2;
+	var xgridmid = Math.round((xpos)/step*2)*step/2;
+	var ygridmid = Math.round((ypos)/step*2)*step/2;
 	
 	return {xpos:xgridtop, ypos:ygridtop, step:step, xgridmid: xgridmid, ygridmid: ygridmid};
 }

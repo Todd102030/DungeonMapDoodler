@@ -110,8 +110,8 @@ var Wall = (function(){
             var gridxy = getGridXY2(xpos, ypos);
             
             if(self.isSnapping){
-                xpos = gridxy.xgridmid+gridxy.step/2;
-                ypos = gridxy.ygridmid+gridxy.step/2;
+                xpos = gridxy.xgridmid//+gridxy.step/2;
+                ypos = gridxy.ygridmid//+gridxy.step/2;
             }
 			ctx.strokeStyle = "rgb(240,60,60)";
             //ctx.beginPath();
@@ -157,8 +157,8 @@ var Wall = (function(){
 			self.isDoodling = true;
             var gridxy = getGridXY2(xpos, ypos);
             if(self.isSnapping){
-				self.doodleStartX = gridxy.xgridmid+gridxy.step/2;
-				self.doodleStartY = gridxy.ygridmid+gridxy.step/2;
+				self.doodleStartX = gridxy.xgridmid;//+gridxy.step/2;
+				self.doodleStartY = gridxy.ygridmid;//+gridxy.step/2;
 				//self.doodleEndX = gridxy.xpos;
 				//self.doodleEndY = gridxy.ypos;
 			}else{
@@ -172,8 +172,8 @@ var Wall = (function(){
 		mouseMove: function(xpos, ypos, data){
 			var gridxy = getGridXY2(xpos, ypos);
 			if(self.isSnapping){
-				self.doodleEndX = gridxy.xgridmid+gridxy.step/2;
-				self.doodleEndY = gridxy.ygridmid+gridxy.step/2;
+				self.doodleEndX = gridxy.xgridmid;//+gridxy.step/2;
+				self.doodleEndY = gridxy.ygridmid;//+gridxy.step/2;
 			}else{
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
@@ -202,7 +202,7 @@ var Wall = (function(){
 			//}
 			
 			
-			doodler.updateUndoStack();
+			doodler.updateCurrentImage(false, true);
 			
 			self.isDoodling = false;
             self.doodleStartX = null;

@@ -4,6 +4,7 @@ var StampTool = (function(){
 	var self={
 		angle: 0,
 		borderSize: 3,
+        custStampIndex:0,
 		fillColor: "white",
 		outlineColor: "black",
 		hatchSize: 30,
@@ -38,8 +39,10 @@ var StampTool = (function(){
                 var img = new Image();
                 //Load the image in from the user, scale it to best fit the canvas, reset the offsets
                 img.onload = function() {
-					Stamps.push({src:img.src, ratio:(img.naturalWidth/img.naturalHeight), name:"Custom", group:StampGroup.Custom, defMult: 1,alias:""});
+                    self.custStampIndex++;
+					Stamps.push({src:img.src, ratio:(img.naturalWidth/img.naturalHeight), name:"Custom"+self.custStampIndex, group:StampGroup.Custom, defMult: 1,alias:""});
 					self.setParameterBox(ir.get("paramBox"));
+                    self.changeStamp(self.sortedStamps.length-1, true);
                 };
 
                 img.src = e.target.result;
@@ -224,7 +227,7 @@ var StampTool = (function(){
 					gridxy.stepx = gridxy.step * self.stampRatio;
 					gridxy.stepy = gridxy.step;
 				}
-				stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
+				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 			}
@@ -269,7 +272,7 @@ var StampTool = (function(){
 						gridxy.stepx = gridxy.step * self.stampRatio;
 						gridxy.stepy = gridxy.step;
 					}
-					self.drawImageRotated(ctx, self.chosenStampImg, gridxy.xgridmid, gridxy.ygridmid, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle, true);				
+					self.drawImageRotated(ctx, self.chosenStampImg, gridxy.xgridmid-gridxy.step/2, gridxy.ygridmid-gridxy.step/2, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle, true);				
 				}
 				else{
 					if(self.stampRatio<1){
@@ -504,8 +507,8 @@ var StampTool = (function(){
 				var gridxy = getGridXY2(xpos, ypos);
 				//stampobj = new StampObj(((gridxy.xgridmid)-offX)/zoom, ((gridxy.ygridmid)-offY)/zoom, gridxy.step/zoom, gridxy.step/zoom, newimg, self.angle);
 				
-				st.x = ((gridxy.xgridmid));
-				st.y = ((gridxy.ygridmid));
+				st.x = ((gridxy.xgridmid-gridxy.step/2));
+				st.y = ((gridxy.ygridmid-gridxy.step/2));
 
 			}
 			else{
@@ -742,7 +745,7 @@ var StampTool = (function(){
             var searchText = self.searchText || "";
 			
             var filteredStamps = Stamps.filter(function(a){
-                return searchText=="" || a.name.toLowerCase().indexOf(searchText)>-1 || a.alias.toLowerCase().indexOf(searchText)>-1;
+                return searchText=="" || a.name.toLowerCase().indexOf(searchText)>-1 || a.alias.toLowerCase().indexOf(searchText)>-1 || StampGroupName[a.group].toLowerCase().indexOf(searchText)>-1;
             })
             
 			var sortedStamps = filteredStamps.sort(function(a,b){

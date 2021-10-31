@@ -226,7 +226,7 @@ var Line = (function(){
 			//}
 			
 			
-			doodler.updateUndoStack();
+			doodler.updateCurrentImage(false, true);
 			
 			self.isDoodling = false;
             self.doodleStartX = null;

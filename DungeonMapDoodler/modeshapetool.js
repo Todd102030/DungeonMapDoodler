@@ -307,8 +307,8 @@ var ShapeTool = (function(){
             var wh = doodler;
 			var gridxy = getGridXY2(xpos, ypos);
 			if(self.isSnapping){
-				self.doodleEndX = gridxy.xgridmid+gridxy.step/2;
-				self.doodleEndY = gridxy.ygridmid+gridxy.step/2;
+				self.doodleEndX = gridxy.xgridmid;//+gridxy.step/2;
+				self.doodleEndY = gridxy.ygridmid;//+gridxy.step/2;
 			}else{
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
@@ -318,7 +318,7 @@ var ShapeTool = (function(){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
 			
-			doodler.updateUndoStack();
+			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;

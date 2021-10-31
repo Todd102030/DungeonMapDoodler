@@ -237,6 +237,10 @@ table{
 	border: 2px inset darkgray;
 }
 
+.floatBtn > img:active {
+    transform: scale(0.92);
+}
+
 .modeBtn > img:active {
     transform: scale(0.92);
 }
@@ -363,7 +367,7 @@ ul#navigation li {
 ul#navigation li a {
     padding:10px 25px;
     color:#616161;
-    text-shadow:1px 1px 0px #fff;
+    /*text-shadow:1px 1px 0px #fff;*/
     text-decoration:none;
     display:inline-block;
     border-right:1px solid #fff;

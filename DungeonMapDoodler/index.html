@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta property="og:image" content="https://dungeonmapdoodler.ca/images/background.png" />
       	<link rel="stylesheet" type="text/css" href="style.css">
-      	<!--<link rel="stylesheet" type="text/css" href="darkstyle.css">-->
+      	<link rel="stylesheet" id='darkTheme' type="text/css" href="darkstyle.css">
         <link rel="apple-touch-icon" href="touch-icon-iphone.png">
         <link rel="apple-touch-icon" sizes="152x152" href="icon-152.png">
         <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
@@ -65,6 +65,7 @@
 					</li>
 					<li><a href="#">Options &raquo;</a>
 						<ul>
+							<li><a href="#" onclick="doodler.toggleTheme()">Toggle Dark/Light Mode</a></li>
 							<li><a href="#" onclick="doodler.toggleToolDock()">Dock/Undock Tools</a></li>
 						</ul>
 					</li>
@@ -102,27 +103,27 @@
 	<img id='squarefuzzImg' src='images/squarefuzz.png'>
 	<img id='circlefuzzImg' src='images/circlefuzz.png'>
 	<img id='hatchingImg' src='hatching.png'>
-	<img id='hatchingImgDots' src='hatches/dots.svg'>
-	<img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.svg'>
-	<img id='hatchingImgJPHalftone' src='hatches/DMD Halftone Pattern.svg'>
-	<img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.svg'>
-	<img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.svg'>
-	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.svg'>
+	<img id='hatchingImgDots' src='hatches/dots.png'>
+	<img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.png'>
+	<img id='hatchingImgJPHalftone' src='hatches/DMD Halftone Pattern.png'>
+	<img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.png'>
+	<img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.png'>
+	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.png'>
 	<img id='hatchingImgSolidBlack' src='hatches/solidblack.png'>
 	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
 	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
     
-	<img id='brick1' src='floortiles/brick1.svg'>
-	<img id='metal1' src='floortiles/metal1.svg'>
-	<img id='wood1' src='floortiles/wood1.svg'>
+	<img id='brick1' src='floortiles/brick1.png'>
+	<img id='metal1' src='floortiles/metal1.png'>
+	<img id='wood1' src='floortiles/wood1.png'>
 	<img id='magma1' src='floortiles/magma1.svg'>
 	<img id='sand1' src='floortiles/sand1.svg'>
 	<img id='sand2' src='floortiles/sand2.svg'>
 	<img id='space1' src='floortiles/space1.svg'>
 	<img id='space2' src='floortiles/space2.svg'>
-	<img id='space3' src='floortiles/space3.svg'>
+	<img id='space3' src='floortiles/space3.png'>
 	<img id='space4' src='floortiles/space4.svg'>
-	<img id='stone1' src='floortiles/stone1.svg'>
+	<img id='stone1' src='floortiles/stone1.png'>
 	<img id='water1' src='floortiles/water1.svg'>
 	
 	

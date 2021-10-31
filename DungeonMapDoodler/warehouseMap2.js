@@ -30,6 +30,7 @@ function StampObj(x, y, w, h, img, imgPath, angle, layer) {
 	img.onload = function(){
 		self.ratio = this.naturalWidth/this.naturalHeight;
 		self.ctx.drawImage(this, 0, 0, w, h);
+		doodler.updateFrameBuffer();
 	}
 	this.canvas = document.createElement("canvas");
 	this.canvas.width = w;

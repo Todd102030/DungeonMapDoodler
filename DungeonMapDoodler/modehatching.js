@@ -128,7 +128,7 @@ var Hatching = (function(){
 		},
 		mouseUp: function(xpos, ypos){
 			self.isDoodling = false;
-			doodler.updateUndoStack();
+			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;
             self.doodleEndX = 0;
