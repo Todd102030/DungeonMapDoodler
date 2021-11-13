@@ -25,22 +25,29 @@ function Wall(x, y, w, h) {
     return this;
 };
 
-function StampObj(x, y, w, h, img, imgPath, angle, layer) {
+function StampObj(x, y, w, h, img, imgPath, angle, layer, colour, canColour) {
 	var self = this;
 	img.onload = function(){
 		self.ratio = this.naturalWidth/this.naturalHeight;
 		self.ctx.drawImage(this, 0, 0, w, h);
+		if(canColour){
+			self.ctx.globalCompositeOperation = "source-in";
+			self.ctx.fillStyle = colour || "#000000";
+			self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
+		}
 		doodler.updateFrameBuffer();
 	}
 	this.canvas = document.createElement("canvas");
 	this.canvas.width = w;
 	this.canvas.height = h;
-
+	
 	this.ctx = this.canvas.getContext("2d")
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
+	this.colour = colour;
+	this.canColour = canColour;
 	this.img = img;
 	this.img.width=w;
 	this.img.height=h;

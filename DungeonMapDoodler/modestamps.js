@@ -217,6 +217,7 @@ var StampTool = (function(){
 			var newimg = new Image();
 			newimg.src = self.chosenStampImg.src;
 			var stampobj = null;
+            self.chosenColour = ir.v("stampColor");
 			if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
 				var gridxy = getGridXY(xpos, ypos);
 				
@@ -227,7 +228,7 @@ var StampTool = (function(){
 					gridxy.stepx = gridxy.step * self.stampRatio;
 					gridxy.stepy = gridxy.step;
 				}
-				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
+				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, ir.v("stampColor"), self.chosenStamp.canColour);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 			}
@@ -240,7 +241,7 @@ var StampTool = (function(){
 					self.stepx = self.size * self.stampRatio;
 					self.stepy = self.size;
 				}
-				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex);
+				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, ir.v("stampColor"), self.chosenStamp.canColour);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 				
@@ -683,8 +684,26 @@ var StampTool = (function(){
             self.showStampPopup();
         },
 		setParameterBox: function(container){
+            var colourStampHtm = "";
+            if(self.chosenStamp.canColour){
+                colourStampHtm = `<div class='paramTitle'>Colour</div><input value=${self.chosenColour} type='color' id='stampColor'>`;
+            }
+
+            var recentStamps = self.recentStamps;
+            var recHtm = "";
+            if(recentStamps.length>0){
+			 recHtm += `<details><summary>Recent Stamps</summary><br>`
+            }
+			recentStamps.forEach(function(stamp, i){
+				recHtm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' style='transform:unset;'  ></div>`;
+			});
+			recHtm += `</details><a href='#' class='' onclick='Modes.StampTool.addStamp()'>Add</a><br> `
+
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
-						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
+                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
+						${colourStampHtm}
+                        ${recHtm}
+                        <div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="stampSize" name="stampSize" min="1" max="200" value='${self.size}' onchange='Modes.StampTool.changeSize(event)' oninput='Modes.StampTool.changeSize(event)'><br>
 						<div class='paramTitle'>Multiplier: </div><input type='number' style='width:60px' step='0.5' id='stampSizeMultLabel' value="${self.multiplyer}" onchange='Modes.StampTool.changeSizeMult(event, true)' oninput='Modes.StampTool.changeSizeMult(event, true)'><br>
 						<input style='width:100px' type="range" id="stampSizeMult" name="stampSizeMult" step='0.5' min="0.5" max="5" value='${self.multiplyer}' onchange='Modes.StampTool.changeSizeMult(event)' oninput='Modes.StampTool.changeSizeMult(event)'><br>
@@ -698,7 +717,6 @@ var StampTool = (function(){
 						<input style='width:100px' type="range" id="stampPaintVariance" name="stampPaintVariance" step='0.01' min="0" max="1" value='${self.paintVariance}' onchange='Modes.StampTool.changePaintVariance(event)' oninput='Modes.StampTool.changePaintVariance(event)'><br>
 						</div>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
-                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
 						`;
 			
 			htm += `<div style='max-width:150px;'>`
@@ -709,26 +727,8 @@ var StampTool = (function(){
             self.sortedStamps = sortedStamps;
 			//console.log("Sorted stamps is ", sortedStamps);
             
-            var recentStamps = self.recentStamps;
-            if(recentStamps.length>0){
-			 htm += `<div class='paramTitle'>Recent Stamps</div><br>`
-            }
-			recentStamps.forEach(function(stamp, i){
-				//if(i==0 || sortedStamps[i-1].group != stamp.group){
-				//	htm += `<details ${i==0?"open":""}><summary>${StampGroupName[stamp.group]}</summary>`;
-				//}
-				
-				htm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' ></div>`;
-				//if(sortedStamps[i+1]==null || ( sortedStamps[i+1] && sortedStamps[i+1].group != stamp.group)){
-				//	htm += `</details>`;
-				//}
-			});
-			htm += `</div>`;
-			
-			htm += `<a href='#' class='' onclick='Modes.StampTool.addStamp()'>Add</a> `
-			
-			htm +=`	
-						`;
+           
+
 			container.innerHTML = htm;
 			
 			ir.set("stampsIsSnapping", self.isSnapping);

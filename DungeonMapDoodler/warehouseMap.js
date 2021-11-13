@@ -1975,7 +1975,7 @@ var doodler = (function(){
         var multiply = mult || 1;
         var ang = angle || 0;
         //Assume stamps are squares
-        stampobj = new StampObj(x*step, y*step, step*multiply, step*multiply, newimg, stamp.path, ang, doodler.layers[doodler.currentLayer].layerIndex);
+        stampobj = new StampObj(x*step, y*step, step*multiply, step*multiply, newimg, stamp.path, ang, doodler.layers[doodler.currentLayer].layerIndex, stamp.colour, stamp.canColour);
         doodler.stamps.push(stampobj);
     },
     showGenerateDungeonPopup: function(){

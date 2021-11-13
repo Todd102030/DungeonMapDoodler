@@ -231,6 +231,12 @@ table{
     display: inline-block;
     margin: 0 auto;
     vertical-align: middle;
+    background-color: transparent;
+}
+
+.stampBtn img:hover {
+    transform: scale(1.5);
+    transition: all 0.2s;
 }
 
 .modeBtn:active{
