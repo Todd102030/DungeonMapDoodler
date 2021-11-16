@@ -702,7 +702,7 @@ var StampTool = (function(){
 
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
-                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
+                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div><br>
 						${colourStampHtm}
                         ${recHtm}
                         <div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
