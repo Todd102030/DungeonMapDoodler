@@ -196,24 +196,40 @@ var doodler = (function(){
             }
 		}	
 	},
-	switchLayer: function(layerIndex){
-		for(var i=0;i<self.layers.length;i++){
-			var layer = self.layers[i];
-			if(layer.layerIndex == layerIndex){
-				self.hatchCanvas = layer.hatchCanvas;
-				self.outlineCanvas = layer.outlineCanvas;
-				self.doodleCanvas = layer.doodleCanvas;
-				self.hatchCtx = layer.hatchCtx;
-				self.outlineCtx = layer.outlineCtx;
-				self.doodleCtx = layer.doodleCtx;
-				self.currentLayer = i;
-				//console.log("Changed to layer "+layerIndex);
-				//return self.layers[i];
-			}
-		}
+    applyLayerName: function(){
+        self.layers[self.currentLayer].name = ir.v("layerName");
+        ir.hide("layerNamePop");
+        self.popupShowing = false;
+        self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+    },
+	switchLayer: function(layerIndex, allowChange){
+        if(layerIndex==self.currentLayer && allowChange){
+            self.popupShowing = true;
+            ir.set("layerName", self.layers[self.currentLayer].name);
+            ir.show("layerNamePop");
+            ir.focus("layerName");
+            ir.get("layerName").select();
+        }
+        else{
+            for(var i=0;i<self.layers.length;i++){
+                var layer = self.layers[i];
+                if(layer.layerIndex == layerIndex){
+                    self.hatchCanvas = layer.hatchCanvas;
+                    self.outlineCanvas = layer.outlineCanvas;
+                    self.doodleCanvas = layer.doodleCanvas;
+                    self.hatchCtx = layer.hatchCtx;
+                    self.outlineCtx = layer.outlineCtx;
+                    self.doodleCtx = layer.doodleCtx;
+                    self.currentLayer = i;
+                    //console.log("Changed to layer "+layerIndex);
+                    //return self.layers[i];
+                }
+            }
+        }
 		//self.layerIndex = layerIndex;
 		//self.updateCurrentImage();
 		self.loadLayerList(layerIndex);
+        
 	},
     addLot: function(sx, sy, ex, ey){
         //Swap values around to make sure sx and sy are the top left
@@ -575,7 +591,6 @@ var doodler = (function(){
     	var a  = document.createElement('a');
         a.href = ir.get("warehouseImagePopImg").src;
         a.download = "Warehouse" + self.rec.Name + "-" + irdate.ymdhmn() + ".png";
-        console.log("Clicking download");
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -897,12 +912,10 @@ var doodler = (function(){
                         ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
                     }
                 }
-                console.log("Before loading image todataurl")
                 var img2 = new Image();
                 var dataurl = canv2.toDataURL();
 
                 img2.onload = function() {
-                    console.log("Loaded image into layer.floorImg")
                     img2.width = canv2.width;
                     img2.height = canv2.height;
                     layer.floorImg = img2;
@@ -1216,55 +1229,6 @@ var doodler = (function(){
 			self.drawHitTest(mrect, rect);
 		}
 	},
-    /** Try and match the set location to the lots currently there. If it matches, 
-    * draw a bunch of information to the canvas about the lot
-    */
-    drawLocationDetails: function(){
-		return;
-      var locs = self.locations;
-      var lots = self.lots;
-      var seeds = self.seeds;
-      var lotZ = lots.length;
-      for(var n=0,z=locs.length;n<z;n++){
-          var locRect = locs[n];
-          self.ctx.fillStyle = "#000";
-          self.ctx.strokeStyle = "#000";
-          self.ctx.setLineDash([4*self.zoomLevel, 4*self.zoomLevel]);
-          self.ctx.lineWidth = self.zoomLevel;
-          self.ctx.strokeRect(
-              self.globalOffsetX+locRect.x*self.zoomLevel+2, self.globalOffsetY+locRect.y*self.zoomLevel+2,
-              locRect.w*self.zoomLevel-4, 
-              locRect.h*self.zoomLevel-4);
-          self.ctx.setLineDash([]);
-          var lotList = [];
-          for(var i=0;i<lotZ; i++){
-              var lot = lots[i];
-              if(locRect.loc == lot.Location){
-                  lotList.push(lot);
-              }
-          }
-          for (var j=0,y=seeds.length;j<y;j++) {
-            var seed = seeds[j];
-            if (locRect.loc == seed.Location) {
-              lotList.push(seed);
-            }
-          }
-          if(lotList.length > 1){
-          	if(locRect.w > locRect.h){
-          		  self.locationDetailsHoriMult(locRect, lotList);
-              }else{
-              	self.locationDetailsVertMult(locRect, lotList);
-              }
-          }
-          else if(lotList.length == 1){
-          	if(locRect.w > locRect.h){
-              self.locationDetailsHori(locRect, lotList[0]);
-            }else{
-              self.locationDetailsVert(locRect, lotList[0]);
-            }
-          }
-        }
-    },
     drawLocations: function(){
         self.ctx.lineWidth = 3;
         var locs = self.locations;
@@ -2271,7 +2235,6 @@ var doodler = (function(){
         
         
         
-        console.log("Grid", grid);
         self.donJonData = null;
         self.donJonData = grid;
         self.loadDonJon(grid, 3, 0);
@@ -2325,7 +2288,6 @@ var doodler = (function(){
             sideCount ++;
         }
         if(grid[y][x] != "" && (sideCount == 2 || sideCount == 1) ){
-            console.log("Found a corner")
             return true;
         }else{
             return false;
@@ -2333,7 +2295,6 @@ var doodler = (function(){
     },
     testRoomFit: function(grid, xS, yS, w, h){
         if(xS < 0 || yS < 0 || h+yS > self.genRoomH || w+xS > self.genRoomW){
-            console.log("Code went out of range at testRoomFit", xS, yS, w, h);
             return false;
         }
         for(var y = yS; y < h+yS; y++){
@@ -2346,16 +2307,13 @@ var doodler = (function(){
                 
             }
         }
-        console.log("Room fit well");
         return true;
     },
     genRoomW:20,
     genRoomH: 20,
     generateRoom: function(grid, xS, yS, w, h, entryPoint){
-        console.log("Making room from ", xS, yS, " to ", w+xS, h+yS);
         
         if(xS < 0 || yS < 0 || h+yS >= self.genRoomH || w+xS >= self.genRoomW){
-            console.log("Code went out of range");
             return;
         }
         for(var y = yS; y < h+yS; y++){
@@ -2535,13 +2493,12 @@ var doodler = (function(){
 		}
 	},
 	loadLayerList: function(layerSelected){
-        console.log("loading layer list");
 		var htm = "";
 		//self.layers.forEach(function(layer, i){
 		for(var i=self.layers.length-1; i>=0;i--){
 			var layer = self.layers[i];
 			var layerSelect = layer.layerIndex == layerSelected;
-			htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>
+			htm += `<div onclick='doodler.switchLayer(${layer.layerIndex}, true)' class='layerRow ${layerSelect?"layerSelected":""}'>
 						<div class='layerPreview'><img class='layerPreviewImg' id='layerPreview${i}' src="${self.getLayerPreview(i)}" width="50px"><br>`
 			
             //htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>

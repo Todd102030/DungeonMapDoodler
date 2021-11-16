@@ -217,7 +217,9 @@ var StampTool = (function(){
 			var newimg = new Image();
 			newimg.src = self.chosenStampImg.src;
 			var stampobj = null;
-            self.chosenColour = ir.v("stampColor");
+            if(self.chosenStamp.canColour){
+                self.chosenColour = ir.v("stampColor");
+            }
 			if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
 				var gridxy = getGridXY(xpos, ypos);
 				
@@ -233,7 +235,7 @@ var StampTool = (function(){
                 doodler.updateFrameBuffer();
 			}
 			else{
-				
+				console.log("Clicking to create stamp")
 				if(self.stampRatio<1){
 					self.stepx = self.size;
 					self.stepy = self.size / self.stampRatio;
@@ -527,7 +529,6 @@ var StampTool = (function(){
             self.doodleEndY = ypos;
 			//self.draw(xpos, ypos, data);
             self.isDoodling = true;
-			
             if(self.stampSelected != null){
                 //Hit test stamp rotater here
                 var st = doodler.stamps[self.stampSelected];
@@ -686,7 +687,7 @@ var StampTool = (function(){
 		setParameterBox: function(container){
             var colourStampHtm = "";
             if(self.chosenStamp.canColour){
-                colourStampHtm = `<div class='paramTitle'>Colour</div><input value=${self.chosenColour} type='color' id='stampColor'>`;
+                colourStampHtm = `<div class='paramTitle'>Colour</div><input list value='${self.chosenColour}'' type='color' id='stampColor'>`;
             }
 
             var recentStamps = self.recentStamps;
@@ -700,6 +701,7 @@ var StampTool = (function(){
 			recHtm += `</details><a href='#' class='' onclick='Modes.StampTool.addStamp()'>Add</a><br> `
 
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
+                        <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
                         <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div>
 						${colourStampHtm}
                         ${recHtm}
@@ -716,7 +718,6 @@ var StampTool = (function(){
 						<div class='paramTitle' id='stampVarTitle'>Paint Variance: </div><input type='number' style='width:60px' step='0.01' id='stampPaintVarianceLabel' value="${self.paintVariance}" onchange='Modes.StampTool.changePaintVariance(event, true)' oninput='Modes.StampTool.changePaintVariance(event, true)'><br>
 						<input style='width:100px' type="range" id="stampPaintVariance" name="stampPaintVariance" step='0.01' min="0" max="1" value='${self.paintVariance}' onchange='Modes.StampTool.changePaintVariance(event)' oninput='Modes.StampTool.changePaintVariance(event)'><br>
 						</div>
-                        <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
 						`;
 			
 			htm += `<div style='max-width:150px;'>`

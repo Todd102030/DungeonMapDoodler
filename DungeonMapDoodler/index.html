@@ -560,6 +560,19 @@
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
+
+<div id='layerNamePop' class='newPopupPanel' style='display:none;text-align: center'>
+    <h2>Change Layer Name</h2>
+	<table>
+		<tr>
+			<td class='tdr'>Name:</td>
+			<td class='tdl'><input type="text" id="layerName" ></td>
+		</tr>		
+	</table>
+    
+	<button type="button" class="canvBtn" onclick="doodler.applyLayerName()">Okay</button>
+	<button type="button" class="canvBtn" onclick="ir.hide('layerNamePop');doodler.popupShowing=false;">Cancel</button>
+</div>
 	
 <div style='display:none'>
 	<a id='link'></a>
