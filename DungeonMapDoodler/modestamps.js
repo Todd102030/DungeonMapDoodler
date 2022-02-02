@@ -24,7 +24,14 @@ var StampTool = (function(){
 		paintDistance: 50,
 		size: 50,
 		stampRatio: 1,
-        recentStamps: [],
+        scrolledStamp: 0,
+        recentStamps: [{
+            path:'stamps/decor/bed.svg',
+            name: "Bed",
+            alias: "",
+            group: StampGroup.Decor,
+            defMult: 1,
+        }],
 		title: "Stamp Settings",
 		addStamp: function(fromPopup){
 			ir.get("stampUpload").click();
@@ -151,8 +158,9 @@ var StampTool = (function(){
 			ir.set("stampSizeMult", self.chosenStamp.defMult);
             ir.get("stampsCurrentStamp").src = self.chosenStampImg.src;
             ir.get("stampsCurrentStampBtn").title = self.chosenStamp.name;
+            self.setParameterBox(ir.get("paramBox"));
+
             if(hidePopup){
-                self.setParameterBox(ir.get("paramBox"));
                 ir.hide("stampPopup");
             }
             doodler.popupShowing = false;
@@ -230,7 +238,7 @@ var StampTool = (function(){
 					gridxy.stepx = gridxy.step * self.stampRatio;
 					gridxy.stepy = gridxy.step;
 				}
-				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, ir.v("stampColor"), self.chosenStamp.canColour);
+				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 			}
@@ -243,7 +251,7 @@ var StampTool = (function(){
 					self.stepx = self.size * self.stampRatio;
 					self.stepy = self.size;
 				}
-				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, ir.v("stampColor"), self.chosenStamp.canColour);
+				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
 				doodler.stamps.push(stampobj);
                 doodler.updateFrameBuffer();
 				
@@ -680,6 +688,18 @@ var StampTool = (function(){
             
             return theta;
         },
+        scrollStamp: function(delta){
+            self.scrolledStamp += delta ;
+            if(self.scrolledStamp >= self.recentStamps.length){
+                self.scrolledStamp = 0;
+            }
+            if(self.scrolledStamp < 0){
+                self.scrolledStamp = self.recentStamps.length-1;
+            }
+            if(self.recentStamps && self.recentStamps.length>0){
+                self.changeStamp(self.scrolledStamp, false);
+            }
+        },
         searchStamp: function(event){
             self.searchText = event.target.value.toLowerCase();
             self.showStampPopup();
@@ -698,7 +718,7 @@ var StampTool = (function(){
 			recentStamps.forEach(function(stamp, i){
 				recHtm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' style='transform:unset;'  ></div>`;
 			});
-			recHtm += `</details><a href='#' class='' onclick='Modes.StampTool.addStamp()'>Add</a><br> `
+            recHtm += `</details>`;
 
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
@@ -720,6 +740,8 @@ var StampTool = (function(){
 						</div>
 						`;
 			
+			htm += `<br><a href='#' class='' onclick='Modes.StampTool.addStamp()'>+ Add Stamp</a><br> `
+            
 			htm += `<div style='max-width:150px;'>`
 			
 			var sortedStamps = Stamps.sort(function(a,b){

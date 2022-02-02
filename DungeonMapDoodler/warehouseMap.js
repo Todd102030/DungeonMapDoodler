@@ -488,7 +488,7 @@ var doodler = (function(){
 		var htm = "";
 		for(var i=0;i<stylePresets.length;i++){
 			var style = stylePresets[i];
-			htm += `<div class='stampBtn' style='width:200px;height:200px;line-height:200px;' title='${style.name}' onclick='doodler.changeStylePreset(null, ${i})'><img src='${style.img}' ></div>`;
+			htm += `<div class='stampBtn' style='width:200px;height:200px;line-height:200px;transform: unset;' title='${style.name}' onclick='doodler.changeStylePreset(null, ${i})'><img src='${style.img}' style='transform: unset;' ></div>`;
 		}
 		container.innerHTML = htm;
 		ir.show("stylePresetPopup");	
@@ -1755,7 +1755,11 @@ var doodler = (function(){
         var evn = window.event || e; // old IE support
         evn.preventDefault();
         var delta = Math.max(-1, Math.min(1, (evn.wheelDelta || -evn.detail)));
-        self.zoom(delta);
+        if(evn.ctrlKey && self.mouseMode==Modes.StampTool){
+            self.mouseMode.scrollStamp(delta);
+        }else{
+            self.zoom(delta);
+        }
     },
     loadDonJon: function(data, border, inset, fill, wall){
         doodler.loadingSave = true;
