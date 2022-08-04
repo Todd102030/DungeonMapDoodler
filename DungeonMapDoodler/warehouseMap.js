@@ -1688,6 +1688,7 @@ var doodler = (function(){
 			self.fbCtx.fillStyle = "rgba(0,0,0,0)";
             self.fbCtx.fillRect(0,0,self.fbCanvas.width,self.fbCanvas.height);
 			
+            
 			
 	        document.getElementById("imageUpload").addEventListener("change", self.readImage, false);
 	        document.getElementById("donJonUpload").addEventListener("change", self.readDonJon, false);

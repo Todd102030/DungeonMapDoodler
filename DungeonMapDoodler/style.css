@@ -139,8 +139,8 @@ table{
 
 .floatingModes{
 	position: fixed;
-	left: calc( 100vw - 174px );
-	top:65px;
+	left: calc( 100vw - 250px );
+	top:41px;
 	background-color: ghostwhite;
 	width:auto;
 	height:auto;
@@ -151,8 +151,9 @@ table{
 
 .floatingContainer{
 	overflow-y:auto;
-	max-height: calc(100vh - 200px);
-	width: 170px;
+	/*max-height: calc(100vh - 200px);*/
+    height: calc(100vh - 108px);
+	width: 250px;
 }
 
 .floatingBtns {
@@ -477,6 +478,32 @@ ul#navigation ul li a {
     width:140px;
 }
 /* End navigation menu*/
+
+.bottomBarWrapper{
+    position: absolute;
+    width: 100vw;
+    padding: 0.4rem;
+    background: rgba(0,0,0,0.8);
+    bottom: 0;
+}
+
+.bottomBarInner{
+    
+    display: flex;
+    background: transparent;
+}
+
+.bottomTextBox{
+    color: orangered;
+    background: transparent;
+}
+
+kbd{
+    border-radius: 2px;
+    border-color: #EEEEEE;
+    background: transparent;
+    border-style: solid;
+}
 
 
 /* Styled tooltip popups */
