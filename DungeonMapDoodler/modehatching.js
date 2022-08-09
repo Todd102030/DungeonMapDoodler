@@ -22,7 +22,7 @@ var Hatching = (function(){
 			}
 		},
 		changeImageStyle: function(evt){
-			self.imageStyle = ir.v("hatchImageStyle");
+			self.imageStyle = evt.target.value;// ir.v("hatchImageStyle");
 			doodler.hatchGenerated = false;
 			doodler.hatchStyleImage = self.imageStyle;
 			var layer = doodler.layers[doodler.currentLayer];
@@ -165,6 +165,25 @@ var Hatching = (function(){
 			htm += `<option name='space4' value='space4'>Space 4</option>`;
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "<option name='Grass1' value='grass1'>Grass1</option>";
+			htm += "<option name='Grass2' value='grass2'>Grass2</option>";
+			htm += "<option name='Grass3' value='grass3'>Grass3</option>";
+			htm += "<option name='f1' value='f1'>f1</option>";
+			htm += "<option name='f2' value='f2'>f2</option>";
+			htm += "<option name='f3' value='f3'>f3</option>";
+			htm += "<option name='f4' value='f4'>f4</option>";
+			htm += "<option name='f5' value='f5'>f5</option>";
+			htm += "<option name='f6' value='f6'>f6</option>";
+            
+            htm += "<option name='d1' value='d1'>d1</option>";
+			htm += "<option name='d2' value='d2'>d2</option>";
+			htm += "<option name='d3' value='d3'>d3</option>";
+			htm += "<option name='d4' value='d4'>d4</option>";
+            
+            htm += "<option name='w1' value='w1'>w1</option>";
+			htm += "<option name='w2' value='w2'>w2</option>";
+			htm += "<option name='w3' value='w3'>w3</option>";
+			htm += "<option name='w4' value='w4'>w4</option>";
 			htm += "<option name='SolidBlack' value='hatchingImgSolidBlack'>Solid Black</option>";
 			htm += "</select><br>";
 			
@@ -191,6 +210,25 @@ var Hatching = (function(){
 			htm += `<option name='space4' value='space4'>Space 4</option>`;
 			htm += "<option name='Grass' value='hatchingImgGrass'>Grass</option>";
 			htm += "<option name='Rock' value='hatchingImgRock'>Rocks</option>";
+			htm += "<option name='Grass1' value='grass1'>Grass1</option>";
+			htm += "<option name='Grass2' value='grass2'>Grass2</option>";
+			htm += "<option name='Grass3' value='grass3'>Grass3</option>";
+            htm += "<option name='f1' value='f1'>f1</option>";
+			htm += "<option name='f2' value='f2'>f2</option>";
+			htm += "<option name='f3' value='f3'>f3</option>";
+			htm += "<option name='f4' value='f4'>f4</option>";
+			htm += "<option name='f5' value='f5'>f5</option>";
+			htm += "<option name='f6' value='f6'>f6</option>";
+            
+            htm += "<option name='d1' value='d1'>d1</option>";
+			htm += "<option name='d2' value='d2'>d2</option>";
+			htm += "<option name='d3' value='d3'>d3</option>";
+			htm += "<option name='d4' value='d4'>d4</option>";
+            
+            htm += "<option name='w1' value='w1'>w1</option>";
+			htm += "<option name='w2' value='w2'>w2</option>";
+			htm += "<option name='w3' value='w3'>w3</option>";
+			htm += "<option name='w4' value='w4'>w4</option>";
 			htm += "</select>";
 			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">

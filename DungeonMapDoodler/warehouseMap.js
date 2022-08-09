@@ -91,6 +91,8 @@ var doodler = (function(){
     overlayImg: null,
     overlayImgStyle: "",
     overlayBlend: "multiply",
+    overlayCanvas: null,
+    overlayCtx: null,
     /** Warehouse object */
     rec:{Row:0,Name:"Warehouse Name"},
     /** SeedPickup objects for this warehouse */
@@ -334,9 +336,14 @@ var doodler = (function(){
 			self.tmpCanvas.height = ysize;
 			self.fbCanvas.width = xsize;
 			self.fbCanvas.height = ysize;
+            self.overlayCanvas.width = xsize;
+			self.overlayCanvas.height = ysize;
 		}
         
-        
+        if(self.fbCanvas){
+            self.globalOffsetX = self.canvas.width/2 - self.fbCanvas.width/2*self.zoomLevel; 
+            self.globalOffsetY = self.canvas.height/2 - self.fbCanvas.height/2*self.zoomLevel; 
+        }
     	//dim.scaleX = dim.wf / (dim.ex-dim.sx);
     	//dim.scaleY = dim.hf / (dim.ey-dim.sy);
     	self.generateGrid(callback);  
@@ -496,8 +503,11 @@ var doodler = (function(){
 	changeBackgroundColor: function(evt){
 		  self.backgroundColor = evt.target.value;
 	},
-    changeStylePreset: function(evt, id){
+    changeStylePreset: function(evt, id, stylePassed){
         var style = stylePresets[evt!=null?ir.v("stylePresetSelect"):id];
+        if(stylePassed != null){
+            style=stylePassed;
+        }
         if(style!=null){
             self.overlayBlend = style.blend;
             self.overlayImgStyle = style.overlay;
@@ -610,6 +620,14 @@ var doodler = (function(){
     		self.errorMessage("You must set the dimensions of your map before continuing", "Click and drag to highlight the bounds of the warehouse");
     	}*/
     },
+    selectHatchTexture: function(hid){
+        Modes.Hatching.changeImageStyle({target:{value:hid}});
+        ir.hide("hatchPopup");
+        doodler.popupShowing = false;
+    },
+    setDynamicBrush: function(evt){
+        self.filter = "url(\'#"+evt.target.value+"\')";
+    },
     updateFrameBuffer: function(canv, ct){
         self.needsRefresh = true;
     },
@@ -629,6 +647,10 @@ var doodler = (function(){
 			ctx.fillStyle = self.backgroundColor || "white";
 			ctx.fillRect(0,0,self.gridImg.width,self.gridImg.height)
 		}*/
+        
+        //Sort stamps on y axis
+        doodler.stamps.sort(function(a, b){return a.y>b.y})
+        
 		self.layers.forEach(function(layer, index){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
@@ -640,6 +662,7 @@ var doodler = (function(){
             }
 		})
 		self.drawGrid(canvas, ctx);
+        
         self.drawOverlay(canvas, ctx);
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
@@ -699,6 +722,7 @@ var doodler = (function(){
 		//self.drawStamps(canvas, ctx);
         
         self.drawTextFields(canvas, ctx);
+        self.drawDoodleOverlay(canvas, ctx);
         if(!self.pinchZoom){
             
             self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
@@ -853,8 +877,37 @@ var doodler = (function(){
 			}
 			else{
 				if(layer.visible){
-					ctx.drawImage(layer.outlineCanvas, 0, 0, layer.outlineCanvas.width, layer.outlineCanvas.height);
+                    //self.filter = "url(\'#squiggly-0\')";
+                    var filter = ""; //self.filter;
+                    
+                    if(self.mouseIsDown){
+                    
+                    }
+                    else{
+                        
+                        
+                        //Soft shadow outline
+                        ctx.filter = filter + 'drop-shadow(0px 0px '+Modes.SnapToGrid.hatchSize+'px '+Modes.SnapToGrid.fillColor+')';
+                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+
+                        
+                        
+                        //New outline border
+                        ctx.filter = filter + 'drop-shadow('+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                        ctx.filter = filter + 'drop-shadow(-'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                        ctx.filter = filter + 'drop-shadow('+Modes.SnapToGrid.borderSize+'px -'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                        ctx.filter = filter + ' drop-shadow(-'+Modes.SnapToGrid.borderSize+'px -'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                    }
+                    //Actual doodle map
+                    //ctx.filter = 'none';
+                    filter = "none";
+                    ctx.filter = filter;
 					ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width,layer.doodleCanvas.height);
+                    ctx.filter = "none";
 				}
 			}
 		}
@@ -943,6 +996,9 @@ var doodler = (function(){
 			tmpCt.drawImage(layer.doodleCanvas, 0,0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 			// restore the context to it's original state
 			tmpCt.restore();
+            
+            var filter = "none"; //self.filter;
+            //ct.filter = filter;
 			
 			if(skipZoomPos){
 				ct.drawImage(self.tmpCanvas, 0,0, layer.doodleCanvas.width, layer.doodleCanvas.height);
@@ -950,6 +1006,7 @@ var doodler = (function(){
 			}else{
 				ct.drawImage(self.tmpCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 			}
+            ct.filter = "none";
 		}
     },
     drawCurrentLoc: function(){
@@ -1063,6 +1120,23 @@ var doodler = (function(){
     	//ctx.msImageSmoothingEnabled = true;
     	//ctx.imageSmoothingEnabled = true;
     },
+    /* */
+    drawDoodleOverlay: function(canv, ct){
+		var ctx = ct || self.ctx;
+    	var filter = self.filter;
+        //ctx.filter = filter;
+        ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+        //ctx.filter = "none";
+    },
+    drawOverlayCommit: function(xpos, ypos, data){
+        //TODO
+        data.doodleCtx.fillStyle="white";
+        data.doodleCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        doodler.overlayCtx.fillStyle = "rgba(0,0,0,0)";
+        doodler.overlayCtx.clearRect(0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
+        doodler.needsRefresh = true;
+    },
+    /* Draws image overlay masking */
     drawOverlay: function(canv, ct){
 		var ctx = ct || self.ctx;
     	//ctx.globalAlpha = self.warehouseAlpha;
@@ -1661,7 +1735,26 @@ var doodler = (function(){
 			self.zoom(0,true);
 			
             
+            
+            
 			self.addLayer();
+            
+            
+            self.worldMap = true;
+            if(self.worldMap){
+                self.filter = "url(\'#ripple1\')";
+                Modes.Hatching.fullHatch = true;
+                doodler.changeStylePreset(null, null, {
+                    name: "World Map",
+                    img: "images/worldmap.png",
+                    overlay: "overlays/parchment-paper-light-texture.jpg",
+                    blend: "multiply",
+                    hatch: "w2",
+                    floor: "d2",
+                    fullHatch: true,
+                })
+                self.drawGridLines = false;
+            }
 			
 			xsize = self.dimensions.footPixel * self.dimensions.wf;
 			ysize = self.dimensions.footPixel * self.dimensions.hf;
@@ -1679,6 +1772,13 @@ var doodler = (function(){
 			self.gridCtx = self.gridCanvas.getContext("2d");
 			self.gridCtx.fillStyle = "rgba(0,0,0,0)";
             self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height);
+            
+            self.overlayCanvas = document.createElement("canvas");
+			self.overlayCanvas.width = xsize;
+			self.overlayCanvas.height = ysize;
+			self.overlayCtx = self.overlayCanvas.getContext("2d");
+			self.overlayCtx.fillStyle = "rgba(0,0,0,0)";
+            self.overlayCtx.fillRect(0,0,self.overlayCanvas.width,self.overlayCanvas.height);
             
             self.fbCanvas = document.createElement("canvas");
 			self.fbCanvas.width = xsize;
@@ -1699,6 +1799,7 @@ var doodler = (function(){
 	        self.canvas.addEventListener("mousedown", self.onMouseDown, false);	  
 	        self.canvas.addEventListener("mouseup", self.onMouseUp, false);	 
 	        document.addEventListener("keyup", self.onKeyUp, false);	 
+	        document.addEventListener("keydown", self.onKeyDown, false);	 
 			
 				        
 	        self.canvas.addEventListener("touchmove", self.onMouseMove, false);
@@ -1731,6 +1832,8 @@ var doodler = (function(){
 			self.canvas.height = h-4;
             self.updateFrameBuffer();
             self.loadStylePresets();
+            self.globalOffsetX = self.canvas.width/2 - self.fbCanvas.width/2*self.zoomLevel; 
+            self.globalOffsetY = self.canvas.height/2 - self.fbCanvas.height/2*self.zoomLevel; 
             //ir.get("loadingPopup").style.opacity=0;
             //setTimeout(function(){ir.hide("loadingPopup")},500)
             //document.body.classList.add("loaded");
@@ -2881,6 +2984,21 @@ var doodler = (function(){
 			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
     },
+      onKeyDown: function(evt){
+        //console.log("Clicked key", evt.key);
+        if(self.popupShowing){
+            return;
+        }
+        if(evt.key=='Delete'){
+            if(self.mouseMode.deleteFn){
+                self.mouseMode.deleteFn();
+            }
+        }
+
+        self.updateShortcutsBar(evt);
+
+        
+	},
 	onKeyUp: function(evt){
 		//console.log("Clicked key", evt.key);
         if(self.popupShowing){
@@ -2891,6 +3009,8 @@ var doodler = (function(){
 				self.mouseMode.deleteFn();
 			}
 		}
+        
+        self.updateShortcutsBar(evt);
         
         if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
 			self.generateDungeon();
@@ -3082,6 +3202,7 @@ var doodler = (function(){
 		
         var mode = self.mode;
         self.mouseIsDown = false;
+        self.needsRefresh = true;
         if(mode == Mode.MOVE){
         	self.canvas.style.cursor = 'grab';
         }
@@ -3986,7 +4107,8 @@ var doodler = (function(){
 	        self.canvas.removeEventListener("mousemove", self.onMouseMove, false);
 	        self.canvas.removeEventListener("mousedown", self.onMouseDown, false);
 	        self.canvas.removeEventListener("mouseup", self.onMouseUp, false);
-	        document.removeEventListener("keyup", self.onKeyUp, false);	 
+	        document.removeEventListener("keyup", self.onKeyUp, false);	
+            document.removeEventListener("keydown", self.onKeyDown, false);	 
 	        self.canvas.removeEventListener("touchmove", self.onMouseMove, false);
 	        self.canvas.removeEventListener("touchstart", self.onMouseDown, false);
 	        self.canvas.removeEventListener("touchend", self.onMouseUp, false);
@@ -4142,6 +4264,31 @@ var doodler = (function(){
         //return the new canvas
         return newCanvas;
     },
+    updateShortcutsBar: function(evt){
+        var bar = ir.get("bottomBarShortcuts");
+        var lclick = "&thinsp;<img src='images/leftclick.png'>";
+        var scroll = "&thinsp;<img src='images/scroll.png'>";
+        var htm = "";
+        var sp = "&thinsp;";
+        var msp = "&emsp;";
+        
+        if(evt.ctrlKey){
+            htm += "Move " + lclick + msp + self.kbd("Undo","Z") + msp + self.kbd("Redo", "Shift", "Z");
+        }
+        
+        if(evt.shiftKey){
+            htm += "Subtract " + lclick;
+        }
+        if(!evt.ctrlKey && !evt.shiftKey){
+            htm += "Zoom "+scroll + msp + self.kbd("Move","M");
+        }
+        bar.innerHTML = htm;
+        
+        
+    },
+    kbd: function(name, val, val2){
+        return name + "&thinsp;<kbd>"+val+"</kbd>"+(val2?("&thinsp;<kbd>"+val2+"</kbd>"):"");
+    },
 	undo: function(){
 		//self.hTempImg = null;
 		//self.oTempImg = null;
@@ -4293,18 +4440,25 @@ var doodler = (function(){
             if(!suppressOffset){
                 var mx = self.mouseX;
                 var my = self.mouseY;
-				/*if(useCenter){
-					mx = self.canvas.width/2;
-					my = self.canvas.height/2;
-				}*/
+				
                 self.globalOffsetX = ((xpos*z)-mx)*-1;
                 self.globalOffsetY = ((ypos*z)-my)*-1;
-            }else{
+            }
+            else{
                 //xpos = (self.canvas.width/2-self.globalOffsetX)/self.zoomLevel;
                 //ypos = (self.canvas.height/2-self.globalOffsetY)/self.zoomLevel;
                 //self.globalOffsetX = ((xpos*z))*-1;
                 //self.globalOffsetY = ((ypos*z))*-1;
             }
+            if(useCenter){
+                /*var mx = self.globalOffsetX + self.fbCanvas.width/2;
+                var my = self.globalOffsetY + self.fbCanvas.height/2;
+                self.globalOffsetX = ((xpos*z)-mx)*-1;
+                self.globalOffsetY = ((ypos*z)-my)*-1;*/
+                self.globalOffsetX = self.canvas.width/2 - self.fbCanvas.width/2*self.zoomLevel;
+                self.globalOffsetY = self.canvas.height/2 - self.fbCanvas.height/2*self.zoomLevel;
+            }
+            
 
         }
         ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%")

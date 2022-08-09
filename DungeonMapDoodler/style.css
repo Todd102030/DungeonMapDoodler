@@ -93,12 +93,13 @@ body{
 }
 
 details{
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 }
 
 summary{
 	user-select: none;
 	font-weight: bold;
+    border: 1px solid black;
 }
 
 table{
@@ -257,7 +258,7 @@ table{
 }
 
 .paramBox{
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 	max-width: 300px;
     /*max-height: 500px;*/
     overflow: auto;
@@ -490,12 +491,17 @@ ul#navigation ul li a {
 .bottomBarInner{
     
     display: flex;
+    justify-content: center;
+    justify-items: center;
+    
     background: transparent;
 }
 
 .bottomTextBox{
     color: orangered;
     background: transparent;
+    display: flex;
+    align-items: center;
 }
 
 kbd{
@@ -503,6 +509,23 @@ kbd{
     border-color: #EEEEEE;
     background: transparent;
     border-style: solid;
+}
+
+#hatchPopupList{
+    display:flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.hatchImgWrap{
+    width: calc(100% / 4);
+    height: 256px;
+    overflow: hidden;
+}
+
+.hatchImgWrap > img {
+    height: 100%;
+    width: 100%;
 }
 
 

@@ -16,6 +16,7 @@ var SnapToGrid = (function(){
 			}else{
 				self.outlineColor = evt.target.value;
 			}
+            doodler.needsRefresh = true;
 		},
 		changeInset: function(evt, fromInput){
 			self.inset = parseInt(evt.target.value);
@@ -32,6 +33,7 @@ var SnapToGrid = (function(){
 			}else{
 				ir.set("snapToGridBorderSize", self.borderSize);
 			}
+            doodler.needsRefresh = true;
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -40,6 +42,7 @@ var SnapToGrid = (function(){
 			}else{
 				ir.set("snapToGridHatchSize", self.hatchSize);
 			}
+            doodler.needsRefresh = true;
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
@@ -90,6 +93,39 @@ var SnapToGrid = (function(){
 
             doodler.updateFrameBuffer();
 		},
+        drawOverlay: function(xpos, ypos, data){
+            var size = self.size;
+			var border=self.borderSize;
+			var ctx = doodler.overlayCtx;
+			var hatchSize = self.hatchSize;
+
+			var dim = doodler.dimensions;
+			var xfeet = dim.wf;
+			var yfeet = dim.hf;
+			var sx = dim.scaleX;
+			var sy = doodler.dimensions.scaleY;
+			var step = dim.footPixel * dim.stepSize / sx;
+			var zoom = doodler.zoomLevel;
+			var xgridtop = Math.floor(xpos/step)*step;
+			var ygridtop = Math.floor(ypos/step)*step;
+			// Radii of the white glow.
+			var innerRadius = self.size * 0.15;
+			var outerRadius = self.size*2+hatchSize;
+			// Radius of the entire circle.
+			var radius = self.size*2.1+hatchSize;
+			var inset=self.inset;
+			//Path Drawing
+			//ctx = data.doodleCtx;
+			ctx.fillStyle = self.fillColor;
+			if(!doodler.drawRough){
+				ctx.fillRect(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2);
+			}else{
+				var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+				var rc = rough.canvas(ctx.canvas);
+				rc.rectangle(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2, rcopts);
+			}
+			
+        },
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(240,60,60)";
 			var dim = doodler.dimensions;
@@ -125,19 +161,22 @@ var SnapToGrid = (function(){
 			
 		},
 		mouseDown: function(xpos, ypos, data){
+            doodler.overlayCtx.clearRect(0,0,doodler.overlayCanvas.width, doodler.overlayCanvas.height);
 			self.isDoodling = true;
 			//doodler.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
-			self.draw(xpos, ypos, data);
+			//self.draw(xpos, ypos, data);
+			self.drawOverlay(xpos, ypos, data);
 		},
 		mouseMove: function(xpos, ypos, data){
 			if (self.isDoodling){
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
-				self.draw(xpos, ypos, data);
+				//self.draw(xpos, ypos, data);
+				self.drawOverlay(xpos, ypos, data);
 				
 				self.doodleStartX = xpos;
 				self.doodleStartY = ypos;
@@ -146,6 +185,7 @@ var SnapToGrid = (function(){
 		mouseUp: function(xpos, ypos, data){
             //self.draw(xpos, ypos, data);
 			self.isDoodling = false;
+            doodler.drawOverlayCommit(xpos, ypos, data);
 			//doodler.updateUndoStack();
 			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;

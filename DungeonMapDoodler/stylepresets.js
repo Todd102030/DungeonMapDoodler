@@ -98,5 +98,14 @@ var stylePresets = [
         floor: "",
         fullHatch: false,
     },
+    {
+        name: "World Map",
+		img: "images/worldmap.png",
+        overlay: "overlays/parchment-paper-light-texture.jpg",
+        blend: "multiply",
+        hatch: "w2",
+        floor: "d2",
+        fullHatch: true,
+    },
 
 ]

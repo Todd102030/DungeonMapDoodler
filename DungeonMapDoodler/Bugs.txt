@@ -26,6 +26,36 @@ Make text and stamps be layer specific
 Change undo buttons to factor in stamps and text as well
 
 
+AUGUST 4 2022 TODO:
+Add more hatching options, more realistic map textures
+
+Vector layers
+ - Inkarnate has a background and foreground layer, background is basically my current hatch layer, foreground is my doodle layer. Rather than having outline layer just be drawing slightly bigger than the doodle layer, figure out how to do various effects based on the boundaries of the doodle layer. Like, an outline/outer shadow, a ripple effect, etc. Interior shadows as well, but that would need to be a new layer I think
+
+Keyboard shortcuts bar - suggestions for common stuff. Needs to update on tool change and on shift click. 
+More hover effects for tooltips and such
+Revamp ui in general, make things look nicer
+Widen stamp interface/sidebar
+Chrome reloads entire stamp popup when it opens, need to show/hide and not rebuild html unless necessary
+* Painter mode that lets you paint textures(hatches) into only already drawn map area. Option to switch between drawing inside of foreground (doodle map) or background
+    * More options for brushes, not just a fuzzy circle
+* Draw onto a temporary overlay layer and then "paste" it onto the actual doodle layer when done so that the outline doesn't disappear entirely from the map when drawing new stuff. 
+    - Can fbCanvas be leveraged for this? 
+    - On mouseup, take overlay canvas and draw to current layer
+* In world map mode, hatching should be disabled, treat hatch layer and doodle layer as background and foreground as two separate things
+* make things like outline thickness and other size sliders global
+* More svg filter options and an easy way to switch between them similar to popup for background selector
+* Add a popup hatching selector just like the style/stamp popups
+Refer to svg filters as "Dynamic Brushes" or some buzzwordy thing
+  --Worth keeping: ripple1, noise, squiggly-1
+  * Things like baseFrequency, give user a slider to adjust
+
+
+*****APPLY FILTER ONTO TEMPOVERLAY DIRECTLY SO WHEN IT"S PASTED DOWN, IT"S PERMANENTLY THAT WAY
+DON"T APPLY FILTER WHEN DRAWING DOODLE CANVAS
+
+
+
 
 ***FOR EACH NEW UPDATE***
 - Edit serviceworker.js if new files added, ensure cache version is updated

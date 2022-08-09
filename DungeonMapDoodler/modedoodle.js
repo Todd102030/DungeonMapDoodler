@@ -148,25 +148,114 @@ var Doodle = (function(){
 			}	
             doodler.updateFrameBuffer();
 		},
+        drawOverlay: function(xpos, ypos, data){
+            var wh = doodler;
+            var offX = wh.globalOffsetX;
+            var offY = wh.globalOffsetY;
+            var zoom = wh.zoomLevel;
+			var size = self.size;
+			var border=self.borderSize;
+			var ctx = doodler.overlayCtx;
+			var hatchSize = self.hatchSize;
+			var expos = self.doodleEndX;
+			var eypos = self.doodleEndY;
+			
+			// Radii of the white glow.
+			var innerRadius = self.size * 0.15;
+			var outerRadius = self.size/2+hatchSize;
+			// Radius of the entire circle.
+			var radius = self.size/2+hatchSize;
+			
+
+			//var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
+			//gradient.addColorStop(0, 'black');
+			//gradient.addColorStop(1, 'transparent');
+
+			//ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
+            
+			//ctx.fillStyle = gradient;
+			//ctx.fill();
+			if(self.shape == Shape.Circle){
+				//Connecting lines
+				//Path Drawing
+				//ctx = data.doodleCtx;
+				ctx.fillStyle = self.fillColor;
+				ctx.strokeStyle = self.fillColor;
+                var filter = doodler.filter;
+                ctx.filter = filter;
+				if(!doodler.drawRough){
+					ctx.beginPath();
+					ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+					ctx.fill();
+					ctx.beginPath();
+					ctx.arc(expos, eypos, size/2, 0, 2 * Math.PI);
+					ctx.fill();
+					ctx.beginPath()
+					ctx.lineWidth = size;
+					ctx.moveTo(xpos,ypos);
+					ctx.lineTo(expos,eypos);
+					ctx.stroke();
+				}
+				else{
+					var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
+					var rc = rough.canvas(ctx.canvas);
+					rc.circle(xpos, ypos, size, rcopts);
+					rc.circle(expos, eypos, size, rcopts);
+				}
+
+				
+			}else{
+				//Path Drawing
+				ctx = data.doodleCtx;
+				ctx.fillStyle = self.fillColor;
+                var filter = doodler.filter;
+                ctx.filter = filter;
+				ctx.fillRect(xpos-(self.size/2),ypos-(self.size/2), size,size);
+
+			}	
+            ctx.filter = "none";
+			
+        },
+        
 		drawCursor : function(ctx, xpos, ypos, data){
             var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
             var zoom = wh.zoomLevel;
+            var size = self.size;
+            var border=self.borderSize;
+			//var ctx = doodler.overlayCtx;
+			var hatchSize = self.hatchSize;
+			var expos = self.doodleEndX;
+			var eypos = self.doodleEndY;
+            //var filter = doodler.filter;
+            //ctx.filter = filter;
 			ctx.strokeStyle = "rgb(240,60,60)";
+            //xpos = (xpos-wh.globalOffsetX)/wh.zoomLevel;
+            //ypos = (ypos-wh.globalOffsetY)/wh.zoomLevel;
+            
+            ctx.fillStyle = self.fillColor;
+            ctx.strokeStyle = self.fillColor;
+            var filter = doodler.filter;
+            //ctx.filter = filter;
 			if(self.shape == Shape.Circle){
-				ctx.beginPath();
+				/*ctx.beginPath();
 				ctx.arc(xpos, ypos, (self.size/2)*zoom, 0, 2 * Math.PI);
-				ctx.stroke();
+				ctx.stroke();*/
+                ctx.beginPath();
+                ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+                ctx.fill();
+                
 			}
 			else{
 				ctx.strokeRect(xpos-(self.size/2)*zoom,ypos-(self.size/2)*zoom,self.size*zoom,self.size*zoom)
 			}
-			ctx.strokeStyle = "rgb(60,200,200)";
+			/*ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size/2+self.hatchSize;
 			ctx.beginPath();
 			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
-			ctx.stroke();
+			ctx.stroke();*/
+            ctx.filter = "none";
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained
@@ -189,20 +278,23 @@ var Doodle = (function(){
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
-			self.draw(xpos, ypos, data);
+			//self.draw(xpos, ypos, data);
+			self.drawOverlay(xpos, ypos, data);
 			
 		},
 		mouseMove: function(xpos, ypos, data){
 			if (self.isDoodling){
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
-				self.draw(self.doodleStartX, self.doodleStartY, data);
+				//self.draw(self.doodleStartX, self.doodleStartY, data);
+                self.drawOverlay(self.doodleStartX, self.doodleStartY, data);
 				self.doodleStartX = xpos;
 				self.doodleStartY = ypos;
 			}
 		},
 		mouseUp: function(xpos, ypos, data){
 			self.isDoodling = false;
+            doodler.drawOverlayCommit(xpos, ypos, data);
 			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;

@@ -100,31 +100,7 @@
 	</div>
 	
 <div style='display:none;'>
-	<img id='squarefuzzImg' src='images/squarefuzz.png'>
-	<img id='circlefuzzImg' src='images/circlefuzz.png'>
-	<img id='hatchingImg' src='hatching.png'>
-	<img id='hatchingImgDots' src='hatches/dots.png'>
-	<img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.png'>
-	<img id='hatchingImgJPHalftone' src='hatches/DMD Halftone Pattern.png'>
-	<img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.png'>
-	<img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.png'>
-	<img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.png'>
-	<img id='hatchingImgSolidBlack' src='hatches/solidblack.png'>
-	<img id='hatchingImgGrass' src='floortiles/grasstile.jpg'>
-	<img id='hatchingImgRock' src='floortiles/rocktile.jpg'>
-    
-	<img id='brick1' src='floortiles/brick1.png'>
-	<img id='metal1' src='floortiles/metal1.png'>
-	<img id='wood1' src='floortiles/wood1.png'>
-	<img id='magma1' src='floortiles/magma1.svg'>
-	<img id='sand1' src='floortiles/sand1.svg'>
-	<img id='sand2' src='floortiles/sand2.svg'>
-	<img id='space1' src='floortiles/space1.svg'>
-	<img id='space2' src='floortiles/space2.svg'>
-	<img id='space3' src='floortiles/space3.png'>
-	<img id='space4' src='floortiles/space4.svg'>
-	<img id='stone1' src='floortiles/stone1.png'>
-	<img id='water1' src='floortiles/water1.svg'>
+	
 	
 	
 	<label for='imageSaveIsometric'><input type='checkbox' id='imageSaveIsometric'> Isometric</label>
@@ -256,6 +232,59 @@
     <div id="stylePresetPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;"></div>
     <div class='popupFooter' style='padding-top: 8px'>
         <button type="button" class="canvBtn" onclick="ir.hide('stylePresetPopup');doodler.popupShowing = false;">Cancel</button>
+    </div>
+</div>
+    
+<div id='hatchPopup' class='popupPanel' style='display:none;text-align: center'>
+    <h2>Choose Texture</h2>
+    <div id="hatchPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;">
+    
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("squareFuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("circleFuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImg")'><img id='hatchingImg' src='hatching.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgDots")'><img id='hatchingImgDots' src='hatches/dots.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPCrosshatch")'><img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPHalftone")'><img id='hatchingImgJPHalftone' src='hatches/DMD Halftone Pattern.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPStipple")'><img id='hatchingImgJPStipple' src='hatches/DMD Stipple Pattern.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPStone")'><img id='hatchingImgJPStone' src='hatches/DMD Stone Pattern.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPGrass")'><img id='hatchingImgJPGrass' src='hatches/DMG Grass Pattern.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgSolidBlack")'><img id='hatchingImgSolidBlack' src='hatches/solidblack.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgGrass")'><img id='hatchingImgGrass' src='floortiles/grasstile.jpg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgRock")'><img id='hatchingImgRock' src='floortiles/rocktile.jpg'></div>
+    
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("brick1")'><img id='brick1' src='floortiles/brick1.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("metal1")'><img id='metal1' src='floortiles/metal1.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("wood1")'><img id='wood1' src='floortiles/wood1.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("magma1")'><img id='magma1' src='floortiles/magma1.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sand1")'><img id='sand1' src='floortiles/sand1.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sand2")'><img id='sand2' src='floortiles/sand2.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("space1")'><img id='space1' src='floortiles/space1.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("space2")'><img id='space2' src='floortiles/space2.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("space3")'><img id='space3' src='floortiles/space3.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("space4")'><img id='space4' src='floortiles/space4.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("stone1")'><img id='stone1' src='floortiles/stone1.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("water1")'><img id='water1' src='floortiles/water1.svg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass1")'><img id='grass1' src='floortiles/grass1.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass2")'><img id='grass2' src='floortiles/grass2.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass3")'><img id='grass3' src='floortiles/grass3.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f1")'><img id='f1' src='hatches/f1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f2")'><img id='f2' src='hatches/f2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f3")'><img id='f3' src='hatches/f3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f4")'><img id='f4' src='hatches/f4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f5")'><img id='f5' src='hatches/f5.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f6")'><img id='f6' src='hatches/f6.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d1")'><img id='d1' src='hatches/d1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d2")'><img id='d2' src='hatches/d2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d3")'><img id='d3' src='hatches/d3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d4")'><img id='d4' src='hatches/d4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w1")'><img id='w1' src='hatches/w1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w2")'><img id='w2' src='hatches/w2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w3")'><img id='w3' src='hatches/w3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w4")'><img id='w4' src='hatches/w4.JPG'></div>
+    
+    </div>
+    <div class='popupFooter' style='padding-top: 8px'>
+        <button type="button" class="canvBtn" onclick="ir.hide('hatchPopup');doodler.popupShowing = false;">Cancel</button>
     </div>
 </div>
 
@@ -624,8 +653,13 @@
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
 	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.png' width='40px' height='40px'></div>
 	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.png' width='40px' height='40px'></div>
-	
-	
+	<button type="button" class="canvBtn" onclick="ir.show('hatchPopup');doodler.popupShowing = true;">Select Texture</button>
+	<select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)'>
+        <option value='none'>None</option>
+        <option value='ripple1'>Rough Coastline</option>
+        <option value='noise'>Noise</option>
+        <option value='squiggly-1'>Squiggly</option>
+    </select>
 </div>	
 
 <div class='bottomBarWrapper'>
@@ -633,7 +667,7 @@
 		<div id="bottomBarLeft" class="bottomTextBox">
 		</div>
 		<div id="bottomBarShortcuts" class="bottomTextBox">
-			Zoom <kbd>Mouse Wheel</kbd> Move <kbd>M</kbd>
+			Zoom &thinsp; <img src='images/scroll.png'> &emsp; Draw &thinsp; <img src='images/leftclick.png'>
 
 		</div>
 		<div id="bottomBarRight" class="'bottomTextBox">
@@ -736,6 +770,375 @@
 	
 </div>
     
+    
+    
+<svg id="svgfilters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<defs>
+			<filter id="teal-white" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.03 1"></feFuncR>
+					<feFuncG type="table" tableValues="0.57 1"></feFuncG>
+					<feFuncB type="table" tableValues="0.49 1"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="teal-lightgreen" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.03 0.8"></feFuncR>
+					<feFuncG type="table" tableValues="0.57 1"></feFuncG>
+					<feFuncB type="table" tableValues="0.49 0.53"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="sepia" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.26 0.95"></feFuncR>
+					<feFuncG type="table" tableValues="0.19 0.78"></feFuncG>
+					<feFuncB type="table" tableValues="0.11 0.59"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="purple-sepia" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.43 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0.06 0.88"></feFuncG>
+					<feFuncB type="table" tableValues="0.37 0.79"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="cherry-icecream" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.84 1"></feFuncR>
+					<feFuncG type="table" tableValues="0.05 0.94"></feFuncG>
+					<feFuncB type="table" tableValues="0.37 0.61"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="blackCurrant-and-mint" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.75 0.53"></feFuncR>
+					<feFuncG type="table" tableValues="0.25 0.97"></feFuncG>
+					<feFuncB type="table" tableValues="0.64 0.77"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="sea" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.02 0.13 0.8"></feFuncR>
+					<feFuncG type="table" tableValues="0.02 0.47 0.97"></feFuncG>
+					<feFuncB type="table" tableValues="0.26 0.52 0.48"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="warm-sea" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.29 0.01 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0.12 0.52 0.94"></feFuncG>
+					<feFuncB type="table" tableValues="0.37 0.59 0.47"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="spring-grass" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0 0.38 0.92"></feFuncR>
+					<feFuncG type="table" tableValues="0.5 0.8 1"></feFuncG>
+					<feFuncB type="table" tableValues="0.5 0.56 0.74"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="red-sunset-with-purple" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.52 0.86 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0 0.08 0.81"></feFuncG>
+					<feFuncB type="table" tableValues="0.51 0.24 0.05"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="red-sunset" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.27 0.86 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0.01 0.08 0.81"></feFuncG>
+					<feFuncB type="table" tableValues="0.02 0.24 0.05"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="gold-sunset" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.27 0.86 1"></feFuncR>
+					<feFuncG type="table" tableValues="0.01 0.31 0.95"></feFuncG>
+					<feFuncB type="table" tableValues="0.02 0.02 0.02"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="dark-crimson-sepia" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.01 0.52 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0 0.05 0.81"></feFuncG>
+					<feFuncB type="table" tableValues="0.02 0.29 0.61"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="dark-blue-sepia" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.29 0.15 0.97"></feFuncR>
+					<feFuncG type="table" tableValues="0.04 0.39 0.93"></feFuncG>
+					<feFuncB type="table" tableValues="0.32 0.52 0.73"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="dark-green-sepia" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.25 0.39 0.96"></feFuncR>
+					<feFuncG type="table" tableValues="0.16 0.52 0.97"></feFuncG>
+					<feFuncB type="table" tableValues="0.06 0.39 0.78"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="x-rays" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.98 0.3 0.25"></feFuncR>
+					<feFuncG type="table" tableValues="1 0.44 0.24"></feFuncG>
+					<feFuncB type="table" tableValues="0.91 0.62 0.39"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="warm-x-rays" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.98 0.75 0.51"></feFuncR>
+					<feFuncG type="table" tableValues="1 0.45 0.11"></feFuncG>
+					<feFuncB type="table" tableValues="0.91 0.39 0.29"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="golden-x-rays" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.98 1 0.94"></feFuncR>
+					<feFuncG type="table" tableValues="1 0.98 0.44"></feFuncG>
+					<feFuncB type="table" tableValues="0.91 0.43 0.02"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="purple-warm" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.52 0.97 1"></feFuncR>
+					<feFuncG type="table" tableValues="0 0.62 1"></feFuncG>
+					<feFuncB type="table" tableValues="0.51 0.39 0.89"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="green-pink-acid" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="1 0.98 0.1"></feFuncR>
+					<feFuncG type="table" tableValues="0.17 1 0.82"></feFuncG>
+					<feFuncB type="table" tableValues="0.7 0.84 0.67"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="yellow-blue-acid" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
+					.33 .33 .33 0 0
+					.33 .33 .33 0 0
+					0 0 0 1 0" in="SourceGraphic" result="colormatrix"></feColorMatrix>
+				<feComponentTransfer in="colormatrix" result="componentTransfer">
+					<feFuncR type="table" tableValues="0.01 0.97 0.89"></feFuncR>
+					<feFuncG type="table" tableValues="0.38 1 1"></feFuncG>
+					<feFuncB type="table" tableValues="1 0.89 0.01"></feFuncB>
+					<feFuncA type="table" tableValues="0 1"></feFuncA>
+				</feComponentTransfer>
+				<feBlend mode="normal" in="componentTransfer" in2="SourceGraphic" result="blend"></feBlend>
+			</filter>
+			<filter id="noise" x="0%" y="0%" width="100%" height="100%">
+				<feTurbulence baseFrequency="0.2 0.2" result="NOISE" numOctaves="2"></feTurbulence>
+				<feDisplacementMap in="SourceGraphic" in2="NOISE" scale="20" xChannelSelector="R" yChannelSelector="R"></feDisplacementMap>
+			</filter>
+			<filter id="squiggly-0">
+				<feTurbulence id="turbulence1" baseFrequency="0.02" numOctaves="3" result="noise" seed="0"></feTurbulence>
+				<feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="6"></feDisplacementMap>
+			</filter>
+			<filter id="squiggly-1">
+				<feTurbulence id="turbulence2" baseFrequency="0.02" numOctaves="3" result="noise" seed="1"></feTurbulence>
+				<feDisplacementMap in="SourceGraphic" in2="noise" scale="8"></feDisplacementMap>
+			</filter>
+			<filter id="squiggly-2">
+				<feTurbulence id="turbulence3" baseFrequency="0.02" numOctaves="3" result="noise" seed="2"></feTurbulence>
+				<feDisplacementMap in="SourceGraphic" in2="noise" scale="6"></feDisplacementMap>
+			</filter>
+			<filter id="squiggly-3">
+				<feTurbulence id="turbulence4" baseFrequency="0.02" numOctaves="3" result="noise" seed="3"></feTurbulence>
+				<feDisplacementMap in="SourceGraphic" in2="noise" scale="8"></feDisplacementMap>
+			</filter>
+			<filter id="squiggly-4">
+				<feTurbulence id="turbulence5" baseFrequency="0.02" numOctaves="3" result="noise" seed="4"></feTurbulence>
+				<feDisplacementMap in="SourceGraphic" in2="noise" scale="6"></feDisplacementMap>
+			</filter>
+			<filter id="posterize">
+				<feComponentTransfer>
+					<feFuncR type="discrete" tableValues="0 .5 1"></feFuncR>
+				</feComponentTransfer>
+			</filter>
+			<filter id="dancing" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="linearRGB">
+				<feMorphology operator="dilate" radius="4 4" in="SourceAlpha" result="morphology"></feMorphology>
+				<feFlood flood-color="#30597E" flood-opacity="1" result="flood"></feFlood>
+				<feComposite in="flood" in2="morphology" operator="in" result="composite"></feComposite>
+				<feComposite in="composite" in2="SourceAlpha" operator="out" result="composite1"></feComposite>
+				<feTurbulence type="fractalNoise" baseFrequency="0.01 0.02" numOctaves="1" seed="0" stitchTiles="stitch" result="turbulence"></feTurbulence>
+				<feDisplacementMap in="composite1" in2="turbulence" scale="17" xChannelSelector="A" yChannelSelector="A" result="displacementMap"></feDisplacementMap>
+				<feMerge result="merge">
+					<feMergeNode in="SourceGraphic"></feMergeNode>
+					<feMergeNode in="displacementMap"></feMergeNode>
+					</feMerge>
+			</filter>
+			<filter id="drops" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+				<feTurbulence type="turbulence" baseFrequency="0.05 0.05" numOctaves="1" seed="3" stitchTiles="stitch" result="turbulence"></feTurbulence>
+				<feComposite in="turbulence" in2="SourceGraphic" operator="in" result="composite"></feComposite>
+				<feColorMatrix type="matrix" values="1 0 0 0 0
+					0 1 0 0 0
+					0 0 1 0 0
+					0 0 0 25 -2" in="composite" result="colormatrix"></feColorMatrix>
+				<feComposite in="SourceGraphic" in2="colormatrix" operator="in" result="composite1"></feComposite>
+				<feGaussianBlur stdDeviation="3 3" in="composite1" result="blur"></feGaussianBlur>
+				<feSpecularLighting surfaceScale="2" specularConstant="1" specularExponent="20" lighting-color="#fffffd" in="blur" result="specularLighting">
+					<feDistantLight azimuth="-90" elevation="150"></feDistantLight>
+				</feSpecularLighting>
+				<feSpecularLighting surfaceScale="2" specularConstant="1" specularExponent="20" lighting-color="#cae1fe" in="blur" result="specularLighting1">
+					<feDistantLight azimuth="90" elevation="150"></feDistantLight>
+				</feSpecularLighting>
+				<feSpecularLighting surfaceScale="7" specularConstant="1" specularExponent="35" lighting-color="#fcfeff" in="blur" result="specularLighting2">
+					<fePointLight x="150" y="50" z="300"></fePointLight>
+				</feSpecularLighting>
+				<feComposite in="specularLighting" in2="composite1" operator="in" result="composite2"></feComposite>
+				<feComposite in="specularLighting2" in2="composite1" operator="in" result="composite3"></feComposite>
+				<feComposite in="specularLighting1" in2="composite1" operator="in" result="composite4"></feComposite>
+				<feBlend mode="multiply" in="composite4" in2="SourceGraphic" result="blend"></feBlend>
+				<feBlend in="composite2" in2="blend" result="blend1"></feBlend>
+				<feBlend in="composite3" in2="blend1" result="blend2"></feBlend>
+			</filter>
+			<filter id="grain">
+				<feTurbulence baseFrequency="0.60,0.90" result="colorNoise"></feTurbulence>
+				<feColorMatrix in="colorNoise" type="matrix" values=".33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0"></feColorMatrix>
+				<feComposite operator="in" in2="SourceGraphic" result="monoNoise"></feComposite>
+				<feBlend in="SourceGraphic" in2="monoNoise" mode="multiply"></feBlend>
+			</filter>
+			<filter id="fluffy" x="0%" y="0%" width="100%" height="100%">
+				 <feTurbulence type="fractalNoise" baseFrequency="0.04" result="fluffyNoise" numOctaves="5"></feTurbulence>
+				<feColorMatrix in="fluffyNoise" type="matrix" values=".33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 1 0"></feColorMatrix>
+				<feComposite operator="in" in2="SourceGraphic" result="monoFluffyNoise"></feComposite>
+				<feBlend in="SourceGraphic" in2="monoFluffyNoise" mode="screen"></feBlend>
+			</filter>
+      
+            <filter id="ripple1">
+            <feTurbulence type="fractalNoise" 
+              baseFrequency=".02" numOctaves="3" />
+            <feDisplacementMap in="SourceGraphic" scale="240" />
+            </filter>
+           <filter id="outliner">
+                <!-- Start by grabbing the alpha channel of the text and dilating it-->
+                <feMorphology operator="dilate" radius="10" in="SourceAlpha" result="THICKNESS" />
+                 <!-- Next, grab the original text (SourceGraphic) and use it to cut out the inside of the dilated text -->
+                <feComposite operator="out" in="THICKNESS" in2="SourceGraphic"></feComposite>
+            </filter>
+		</defs>
+	</svg>
 
 	
 <script type="text/javascript">
