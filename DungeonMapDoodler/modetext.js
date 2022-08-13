@@ -148,7 +148,7 @@ var TextTool = (function(){
                 doodler.setFont(16, "Arial", ctx, "center");
                 ctx.fillText(msg, xpos, ypos);
 				if(self.isSnapping){
-					var gridxy = getGridXY(xpos, ypos);
+					var gridxy = getGridXY2(xpos, ypos);
 					if(self.stampRatio<1){
 						gridxy.stepx = gridxy.step;
 						gridxy.stepy = gridxy.step / self.stampRatio;

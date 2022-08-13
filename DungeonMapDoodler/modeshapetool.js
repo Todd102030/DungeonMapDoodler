@@ -100,7 +100,7 @@ var ShapeTool = (function(){
 					Ycenter = self.doodleStartY/zoom;
 */
 				var numberOfSides = self.numSides,
-				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY)),
+				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX)*zoom,Math.abs(self.doodleStartY-self.doodleEndY)*zoom),
 				Xcenter = self.doodleStartX,
 				Ycenter = self.doodleStartY;
 				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
@@ -145,7 +145,7 @@ var ShapeTool = (function(){
 					Ycenter = self.doodleStartY/zoom;
 				*/
 				var numberOfSides = self.numSides,
-				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY)),
+				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX)*zoom,Math.abs(self.doodleStartY-self.doodleEndY)*zoom),
 				Xcenter = self.doodleStartX,
 				Ycenter = self.doodleStartY;
 				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
@@ -213,7 +213,7 @@ var ShapeTool = (function(){
 				}else{
 					ctx.strokeStyle = "rgb(240,60,60)";
 				}
-				var gridxy = getGridXY(xpos, ypos);
+				var gridxy = getGridXY2(xpos, ypos);
 				var offx = doodler.globalOffsetX;
 				var offy = doodler.globalOffsetY;
 				var zoom = doodler.zoomLevel;
@@ -230,10 +230,10 @@ var ShapeTool = (function(){
 			}
 		},
 		drawOutlineBox: function(ctx, xpos, ypos, data){
-			if(self.isSubtractive /*|| data.event.shiftKey*/){
-				ctx.strokeStyle = "rgb(55, 222, 126)";
+			if(doodler.shiftDown){
+				ctx.fillStyle = "rgb(237, 148, 148)";
 			}else{
-				ctx.strokeStyle = "rgb(240,60,60)";
+				ctx.fillStyle = "white";
 			}
 			var offx = doodler.globalOffsetX;
 			var offy = doodler.globalOffsetY;
@@ -253,8 +253,8 @@ var ShapeTool = (function(){
 			
 			var numberOfSides = self.numSides,
 				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX),Math.abs(self.doodleStartY-self.doodleEndY))*zoom,
-				Xcenter = self.doodleStartX*zoom + offx,
-				Ycenter = self.doodleStartY*zoom + offy;
+				Xcenter = self.doodleStartX,
+				Ycenter = self.doodleStartY;
 			var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
 			
 			
@@ -265,7 +265,7 @@ var ShapeTool = (function(){
 			for (var i = 1; i <= numberOfSides;i += 1) {
 			  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides+angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides+angleRad));
 			}
-			ctx.stroke();
+			ctx.fill();
 			
 		},
 		/**

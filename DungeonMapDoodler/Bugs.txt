@@ -49,11 +49,22 @@ Chrome reloads entire stamp popup when it opens, need to show/hide and not rebui
 Refer to svg filters as "Dynamic Brushes" or some buzzwordy thing
   --Worth keeping: ripple1, noise, squiggly-1
   * Things like baseFrequency, give user a slider to adjust
+Place for all theme settings grouped together for easy editing, maybe just more stuff in global settings area?
+Putting Wall Thickness into the negatives looks really cool, shifts all outline to the top left
+Move global options and layers to floatingControlsLeft
+Move Dynamic Brush selector into doodle tool paramBox, rename to Brush Tool
+Get Mike's data-hover code from trusa and use it for hover tips
+Drawing hatch layer possibly needs to be theme edited option that toggles code on doodle draw
 
 
-*****APPLY FILTER ONTO TEMPOVERLAY DIRECTLY SO WHEN IT"S PASTED DOWN, IT"S PERMANENTLY THAT WAY
-DON"T APPLY FILTER WHEN DRAWING DOODLE CANVAS
-
+*****HIGHEST PRIORITIES
+ - Make it possible to draw different types of floor map/hatching onto single layer
+ - Improve text layers
+   - Put edit box into side menu, update oninput so map updates live
+   - Add colour options for text and drop shadow options
+   - Add full rotation similar to stamps
+   - If possible, add curvy text using bezier curves or something
+- Fix any broken stuff related to change of drawCursor - stamp and text highlights, wall and line tools
 
 
 

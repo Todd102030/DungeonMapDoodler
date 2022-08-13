@@ -36,7 +36,7 @@ var StampTool = (function(){
 		addStamp: function(fromPopup){
 			ir.get("stampUpload").click();
             if(fromPopup){
-                ir.hide("stampPopup");
+                doodler.unpop("stampPopup");
             }
 		},
 		readAddStamp: function(){
@@ -161,7 +161,7 @@ var StampTool = (function(){
             self.setParameterBox(ir.get("paramBox"));
 
             if(hidePopup){
-                ir.hide("stampPopup");
+                doodler.unpop("stampPopup");
             }
             doodler.popupShowing = false;
             self.stampSelected = null;
@@ -787,7 +787,7 @@ var StampTool = (function(){
 			});
 			htm += `</div>`;
 			container.innerHTML = htm;            
-            ir.show("stampPopup");
+            doodler.pop("stampPopup");
         },
 	}; return self;
 	})()

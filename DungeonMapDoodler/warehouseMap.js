@@ -29,6 +29,7 @@ var doodler = (function(){
 		wf: 10},
 	dockedTools: true,
     dimensionsOld: null,
+    drawFancyOutlines: true,
 	drawGridOutside: true,
     drawGridLines: true,
     editMode:false,
@@ -92,6 +93,7 @@ var doodler = (function(){
     overlayImgStyle: "",
     overlayBlend: "multiply",
     overlayCanvas: null,
+    overlayHoverCanvas: null,
     overlayCtx: null,
     /** Warehouse object */
     rec:{Row:0,Name:"Warehouse Name"},
@@ -203,6 +205,16 @@ var doodler = (function(){
         ir.hide("layerNamePop");
         self.popupShowing = false;
         self.loadLayerList(self.layers[self.currentLayer].layerIndex);
+    },
+    pop: function(id){
+        self.popupShowing = true;
+        var popup = ir.get(id);
+        popup.style.transform = "translateX(-50%) translateY(-0%)";
+    },
+    unpop: function(id){
+        self.popupShowing = false;
+        var popup = ir.get(id);
+        popup.style.transform = "translateX(-50%) translateY(-120%)";
     },
 	switchLayer: function(layerIndex, allowChange){
         if(layerIndex==self.currentLayer && allowChange){
@@ -338,6 +350,8 @@ var doodler = (function(){
 			self.fbCanvas.height = ysize;
             self.overlayCanvas.width = xsize;
 			self.overlayCanvas.height = ysize;
+            self.overlayHoverCanvas.width = xsize;
+			self.overlayHoverCanvas.height = ysize;
 		}
         
         if(self.fbCanvas){
@@ -498,7 +512,7 @@ var doodler = (function(){
 			htm += `<div class='stampBtn' style='width:200px;height:200px;line-height:200px;transform: unset;' title='${style.name}' onclick='doodler.changeStylePreset(null, ${i})'><img src='${style.img}' style='transform: unset;' ></div>`;
 		}
 		container.innerHTML = htm;
-		ir.show("stylePresetPopup");	
+		self.pop("stylePresetPopup");	
 	},
 	changeBackgroundColor: function(evt){
 		  self.backgroundColor = evt.target.value;
@@ -529,7 +543,7 @@ var doodler = (function(){
         }
         self.overlayImg = null;
 		if(id!= null){
-			ir.hide("stylePresetPopup");
+			doodler.unpop("stylePresetPopup");
 			doodler.popupShowing = false;
 		}
         //self.loadLayerList(self.layers[self.currentLayer].layerIndex);
@@ -622,10 +636,11 @@ var doodler = (function(){
     },
     selectHatchTexture: function(hid){
         Modes.Hatching.changeImageStyle({target:{value:hid}});
-        ir.hide("hatchPopup");
+        doodler.unpop("hatchPopup");
         doodler.popupShowing = false;
     },
     setDynamicBrush: function(evt){
+        self.brushName = evt.target.value;
         self.filter = "url(\'#"+evt.target.value+"\')";
     },
     updateFrameBuffer: function(canv, ct){
@@ -654,7 +669,7 @@ var doodler = (function(){
 		self.layers.forEach(function(layer, index){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
-			self.drawFloorMask(canvas, ctx, index);	
+			//self.drawFloorMask(canvas, ctx, index);	
             if(doodler.stopStamps){
 
             }else{
@@ -724,8 +739,62 @@ var doodler = (function(){
         self.drawTextFields(canvas, ctx);
         self.drawDoodleOverlay(canvas, ctx);
         if(!self.pinchZoom){
+            self.overlayHoverCtx.clearRect(0,0,self.overlayHoverCanvas.width, self.overlayHoverCanvas.height);
+            var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
+            var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
+            self.overlayHoverCtx.globalAlpha = 0.8;
+            self.overlayHoverCtx.filter = "none";
+            self.mouseMode.drawCursor(self.overlayHoverCtx, xpos, ypos,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
+            self.overlayHoverCtx.globalAlpha = 1;
             
-            self.mouseMode.drawCursor(self.ctx, self.mouseX, self.mouseY,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
+            
+            //New outline border
+            var oSize=1;
+            ctx.filter = 'drop-shadow('+oSize+'px '+oSize+'px red)';
+            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                self.globalOffsetY,
+                self.overlayHoverCanvas.width*self.zoomLevel,
+                self.overlayHoverCanvas.height*self.zoomLevel);
+            ctx.filter = 'drop-shadow(-'+oSize+'px '+oSize+'px red)';
+            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                self.globalOffsetY,
+                self.overlayHoverCanvas.width*self.zoomLevel,
+                self.overlayHoverCanvas.height*self.zoomLevel);
+            ctx.filter = 'drop-shadow('+oSize+'px -'+oSize+'px red)';
+            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                self.globalOffsetY,
+                self.overlayHoverCanvas.width*self.zoomLevel,
+                self.overlayHoverCanvas.height*self.zoomLevel);
+            ctx.filter = ' drop-shadow(-'+oSize+'px -'+oSize+'px red)';
+            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                self.globalOffsetY,
+                self.overlayHoverCanvas.width*self.zoomLevel,
+                self.overlayHoverCanvas.height*self.zoomLevel);
+            
+            
+            
+            ctx.filter = "none";
+            
+            
+            
+            /*ctx.drawImage(self.overlayHoverCanvas,
+                -self.globalOffsetX/self.zoomLevel,
+                -self.globalOffsetY/self.zoomLevel,
+                self.overlayHoverCanvas.width/self.zoomLevel,
+                self.overlayHoverCanvas.height/self.zoomLevel,
+				0, 
+                0, 
+                Math.floor(self.overlayHoverCanvas.width),
+                Math.floor(self.overlayHoverCanvas.height));*/
+            
+            ctx.drawImage(self.overlayHoverCanvas,
+                self.globalOffsetX,
+                self.globalOffsetY,
+                self.overlayHoverCanvas.width*self.zoomLevel,
+                self.overlayHoverCanvas.height*self.zoomLevel);
+            
+                        
+
         }
         
         
@@ -839,13 +908,14 @@ var doodler = (function(){
                     ct.drawImage(layer.hatchImg, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
                 }
             }else{
-                var tmpCt = self.tmpCtx;
+                ct.drawImage(layer.hatchCanvas, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
+                /*var tmpCt = self.tmpCtx;
                 //tmpCt.save();
                 // draw the overlay
                 tmpCt.clearRect(0,0,self.tmpCanvas.width, self.tmpCanvas.height);
                 tmpCt.drawImage(layer.hatchImg, 0,0, layer.hatchImg.width, layer.hatchImg.height);
 
-                tmpCt.globalCompositeOperation = "destination-in";
+                //tmpCt.globalCompositeOperation = "destination-in";
 
                 // draw the full logo
                 tmpCt.drawImage(layer.hatchCanvas, 0,0, layer.hatchCanvas.width, layer.hatchCanvas.height);
@@ -858,9 +928,19 @@ var doodler = (function(){
 
                 }else{
                     ct.drawImage(self.tmpCanvas, 0, 0, layer.hatchCanvas.width, layer.hatchCanvas.height);
-                }
+                }*/
+                
+                
             }
 		}
+    },
+    setSoftShadowSize: function(){
+      self.softShadowSize = ir.vn("softShadowRange");
+        self.updateFrameBuffer();
+    },
+    setOutlineSize: function(){
+      self.outlineSize = ir.vn("outlineRange");
+        self.updateFrameBuffer();
     },
 	drawDoodleMap: function(canv, ct, index, skipZoomPos){
 		var canvas = canv || self.canvas;
@@ -880,28 +960,32 @@ var doodler = (function(){
                     //self.filter = "url(\'#squiggly-0\')";
                     var filter = ""; //self.filter;
                     
-                    if(self.mouseIsDown){
+                    /*if(self.mouseIsDown){
                     
                     }
-                    else{
+                    else{*/
                         
-                        
-                        //Soft shadow outline
-                        ctx.filter = filter + 'drop-shadow(0px 0px '+Modes.SnapToGrid.hatchSize+'px '+Modes.SnapToGrid.fillColor+')';
-                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                        if(self.drawFancyOutlines){
+                            //Soft shadow outline
+                            
+                            var hSize = self.softShadowSize || 50;
+                            var oSize = self.outlineSize || 1;
+                            ctx.filter = filter + 'drop-shadow(0px 0px '+hSize+'px '+Modes.SnapToGrid.fillColor+')';
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 
-                        
-                        
-                        //New outline border
-                        ctx.filter = filter + 'drop-shadow('+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
-                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
-                        ctx.filter = filter + 'drop-shadow(-'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
-                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
-                        ctx.filter = filter + 'drop-shadow('+Modes.SnapToGrid.borderSize+'px -'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
-                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
-                        ctx.filter = filter + ' drop-shadow(-'+Modes.SnapToGrid.borderSize+'px -'+Modes.SnapToGrid.borderSize+'px '+Modes.SnapToGrid.outlineColor+')';
-                        ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
-                    }
+
+
+                            //New outline border
+                            ctx.filter = filter + 'drop-shadow('+oSize+'px '+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            ctx.filter = filter + 'drop-shadow(-'+oSize+'px '+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            ctx.filter = filter + 'drop-shadow('+oSize+'px -'+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            ctx.filter = filter + ' drop-shadow(-'+oSize+'px -'+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                        }
+                    //}
                     //Actual doodle map
                     //ctx.filter = 'none';
                     filter = "none";
@@ -912,6 +996,9 @@ var doodler = (function(){
 			}
 		}
 	},
+    debugCanvas: function(canv){
+        window.open(canv.toDataURL());
+    },
     drawFloorMask: function(canvas, ctx, index, skipZoomPos){
 		//return;
 		var canv = canvas || self.canvas;
@@ -1120,19 +1207,69 @@ var doodler = (function(){
     	//ctx.msImageSmoothingEnabled = true;
     	//ctx.imageSmoothingEnabled = true;
     },
+    centerMouse: function(){
+        self.mouseX = self.canvas.width/2;
+        self.mouseY = self.canvas.height/2;
+        
+    },
     /* */
     drawDoodleOverlay: function(canv, ct){
 		var ctx = ct || self.ctx;
     	var filter = self.filter;
         //ctx.filter = filter;
+        
+        ctx.globalAlpha = 0.8;
+
+        if(self.shiftDown){
+            self.overlayCtx.save()
+            self.overlayCtx.globalCompositeOperation = "source-in";
+			self.overlayCtx.fillStyle = "rgb(237, 148, 148)";
+			self.overlayCtx.fillRect(0,0,self.overlayCanvas.width, self.overlayCanvas.height);
+            self.overlayCtx.restore();
+        }
+        
+        //var ctx = data.doodleCtx;
+        //doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+        //doodler.tmpCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
+        var layer = self.layers[self.currentLayer];
+        if(layer.hatchImg && !self.shiftDown){
+            doodler.overlayCtx.globalCompositeOperation = "source-atop";
+            doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+            doodler.overlayCtx.globalCompositeOperation = "source-over";
+        }
+        //ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+        //Draw tmpCanvas to hatchCtx
+        /*ctx.globalCompositeOperation = "source-atop";
+        ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+        ctx.globalCompositeOperation = "source-over";*/
+
+        
         ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+        ctx.globalAlpha = 1;
         //ctx.filter = "none";
     },
     drawOverlayCommit: function(xpos, ypos, data){
         //TODO
-        data.doodleCtx.fillStyle="white";
+        if(self.shiftDown){
+            data.doodleCtx.save();
+            data.doodleCtx.globalCompositeOperation = "destination-out";
+            data.doodleCtx.fillStyle = 'black';
+        }
+        else{
+            data.doodleCtx.fillStyle="white";
+        }
+        
+        var layer = self.layers[self.currentLayer];
+        doodler.overlayCtx.globalCompositeOperation = "source-atop";
+        doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+        doodler.overlayCtx.globalCompositeOperation = "source-over";
+        
         data.doodleCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        if(self.shiftDown){
+            data.doodleCtx.restore();
+        }
         doodler.overlayCtx.fillStyle = "rgba(0,0,0,0)";
+        //doodler.debugCanvas(doodler.overlayCanvas)
         doodler.overlayCtx.clearRect(0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
         doodler.needsRefresh = true;
     },
@@ -1747,11 +1884,13 @@ var doodler = (function(){
                 doodler.changeStylePreset(null, null, {
                     name: "World Map",
                     img: "images/worldmap.png",
-                    overlay: "overlays/parchment-paper-light-texture.jpg",
+                    overlay: "",
                     blend: "multiply",
-                    hatch: "w2",
+                    /*overlay: "overlays/parchment-paper-light-texture.jpg",
+                    blend: "multiply",*/
+                    hatch: "d2",
                     floor: "d2",
-                    fullHatch: true,
+                    fullHatch: false,
                 })
                 self.drawGridLines = false;
             }
@@ -1779,6 +1918,13 @@ var doodler = (function(){
 			self.overlayCtx = self.overlayCanvas.getContext("2d");
 			self.overlayCtx.fillStyle = "rgba(0,0,0,0)";
             self.overlayCtx.fillRect(0,0,self.overlayCanvas.width,self.overlayCanvas.height);
+            
+            self.overlayHoverCanvas = document.createElement("canvas");
+			self.overlayHoverCanvas.width = xsize;
+			self.overlayHoverCanvas.height = ysize;
+			self.overlayHoverCtx = self.overlayHoverCanvas.getContext("2d");
+			self.overlayHoverCtx.fillStyle = "rgba(0,0,0,0)";
+            self.overlayHoverCtx.fillRect(0,0,self.overlayHoverCanvas.width,self.overlayHoverCanvas.height);
             
             self.fbCanvas = document.createElement("canvas");
 			self.fbCanvas.width = xsize;
@@ -2051,10 +2197,10 @@ var doodler = (function(){
         doodler.stamps.push(stampobj);
     },
     showGenerateDungeonPopup: function(){
-        ir.show("randomGenPopup");  
+        doodler.pop("randomGenPopup");  
     },
     generateDungeon: function(){
-        ir.hide("randomGenPopup");
+        doodler.unpop("randomGenPopup");
         //Options from user
         //Width
         //Height
@@ -2685,7 +2831,7 @@ var doodler = (function(){
 		ctx.fillRect(0,0,canv.width, canv.height);
 		self.drawCrossHatchMask(canv, ctx, i, true);
 		self.drawDoodleMap(canv, ctx, i, true);	
-		self.drawFloorMask(canv, ctx, i, true);
+		//self.drawFloorMask(canv, ctx, i, true);
 		self.drawStamps(canv, ctx, i, true);
 		
 		var canvSmall = document.createElement("canvas");
@@ -2976,12 +3122,12 @@ var doodler = (function(){
             self.doodleEndY = ypos;
         }*/
         self.shiftDown = evt.shiftKey;
-        
+        var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
 		}
     },
       onKeyDown: function(evt){
@@ -3161,11 +3307,12 @@ var doodler = (function(){
 		}*/
         self.shiftDown = evt.shiftKey;
 		
+		var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			Modes.Move.mouseMove(xpos, ypos, {isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseMove(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
+			self.mouseMode.mouseMove(xpos, ypos,{isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
 		}
         
     },
@@ -4070,11 +4217,11 @@ var doodler = (function(){
     },
     showAboutPopup: function(){
         self.popupShowing = true;
-        ir.show("aboutPopup");
+        doodler.pop("aboutPopup");
     },
     showHowToPopup: function(){
         self.popupShowing = true;
-        ir.show("howToPopup");
+        doodler.pop("howToPopup");
     },
     showDimensionPopup: function(){
     	/*ir.show("dimensionPopup");
@@ -4166,6 +4313,18 @@ var doodler = (function(){
 		self.drawGridOutside = !self.drawGridOutside;
         self.updateFrameBuffer();
 	},
+    changeBrushTurbulence:function(evt){
+        ir.get(doodler.brushName+"-turbulence").setAttribute("numOctaves", evt.target.value);
+        self.updateFrameBuffer();
+    },
+    changeBrushBaseFreq:function(evt){
+        ir.get(doodler.brushName+"-turbulence").setAttribute("baseFrequency", evt.target.value);
+        self.updateFrameBuffer();
+    },
+    toggleFancyOutlines:function(evt){
+        self.drawFancyOutlines = ir.bool(evt.target);
+        self.updateFrameBuffer();
+    },
 	toggleToolDock: function(override){
 		self.dockedTools = override || !self.dockedTools;
 		
@@ -4278,9 +4437,11 @@ var doodler = (function(){
         
         if(evt.shiftKey){
             htm += "Subtract " + lclick;
+        }else{
+            htm += self.kbd("Subtract", "Shift") + " " + lclick;
         }
         if(!evt.ctrlKey && !evt.shiftKey){
-            htm += "Zoom "+scroll + msp + self.kbd("Move","M");
+            htm += msp + "Zoom "+scroll + msp + self.kbd("Move","M");
         }
         bar.innerHTML = htm;
         

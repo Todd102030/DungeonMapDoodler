@@ -71,29 +71,62 @@ var Hatching = (function(){
 		draw: function(xpos, ypos, data){
 			var size = self.size;
 			var border=self.borderSize;
-			var ctx = data.hatchCtx;
+			var zoom = doodler.zoomLevel;
 			var hatchSize = self.hatchSize;
 			// Radii of the white glow.
 			var innerRadius = self.size * 0.15;
 			var outerRadius = self.size*2+hatchSize;
 			// Radius of the entire circle.
 			var radius = self.size*2.1+hatchSize;
-
-			var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
+            
+            //hatchCtx is part of the layer object, need to paste down a circle of the hatchimg from layer.hatchImg onto hatchCtx/Canvas, then in doodle drawCrossHatchMask just draw hatchCanvas as normal
+            // if we change hatchImg then we'll be pasting down a new circle of stuff, but unless we clear hatchCanvas, it should now have two different textures pasted onto it
+            
+			/*var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
 			gradient.addColorStop(0, self.fillColor);
 			gradient.addColorStop(1, 'transparent');
-
 			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
-
 			ctx.fillStyle = gradient;
-			ctx.fill();
+			ctx.fill();*/
+            
+            var drawOnBG = ir.bool("drawFGBG");
+            
+            if(!drawOnBG){
+                var ctx = data.doodleCtx;
+                doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                //Draw circle to tmpCanvas
+                doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
+                doodler.tmpCtx.globalCompositeOperation = "source-in";
+                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                doodler.tmpCtx.globalCompositeOperation = "source-over";
+                //Draw tmpCanvas to hatchCtx
+                ctx.globalCompositeOperation = "source-atop";
+                ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                ctx.globalCompositeOperation = "source-over";
+            }else{
+                var ctx = data.hatchCtx;
+                doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                //Draw circle to tmpCanvas
+                doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
+                doodler.tmpCtx.globalCompositeOperation = "source-in";
+                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.hatchCanvas.width, data.hatchCanvas.height)
+                doodler.tmpCtx.globalCompositeOperation = "source-over";
+                //Draw tmpCanvas to hatchCtx
+                ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            }
+            
+            
+            
+            
+            
+            
             doodler.updateFrameBuffer();
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
+			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
 			ctx.stroke();
 		},
 		/**
@@ -142,8 +175,18 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						<input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Hatching</label><br>
                         `;
+            htm += `<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>`
+            htm +='<div class="tooltipParent">\
+                <div class="toggle">\
+                    <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />\
+                    <label for="drawFG">Foreground</label>\
+                    <input type="radio" name="drawFGBG" value="1" id="drawBG" />\
+                    <label for="drawBG">Background</label>\
+                </div>\
+                <div class="tooltipError">A message popup above toggle?</div>\
+            </div>';
 			
-			htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' style='max-width:100px;' onchange='Modes.Hatching.changeImageStyle(event)'>`;
+			/*htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' style='max-width:100px;' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";
 			htm += "<option name='JPCross' value='hatchingImgJPCrosshatch'>Dense Hatching</option>";
 			htm += "<option name='JPHalftone' value='hatchingImgJPHalftone'>Drawn Halftone</option>";
@@ -229,7 +272,7 @@ var Hatching = (function(){
 			htm += "<option name='w2' value='w2'>w2</option>";
 			htm += "<option name='w3' value='w3'>w3</option>";
 			htm += "<option name='w4' value='w4'>w4</option>";
-			htm += "</select>";
+			htm += "</select>";*/
 			
 			//<input type='color' value='${self.fillColor}' id='hatchingColor' onchange="Modes.Hatching.changeColor(event, 'fill')">
 						//<label for="hatchingColor">Hatching Color</label><br>

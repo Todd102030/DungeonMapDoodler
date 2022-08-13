@@ -61,7 +61,7 @@ var RoomTool = (function(){
 			var wh = doodler;
             var offX = wh.globalOffsetX;
             var offY = wh.globalOffsetY;
-            var zoom = wh.zoomLevel;
+            var zoom = 1;//wh.zoomLevel;
 			var size = self.size;
 			var border=self.borderSize;
 			var ctx = data.hatchCtx;
@@ -144,12 +144,12 @@ var RoomTool = (function(){
 			if(self.mouseIsDown){
 				self.drawOutlineBox(ctx, xpos, ypos, data);
 			}else{
-				if(self.isSubtractive /*|| data.event.shiftKey*/){
-					ctx.strokeStyle = "rgb(55, 222, 126)";
-				}else{
-					ctx.strokeStyle = "rgb(240,60,60)";
-				}
-				var gridxy = getGridXY(xpos, ypos);
+				if(doodler.shiftDown){
+                    ctx.fillStyle = "rgb(237, 148, 148)";
+                }else{
+                    ctx.fillStyle = "white";
+                }
+				var gridxy = getGridXY2(xpos, ypos);
 				var offx = doodler.globalOffsetX;
 				var offy = doodler.globalOffsetY;
 				var zoom = doodler.zoomLevel;
@@ -172,12 +172,12 @@ var RoomTool = (function(){
 			if(self.isSnapping){
 				var grid1 = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
 				var grid2 = getGridXY2(Math.max(self.doodleStartX,self.doodleEndX), Math.max(self.doodleStartY,self.doodleEndY));
-				ctx.strokeRect(grid1.xpos*zoom+offx, grid1.ypos*zoom+offy, 
-						   Math.abs(grid1.xpos-grid2.xpos)*zoom, Math.abs(grid1.ypos-grid2.ypos)*zoom);
+				ctx.strokeRect(grid1.xpos, grid1.ypos, 
+						   Math.abs(grid1.xpos-grid2.xpos), Math.abs(grid1.ypos-grid2.ypos));
 			}
 			else{
-				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX))*zoom+offx, (Math.min(self.doodleStartY,self.doodleEndY))*zoom+offy, 
-						   Math.abs(self.doodleStartX-self.doodleEndX)*zoom, Math.abs(self.doodleStartY-self.doodleEndY)*zoom);
+				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX)), (Math.min(self.doodleStartY,self.doodleEndY)), 
+						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
 			}
 		},
 		/**

@@ -134,7 +134,7 @@ var SnapToGrid = (function(){
 			var sx = dim.scaleX;
 			var sy = dim.scaleY;
             var zoom = doodler.zoomLevel;
-			var gridxy = getGridXY(xpos, ypos);
+			var gridxy = getGridXY2(xpos, ypos);
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
 			ctx.strokeRect(gridxy.xpos-inset*zoom, gridxy.ypos-inset*zoom, gridxy.step+inset*2*zoom, gridxy.step+inset*2*zoom);

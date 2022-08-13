@@ -160,22 +160,26 @@ table{
 .floatingBtns {
 	/*resize:horizontal;
 	overflow: auto;*/
-    font-size: 0;
+    /*font-size: 0;*/
 }
 
 .floatingControlsLeft{
 	background-color: white;
 	position: fixed;
 	left: 0;
-	top: 60px;
-	width: 50px;
-	text-align: center;
+	top: 41px;
+    width: 250px;
+	text-align: left;
 }
 
 .floatBtn{
 	cursor: pointer;
 	user-select: none;
-	
+    display: inline;
+}
+
+#zoomSizeLabel{
+    display: inline;
 }
 
 .floatingModeTitle{
@@ -306,10 +310,11 @@ table{
     height:auto;
     position:fixed;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateY(-120%);
     top:10%;
 	box-shadow: 0px 5px 20px;
 	border-radius: 15px;
+    transition: transform 0.3s;
     /*min-width: 50%;*/
 }
 
@@ -498,7 +503,7 @@ ul#navigation ul li a {
 }
 
 .bottomTextBox{
-    color: orangered;
+    color: #c33500;
     background: transparent;
     display: flex;
     align-items: center;
@@ -510,6 +515,105 @@ kbd{
     background: transparent;
     border-style: solid;
 }
+
+
+/* BEGIN TOGGLE CSS */
+.toggle {
+  box-sizing: border-box;
+  font-size: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+.toggle input {
+  width: 0;
+  height: 0;
+  position: absolute;
+  left: -9999px;
+}
+.toggle input + label {
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-block;
+  border: solid 1px #DDD;
+  font-size: 1rem;
+  line-height: 140%;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.15s ease-out, color 0.25s ease-out, background-color 0.15s ease-out, box-shadow 0.15s ease-out;
+  /* ADD THESE PROPERTIES TO SWITCH FROM AUTO WIDTH TO FULL WIDTH */
+  /*flex: 0 0 50%; display: flex; justify-content: center; align-items: center;*/
+  /* ----- */
+}
+.toggle input + label:first-of-type {
+  border-radius: 6px 0 0 6px;
+  border-right: none;
+}
+.toggle input + label:last-of-type {
+  border-radius: 0 6px 6px 0;
+  border-left: none;
+}
+.toggle input:hover + label {
+  border-color: #c33500;
+}
+.toggle input:checked + label {
+  background-color: #c33500;
+  color: #FFF;
+  box-shadow: 0 0 10px rgba(102, 179, 251, 0.5);
+  border-color: #c33500;
+  z-index: 1;
+}
+.toggle input:focus + label {
+  outline: dotted 1px #CCC;
+  outline-offset: 0.45rem;
+}
+@media (max-width: 800px) {
+  .toggle input + label {
+    padding: 0.75rem 0.25rem;
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+/* END TOGGLE CSS */
+
+
+
+.tooltipError {
+	resize: none;
+	display: block;
+	opacity: 0;
+	position: absolute;
+	text-align: center;
+	bottom: calc( 0 -100% );
+	left: 0;
+	right: 0;
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: normal;
+	height: auto;
+	box-sizing: border-box;
+	border-radius: 20rem;
+	overflow: hidden;
+	background: #880000;
+	color: white;
+	z-index: 10000;
+	padding: 0.5rem;
+	-webkit-transition: all ease 0.2s;
+	-moz-transition: all ease 0.2s;
+	transition: all ease 0.2s;
+	transform: scale(0);
+	transform-origin: top center;
+}
+.tooltipParent {z-index: unset;position: relative;}
+.tooltipParent:hover .tooltipError, .tooltipParent:hover .tooltip, .tooltipParent:hover + .tooltip, .editCell:hover ~ div, .checkMultiple:hover ~ div {opacity: 1;transform: scale(1);border-radius: 0.5rem;}
+.tooltip:focus .tooltipError, .tooltip:focus .tooltipErrorTD, .tooltipReg:focus .tooltip, .tooltipReg:focus + .tooltip {opacity: 1;transform: scale(1);border-radius: 0.5rem;}
+
 
 #hatchPopupList{
     display:flex;
