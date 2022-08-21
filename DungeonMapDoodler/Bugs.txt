@@ -58,14 +58,14 @@ Drawing hatch layer possibly needs to be theme edited option that toggles code o
 
 
 *****HIGHEST PRIORITIES
- - Make it possible to draw different types of floor map/hatching onto single layer
+ - Make it possible to draw different types of floor map/hatching onto single layer - DONE
  - Improve text layers
    - Put edit box into side menu, update oninput so map updates live
    - Add colour options for text and drop shadow options
    - Add full rotation similar to stamps
    - If possible, add curvy text using bezier curves or something
 - Fix any broken stuff related to change of drawCursor - stamp and text highlights, wall and line tools
-
+* After creating a new map, need to wipe out undo/redo stack
 
 
 ***FOR EACH NEW UPDATE***

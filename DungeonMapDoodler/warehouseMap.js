@@ -100,6 +100,7 @@ var doodler = (function(){
     /** SeedPickup objects for this warehouse */
     seeds:[],
 	stamps: [],
+	sortedStamps: [],
     //Holds all text displayed on screen
     textFields: [],
     textId: null,
@@ -293,6 +294,76 @@ var doodler = (function(){
         }
         self.walls.push(new Wall(Number(sx.toFixed(2)), Number(sy.toFixed(2)), Number((ex-sx).toFixed(2)), Number((ey-sy).toFixed(2))));
     },
+    recalcSize: function(){
+        var xfeet = ir.vn("dimensionPopupX");
+    	var yfeet = ir.vn("dimensionPopupY");
+    	var stepsize = ir.vn("dimensionPopupStep");
+    	var boxsize = ir.vn("dimensionPopupBoxSize");
+        var sizex = xfeet/stepsize * boxsize;
+        var sizey = yfeet/stepsize * boxsize;
+        
+        ir.set("dimensionSize", sizex + "px x " + sizey + "px");
+        if(sizex > 3000 || sizey > 3000){
+            ir.set("dimensionSize", sizex + "px x " + sizey + "px<br>(Size is above recommended resolution, issues may occur on less powerful computers)");
+        }
+        
+    },
+    clickDimension: function(sizeFt){
+        ir.set("dimensionPopupX", sizeFt);
+        ir.set("dimensionPopupY", sizeFt);
+        ir.set("dimensionPopupStep", 5);
+        ir.set("dimensionPopupBoxSize", 70);
+        ir.get("dimensionDetails").open = false;
+        doodler.recalcSize();
+    },
+    clickCustomDimension: function(){
+        ir.get("dimensionDetails").open = true;
+    },
+    setDungeonDefaults: function(){
+        console.log("setting dungeon defaults");
+
+        self.worldMap = false;
+        self.clickMode({target:ir.get("modeSnapToGrid")});
+        
+        self.filter = "none";
+        Modes.Hatching.fullHatch = true;
+        doodler.changeStylePreset(null, null, {
+            name: "Hand Drawn",
+            img: "images/HandDrawn.png",
+            overlay: "",
+            blend: "multiply",
+            hatch: "hatchingImg",
+            floor: "plainWhite",
+            fullHatch: true,
+        })
+        self.drawGridLines = true;
+        ir.set("outlineRange", 3);
+        doodler.setOutlineSize()
+    },
+    setWorldDefaults: function(){
+        console.log("setting world defaults");
+        self.worldMap = true;
+        self.clickMode({target:ir.get("modeDoodle")});
+		
+        
+        self.filter = "url(\'#displacementFilter\')";
+        Modes.Hatching.fullHatch = true;
+        doodler.changeStylePreset(null, null, {
+            name: "World Map",
+            img: "images/worldmap.png",
+            overlay: "",
+            blend: "multiply",
+            /*overlay: "overlays/parchment-paper-light-texture.jpg",
+            blend: "multiply",*/
+            hatch: "w2",
+            floor: "d2",
+            fullHatch: true,
+        })
+        self.drawGridLines = false;
+        ir.set("outlineRange", -2);
+        doodler.setOutlineSize();
+        
+    },
 	applyDimensions: function(callback, skipHatchImg){   
         doodler.popupShowing=false;
 		ir.hide("dimensionPopup");
@@ -300,6 +371,7 @@ var doodler = (function(){
     	var yfeet = ir.vn("dimensionPopupY");
     	var stepsize = ir.vn("dimensionPopupStep");
     	var boxsize = ir.vn("dimensionPopupBoxSize");
+    	var mapType = ir.v("dimensionMapType");
     	self.drawRough = ir.bool("dimensionPopupBoxIsRough");
 		ir.set("drawRoughCheck", self.drawRough);
     	var dim = self.dimensions;
@@ -326,6 +398,17 @@ var doodler = (function(){
 		var ysize = dim.footPixel * dim.hf;
 		self.hatchImg = null;
 		self.hatchGenerated = false;
+        self.floorImg = null;
+		self.floorGenerated = false;
+        
+        console.log("maptype is ", mapType)
+        if(mapType == "dungeon"){
+            self.setDungeonDefaults();
+        }else{
+            self.setWorldDefaults();
+        }
+        
+        
 		
 		if(self.hatchCanvas){
 			self.layers.forEach(function(layer, i){
@@ -337,6 +420,8 @@ var doodler = (function(){
 				layer.outlineCanvas.height = ysize;
 				layer.hatchImg = null;
 				layer.hatchGenerated = false;
+                layer.floorImg = null;
+				layer.floorGenerated = false;
 			})
 			self.hatchCanvas.width = xsize;//self.canvas.width;
 			self.hatchCanvas.height = ysize;//self.canvas.height;
@@ -539,6 +624,10 @@ var doodler = (function(){
             ir.set("overlayBlend", style.blend);
             ir.set("hatchImageStyle", style.hatch);
             ir.set("hatchFloorStyle", style.floor);
+            var bg = ir.get("backgroundTexture");
+            bg.style.backgroundImage = "url('"+ir.get(style.hatch).src+"') ";
+            var fg = ir.get("foregroundTexture");
+            fg.style.backgroundImage = "url('"+ir.get(style.floor).src+"') ";
             
         }
         self.overlayImg = null;
@@ -664,12 +753,13 @@ var doodler = (function(){
 		}*/
         
         //Sort stamps on y axis
-        doodler.stamps.sort(function(a, b){return a.y>b.y})
+        doodler.sortedStamps = doodler.stamps.slice();
+        doodler.sortedStamps.sort(function(a, b){return a.y>b.y})
         
 		self.layers.forEach(function(layer, index){
 			self.drawCrossHatchMask(canvas, ctx, index);
 			self.drawDoodleMap(canvas, ctx, index);	
-			//self.drawFloorMask(canvas, ctx, index);	
+			self.drawFloorMask(canvas, ctx, index);	//ONLY USED TO CREATE LAYER.FLOORIMG VARIABLE, REWORK THIS
             if(doodler.stopStamps){
 
             }else{
@@ -1028,6 +1118,7 @@ var doodler = (function(){
             
             var img = new Image();
             img.src = ir.get(layer.floorStyle).src;
+            console.log("Generating floor style from " + layer.floorStyle);
             /// draw the image to be clipped
             //ctx.drawImage(img, 0, 0, 500, 500);
             //////
@@ -1069,7 +1160,7 @@ var doodler = (function(){
             
 		}
 		
-        
+        /*
 		if(layer.floorImg && layer.floorImg.complete && layer.doodleCanvas){
 			var tmpCt = self.tmpCtx;
 			tmpCt.save();
@@ -1094,7 +1185,7 @@ var doodler = (function(){
 				ct.drawImage(self.tmpCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 			}
             ct.filter = "none";
-		}
+		}*/
     },
     drawCurrentLoc: function(){
         self.ctx.lineWidth = 1;
@@ -1212,6 +1303,67 @@ var doodler = (function(){
         self.mouseY = self.canvas.height/2;
         
     },
+    initFloorImg: function(){
+        
+		var dim = self.dimensions;
+		var sX =self.dimensions.scaleX;
+		var sY =self.dimensions.scaleY;
+		var xfeet = dim.wf;
+    	var yfeet = dim.hf;
+		var step = dim.stepSize * dim.footPixel;
+		var stepX = xfeet/dim.stepSize;
+		var stepY = yfeet/dim.stepSize;
+        var layer = self.layers[self.currentLayer];
+		
+		//Skip if layer not visible, skipZoom is false, 
+		if(layer.floorStyle==''){
+            return;
+        }
+		if((!layer.visible || !layer.showFloor) && !skipZoomPos){
+			return;
+		}
+		
+        var img = new Image();
+        img.src = ir.get(layer.floorStyle).src;
+        console.log("Generating floor style from " + layer.floorStyle);
+        /// draw the image to be clipped
+        //ctx.drawImage(img, 0, 0, 500, 500);
+        //////
+        img.onload = function(){
+            var iw = img.naturalWidth*Modes.Hatching.renderScale;
+            var ih = img.naturalHeight*Modes.Hatching.renderScale;
+            var xplus = iw*(1/sX);//*self.zoomLevel;
+            var yplus = ih*(1/sY);//*self.zoomLevel;
+
+
+            layer.floorGenerated = true;
+            var canv2 = document.createElement("canvas");
+            //By foot count
+            canv2.width = xfeet*dim.footPixel+1;
+            canv2.height = yfeet*dim.footPixel+1;
+            //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+            var ctx2 = canv2.getContext("2d");
+            ctx2.lineWidth = 1;
+            ctx2.strokeStyle = "#fff";
+            for(var x=0;x<canv2.width;x+=xplus){
+                for(var y=0;y<canv2.height;y+=yplus){					
+                    ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
+                }
+            }
+            var img2 = new Image();
+            var dataurl = canv2.toDataURL();
+
+            img2.onload = function() {
+                img2.width = canv2.width;
+                img2.height = canv2.height;
+                layer.floorImg = img2;
+                self.updateFrameBuffer();
+            };
+            img2.src = dataurl;
+
+            layer.floorGenerated = true;
+        }
+    },
     /* */
     drawDoodleOverlay: function(canv, ct){
 		var ctx = ct || self.ctx;
@@ -1234,7 +1386,15 @@ var doodler = (function(){
         var layer = self.layers[self.currentLayer];
         if(layer.hatchImg && !self.shiftDown){
             doodler.overlayCtx.globalCompositeOperation = "source-atop";
-            doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+            if(ir.bool("drawFGBG")){
+                if(layer.hatchImg != null){
+                    doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                }
+            }else{
+                if(layer.floorImg != null){
+                    doodler.overlayCtx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                }
+            }
             doodler.overlayCtx.globalCompositeOperation = "source-over";
         }
         //ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
@@ -1242,31 +1402,61 @@ var doodler = (function(){
         /*ctx.globalCompositeOperation = "source-atop";
         ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
         ctx.globalCompositeOperation = "source-over";*/
-
         
+        ctx.filter = 'drop-shadow(0px 0px 5px red)';
+        ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+
+        ctx.filter = 'none';
         ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
         ctx.globalAlpha = 1;
         //ctx.filter = "none";
     },
     drawOverlayCommit: function(xpos, ypos, data){
         //TODO
+        var dobg = ir.bool("drawFGBG");
         if(self.shiftDown){
-            data.doodleCtx.save();
-            data.doodleCtx.globalCompositeOperation = "destination-out";
-            data.doodleCtx.fillStyle = 'black';
+            if(dobg){
+                data.hatchCtx.save();
+                data.hatchCtx.globalCompositeOperation = "destination-out";
+                data.doodleCtx.fillStyle = 'black';
+            }else{
+                data.doodleCtx.save();
+                data.doodleCtx.globalCompositeOperation = "destination-out";
+                data.doodleCtx.fillStyle = 'black';
+            }
+            
         }
         else{
-            data.doodleCtx.fillStyle="white";
+            if(dobg){
+                data.hatchCtx.fillStyle="white";
+            }
+            else{
+                data.doodleCtx.fillStyle="white";
+            }
+            
         }
         
         var layer = self.layers[self.currentLayer];
         doodler.overlayCtx.globalCompositeOperation = "source-atop";
-        doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-        doodler.overlayCtx.globalCompositeOperation = "source-over";
+        if(dobg){
+            doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+        }else{
+            doodler.overlayCtx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+        }
         
-        data.doodleCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        doodler.overlayCtx.globalCompositeOperation = "source-over";
+        if(dobg){
+            data.hatchCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        }else{
+            data.doodleCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        }
         if(self.shiftDown){
-            data.doodleCtx.restore();
+            if(dobg){
+                data.hatchCtx.restore();
+            }
+            else{
+                data.doodleCtx.restore();
+            }
         }
         doodler.overlayCtx.fillStyle = "rgba(0,0,0,0)";
         //doodler.debugCanvas(doodler.overlayCanvas)
@@ -1466,7 +1656,7 @@ var doodler = (function(){
     },
 	drawStamps: function(canv,ct, index, skipZoomPos){
 		var ctx = ct || self.ctx;
-        var stamps = self.stamps;
+        var stamps = self.sortedStamps;
         var sX =self.dimensions.scaleX;
 		var sY =self.dimensions.scaleY;
         var layerIdx = self.layers[index].layerIndex;
@@ -1861,6 +2051,7 @@ var doodler = (function(){
 			ir.set("dimensionPopupX", xsize);
 			ir.set("dimensionPopupY", ysize);
 			ir.set("dimensionPopupBoxSize", 70);
+            doodler.recalcSize()
 
             self.applyDimensions();
 			ir.set("drawRoughCheck", self.drawRough);
@@ -1877,23 +2068,21 @@ var doodler = (function(){
 			self.addLayer();
             
             
-            self.worldMap = true;
-            if(self.worldMap){
-                self.filter = "url(\'#ripple1\')";
+            
+           /* if(self.worldMap){
+                self.filter = "url(\'#displacementFilter\')";
                 Modes.Hatching.fullHatch = true;
                 doodler.changeStylePreset(null, null, {
                     name: "World Map",
                     img: "images/worldmap.png",
                     overlay: "",
                     blend: "multiply",
-                    /*overlay: "overlays/parchment-paper-light-texture.jpg",
-                    blend: "multiply",*/
-                    hatch: "d2",
+                    hatch: "w2",
                     floor: "d2",
                     fullHatch: false,
                 })
                 self.drawGridLines = false;
-            }
+            }*/
 			
 			xsize = self.dimensions.footPixel * self.dimensions.wf;
 			ysize = self.dimensions.footPixel * self.dimensions.hf;
@@ -1967,6 +2156,7 @@ var doodler = (function(){
 	        }
 			
 			//Things to call once everything is all loaded
+            self.initFloorImg();
 			self.clickMode({target:ir.get("modeSnapToGrid")});
 			self.updateCurrentImage();
 			self.toggleToolDock(true);
@@ -3124,10 +3314,10 @@ var doodler = (function(){
         self.shiftDown = evt.shiftKey;
         var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
+			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
+			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
     },
       onKeyDown: function(evt){
@@ -3309,10 +3499,10 @@ var doodler = (function(){
 		
 		var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseMove(xpos, ypos, {isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
+			Modes.Move.mouseMove(xpos, ypos, {isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseMove(xpos, ypos,{isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, event:evt});
+			self.mouseMode.mouseMove(xpos, ypos,{isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
         
     },
@@ -3529,7 +3719,7 @@ var doodler = (function(){
       ir.set("locEditCell",selectbox);
     },
     popupSaveImage: function(){
-    	ir.show("saveImagePopup");
+    	doodler.pop("saveImagePopup");
     	self.enableButtons(false);
     },
     popupTextInput: function(xpos, ypos){
@@ -3729,10 +3919,9 @@ var doodler = (function(){
 		self.publishImage(fileName, claimToken);
 		
 	},
-   
 	saveImage: function(){
         doodler.popupShowing=true;
-		ir.show("imageSavePopup");
+		doodler.pop("imageSavePopup");
 		ir.focus("imageSaveName");
 	},
 	saveImageConfirm: function(print){

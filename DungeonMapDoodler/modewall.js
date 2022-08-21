@@ -119,19 +119,19 @@ var Wall = (function(){
             //ctx.stroke();
             
             ctx.beginPath();
-            ctx.arc(self.doodleStartX*zoom+offx || xpos, self.doodleStartY*zoom+offy || ypos, (self.size/2)*doodler.zoomLevel, 0, 2 * Math.PI);
+            ctx.arc(self.doodleStartX || xpos, self.doodleStartY || ypos, (self.size/2)*doodler.zoomLevel, 0, 2 * Math.PI);
             ctx.stroke();
 
             ctx.beginPath();
-            ctx.arc(self.doodleEndX*zoom+offx || xpos, self.doodleEndY*zoom+offy || ypos, (self.size/2)*doodler.zoomLevel, 0, 2 * Math.PI);
+            ctx.arc(self.doodleEndX || xpos, self.doodleEndY || ypos, (self.size/2)*doodler.zoomLevel, 0, 2 * Math.PI);
             ctx.stroke();
             
             
             if(self.doodleEndX != null && self.isDoodling){
                 ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.moveTo(self.doodleStartX*zoom+offx, self.doodleStartY*zoom+offy);
-                ctx.lineTo(self.doodleEndX*zoom+offx || xpos, self.doodleEndY*zoom+offy || ypos);
+                ctx.moveTo(self.doodleStartX, self.doodleStartY);
+                ctx.lineTo(self.doodleEndX || xpos, self.doodleEndY || ypos);
                 ctx.stroke();
             }
 			

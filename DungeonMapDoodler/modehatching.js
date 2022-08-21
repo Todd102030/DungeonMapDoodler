@@ -6,7 +6,7 @@ var Hatching = (function(){
 		fillColor: "white",
 		outlineColor: "black",
 		imageStyle: "hatchingImg",
-		floorStyle: "hatchingImgJPStone",
+		floorStyle: "plainWhite",
         fullHatch: false,
 		hatchSize: 30,
 		renderScale: 1,
@@ -22,14 +22,38 @@ var Hatching = (function(){
 			}
 		},
 		changeImageStyle: function(evt){
-			self.imageStyle = evt.target.value;// ir.v("hatchImageStyle");
-			doodler.hatchGenerated = false;
-			doodler.hatchStyleImage = self.imageStyle;
+            //only gets set if clicked from texture images, null otherwise. Overrides the drawFGBG value;
+			var doBackground = doodler.doBackground;
+            
 			var layer = doodler.layers[doodler.currentLayer];
-			layer.hatchStyle = self.imageStyle;
-			layer.hatchImg = null;
-			layer.hatchGenerated = false;
+            var doBg = ir.vn("drawFGBG")
+            if(doBackground != null && doBackground>0){
+                doBg = doBackground == 1;
+            }
+            if(doBg == 1){
+                self.imageStyle = evt.target.value;// ir.v("hatchImageStyle");
+                doodler.hatchStyleImage = self.imageStyle;
+                layer.hatchStyle = self.imageStyle;
+                layer.hatchImg = null;
+                layer.hatchGenerated = false;
+                console.log("ir.get(layer.hatchStyle).src" , ir.get(layer.hatchStyle).src);
+                var myimg = ir.get("backgroundTexture");
+                myimg.style.backgroundImage = "url('"+ir.get(layer.hatchStyle).src+"') ";
+            }
+            else{
+                self.floorStyle = evt.target.value;//ir.v("hatchFloorStyle");
+                doodler.floorStyle = self.floorStyle;
+                layer.floorStyle = self.floorStyle;
+                layer.floorImg = null;
+                layer.floorGenerated = false;
+                console.log("ir.get(layer.floorStyle).src" , ir.get(layer.floorStyle).src);
+                var myimg = ir.get("foregroundTexture");
+                myimg.style.backgroundImage = "url('"+ir.get(layer.floorStyle).src+"') ";
+            }
+			doodler.doBackground = 0;
+            
             doodler.updateFrameBuffer();
+            
 		},
 		changeFloorStyle: function(evt){
 			self.floorStyle = ir.v("hatchFloorStyle");
@@ -97,7 +121,7 @@ var Hatching = (function(){
                 //Draw circle to tmpCanvas
                 doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
                 doodler.tmpCtx.globalCompositeOperation = "source-in";
-                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                doodler.tmpCtx.drawImage(data.floorImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
                 doodler.tmpCtx.globalCompositeOperation = "source-over";
                 //Draw tmpCanvas to hatchCtx
                 ctx.globalCompositeOperation = "source-atop";
@@ -176,15 +200,15 @@ var Hatching = (function(){
 						<input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Hatching</label><br>
                         `;
             htm += `<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>`
-            htm +='<div class="tooltipParent">\
-                <div class="toggle">\
-                    <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />\
-                    <label for="drawFG">Foreground</label>\
-                    <input type="radio" name="drawFGBG" value="1" id="drawBG" />\
-                    <label for="drawBG">Background</label>\
-                </div>\
-                <div class="tooltipError">A message popup above toggle?</div>\
-            </div>';
+            /*htm +=`<div class="tooltipParent">
+                <div class="toggle">
+                    <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />
+                    <label for="drawFG">Foreground</label>
+                    <input type="radio" name="drawFGBG" value="1" id="drawBG" />
+                    <label for="drawBG">Background</label>
+                </div>
+                <div class="tooltipError">A message popup above toggle?</div>
+            </div>`;*/
 			
 			/*htm += `<div class='paramTitle'>Hatch Style</div><br><select id='hatchImageStyle' style='max-width:100px;' onchange='Modes.Hatching.changeImageStyle(event)'>`;
 			htm += "<option name='Hatching' value='hatchingImg'>Hatching</option>";

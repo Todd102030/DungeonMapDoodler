@@ -239,8 +239,9 @@
     <h2>Choose Texture</h2>
     <div id="hatchPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;">
     
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("squareFuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("circleFuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("squarefuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("circlefuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("plainWhite")'><img id='plainWhite' src='images/white.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImg")'><img id='hatchingImg' src='hatching.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgDots")'><img id='hatchingImgDots' src='hatches/dots.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgJPCrosshatch")'><img id='hatchingImgJPCrosshatch' src='hatches/DMD Crosshatch Pattern.png'></div>
@@ -281,6 +282,16 @@
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w2")'><img id='w2' src='hatches/w2.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w3")'><img id='w3' src='hatches/w3.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w4")'><img id='w4' src='hatches/w4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di1")'><img id='di1' src='hatches/di1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di2")'><img id='di2' src='hatches/di2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr1")'><img id='gr1' src='hatches/gr1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr2")'><img id='gr2' src='hatches/gr2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr3")'><img id='gr3' src='hatches/gr3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r1")'><img id='r1' src='hatches/r1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r2")'><img id='r2' src='hatches/r2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r3")'><img id='r3' src='hatches/r3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r4")'><img id='r4' src='hatches/r4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r5")'><img id='r5' src='hatches/r5.JPG'></div>
     
     </div>
     <div class='popupFooter' style='padding-top: 8px'>
@@ -438,7 +449,7 @@
 	<button type="button" class="canvBtn" onclick="doodler.applyCancelLocPopup()">Cancel</button>
 </div>
 	
-<div id='imageSavePopup' class='popupPanel' style='display:none;text-align: center'>
+<div id='imageSavePopup' class='popupPanel' style='text-align: center'>
 	<h2>Export Image File</h2>
 	<table>
 		<tr>
@@ -470,7 +481,7 @@
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm()">Save</button>
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm(true)">Print</button>
-	<button type="button" class="canvBtn" onclick="ir.hide('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.unpop('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
 </div>
     
 <div id='imageExportPopup' class='popupPanel' style='display:none;text-align: center'>
@@ -602,29 +613,71 @@
 <div id='dimensionPopup' class='newPopupPanel' style='display:none;text-align: center'>
     <h2>Create New Map</h2>
 	<table>
+        <tr><td colspan="2">
+            <label>
+              <input class='radioImg' type="radio" name="dimensionMapType" value="dungeon" checked>
+              <img style='width:150px;height:150px' src="images/HandDrawn.png" alt="Dungeon Map">
+            </label>
+
+            <label>
+              <input class='radioImg' type="radio" name="dimensionMapType" value="world">
+              <img style='width:150px;height:150px' src="images/worldmap.png" alt="World Map">
+            </label>
+            </td>
+        </tr>
+        <tr><td colspan="2">
+            <label>
+              <input class='radioImg' onclick='doodler.clickDimension(60)' type="radio" name="dimensionMapSize" value="small">
+              <img style='width:80px;height:40px' src="images/leftclickk.png" alt="Small (840x840px)">
+            </label>
+            <label>
+              <input class='radioImg' onclick='doodler.clickDimension(100)' type="radio" name="dimensionMapSize" value="medium" checked>
+              <img style='width:80px;height:40px' src="images/leftclickk.png" alt="Medium (1400x1400px)">
+            </label>
+            </td>
+        </tr>
+        <tr><td colspan="2">
+            <label>
+              <input class='radioImg' onclick='doodler.clickDimension(150)' type="radio" name="dimensionMapSize" value="big">
+              <img style='width:80px;height:40px' src="images/leftclickk.png" alt="Big (2100x2100px)">
+            </label>
+            <label>
+              <input class='radioImg' onclick='doodler.clickCustomDimension()' type="radio" name="dimensionMapSize" value="custom">
+              <img style='width:80px;height:40px' src="images/leftclickk.png" alt="Custom">
+            </label>
+            </td>
+        </tr>
+    </table>
+    <details id="dimensionDetails">
+    <summary>Advanced Dimensions</summary>
+    
+    <table>
 		<tr>
 			<td class='tdr'>Width in Feet:</td>
-			<td class='tdl'><input type="number" id="dimensionPopupX" value='10'></td>
+			<td class='tdl'><input type="number" id="dimensionPopupX" value='10' oninput='doodler.recalcSize()'></td>
 		</tr>
 		<tr>
 			<td class='tdr'>Height in Feet:</td>
-			<td class='tdl'><input type="number" id="dimensionPopupY" value='10'></td>
+			<td class='tdl'><input type="number" id="dimensionPopupY" value='10' oninput='doodler.recalcSize()'></td>
 		</tr>
         <tr>
 			<td class='tdr'>Feet Per Box:</td>
-			<td class='tdl'><input type="number" value='5' id="dimensionPopupStep" ></td>
+			<td class='tdl'><input type="number" value='5' id="dimensionPopupStep"  oninput='doodler.recalcSize()'></td>
 		</tr>
         <tr>
 			<td class='tdr'>Box Size in Pixels:</td>
-			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize" ></td>
+			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize"  oninput='doodler.recalcSize()'></td>
 		</tr>
 		<tr>
 			<td class='tdr'>Rough Grid Lines:</td>
 			<td class='tdl'><input type="checkbox" id="dimensionPopupBoxIsRough" ></td>
 		</tr>
-        <tr id='newMapWarn' style='display:none;'><td colspan='2'>Warning: this will clear out any doodles you currently have, be sure to save</td></tr>
+        </table>
+    </details>
+    <table>
+        <tr><td colspan='2' id='dimensionSize' style="font-size: 135%;"></td></tr>
+        <tr id='newMapWarn'><td colspan='2'>Warning: this will clear out any doodles you currently have, <br>be sure to save</td></tr>
 	</table>
-    
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
@@ -653,8 +706,22 @@
 	<div id='zoomSizeLabel' style='font-size: 9pt'></div>
 	<div class='floatBtn' onclick="doodler.undo()"><img title='Undo' src='images/undo.png' width='40px' height='40px'></div>
 	<div class='floatBtn' onclick="doodler.redo()"><img title="Redo" src='images/redo.png' width='40px' height='40px'></div>
-	<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>
-	<br><br>
+	<!--<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>-->
+	<br>
+    <div class="tooltipParent">
+                <div class="toggle">
+                    <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />
+                    <label for="drawFG">Foreground</label>
+                    <input type="radio" name="drawFGBG" value="1" id="drawBG" />
+                    <label for="drawBG">Background</label>
+                </div>
+                <div class="tooltipError">A message popup above toggle?</div>
+            </div>
+    <div class='textureImgWrap'>
+        <div class='textureImg' id='foregroundTexture' onclick="doodler.doBackground=2;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/d2.JPG")'></div>
+        <div class='textureImg' id='backgroundTexture' onclick="doodler.doBackground=1;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/w2.JPG")'></div>
+    </div>
+    <br>
     <select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)' >
         <option value='none'>None</option>
         <option value='ripple1'>Rough Coastline</option>
@@ -746,8 +813,8 @@
 			<summary>Tool Options</summary>
 			<div id='toolFlexbox' style='display:flex'>
 				<div class='floatingBtns'>
-                    <div class="tooltipParent"><div class='modeBtn ' title="Move" id='modeMove'  onclick='doodler.clickMode(event)'><img id='imgmMove' src="move.png" width='32px' height='32px'></div><div class="tooltipError"><h3>Move</h3><ul><li>[M] to select tool</li><li>Click and drag to pan around canvas</li></ul><i></i></div></div>
-                    <div class="tooltipParent"><div class='modeBtn tooltip' title="Free Draw" id='modeDoodle' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="tooltipError"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div></div>
+                    <div class='modeBtn tooltip' title="Move" id='modeMove' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Move</h3><ul><li>[M] to select tool</li><li>Click and drag to pan around canvas</li></ul><i></i></div><img id='imgmMove' src="move.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Free Draw" id='modeDoodle' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Snap To Grid" id='modeSnapToGrid' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Snap To Grid</h3><ul><li>[G] to select tool</li><li>Draw locked to the grid</li></ul><i></i></div><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Line Tool" id='modeLine' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Line Tool</h3><ul><li>[L] to select tool</li><li>Click and drag to draw straight line</li></ul><i></i></div><img id='imgmLine' src="line.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Wall Tool" id='modeWall' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Interior Wall Tool</h3><ul><li>[W] to select tool</li><li>Click and drag to draw straight walls inside of a room</li></ul><i></i></div><img id='imgmWall' src="wall.png" width='32px' height='32px'></div>
@@ -1070,7 +1137,7 @@
 				<feDisplacementMap id="displacement" in="SourceGraphic" in2="noise" scale="6"></feDisplacementMap>
 			</filter>
 			<filter id="squiggly-1">
-				<feTurbulence id="turbulence2" baseFrequency="0.02" numOctaves="3" result="noise" seed="1"></feTurbulence>
+				<feTurbulence id="squiggly-1-turbulence" baseFrequency="0.04" numOctaves="3" result="noise" seed="1"></feTurbulence>
 				<feDisplacementMap in="SourceGraphic" in2="noise" scale="8"></feDisplacementMap>
 			</filter>
 			<filter id="squiggly-2">

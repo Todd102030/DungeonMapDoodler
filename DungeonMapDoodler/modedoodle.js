@@ -225,20 +225,12 @@ var Doodle = (function(){
             var zoom = wh.zoomLevel;
             var size = self.size;
             var border=self.borderSize;
-            
-            //TODO: This has something to do with why cursor preview is out of whack with what gets drawn, gotta make it draw on the same size canvas I think, 
-            //but then it needs to be adjusted and scaled appropriately
-            //
-			//var ctx = doodler.overlayCtx;
-            //ctx.clearRect(0,0,wh.overlayCanvas.width, wh.overlayCanvas.height);
 			var hatchSize = self.hatchSize;
 			var expos = self.doodleEndX;
 			var eypos = self.doodleEndY;
             var filter = doodler.filter;
             ctx.filter = filter;
 			ctx.strokeStyle = "rgb(240,60,60)";
-            
-            
             ctx.fillStyle = "white"; //self.fillColor;
             ctx.strokeStyle = "white";//self.fillColor;
             if(doodler.shiftDown){
@@ -248,9 +240,6 @@ var Doodle = (function(){
             var filter = doodler.filter;
             ctx.filter = filter;
 			if(self.shape == Shape.Circle){
-				/*ctx.beginPath();
-				ctx.arc(xpos, ypos, (self.size/2)*zoom, 0, 2 * Math.PI);
-				ctx.stroke();*/
                 ctx.beginPath();
                 ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
                 ctx.fill();
@@ -259,11 +248,6 @@ var Doodle = (function(){
 			else{
 				ctx.strokeRect(xpos-(self.size/2)*zoom,ypos-(self.size/2)*zoom,self.size*zoom,self.size*zoom)
 			}
-			/*ctx.strokeStyle = "rgb(60,200,200)";
-			var radius = self.size/2+self.hatchSize;
-			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
-			ctx.stroke();*/
             ctx.filter = "none";
 		},
 		/**

@@ -82,6 +82,8 @@ function Layer(name, layerIndex, hatchCanvas, hatchCtx, outlineCanvas, outlineCt
 	this.name = name;
 	this.hatchImg = null;
 	this.hatchGenerated = false;
+    this.floorImg = null;
+	this.floorGenerated = false;
     this.floorStyle = floorStyle;
     this.showFloor = showFloor;
 	return this;

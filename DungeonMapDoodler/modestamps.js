@@ -270,12 +270,12 @@ var StampTool = (function(){
 			var offX = doodler.globalOffsetX;
 			var offY = doodler.globalOffsetY;
             
-			self.stampMoveHit = doodler.hitTestStamps({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+			self.stampMoveHit = doodler.hitTestStamps({x:(xpos),y:(ypos),w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
 			if(self.stampMoveHit == null && !self.isMovingStamp && self.stampSelected==null && !self.stampRotater && !self.rotatingStamp){
 				if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
-					var gridxy = getGridXY(xpos, ypos);
+					var gridxy = getGridXY2(xpos, ypos);
 					if(self.stampRatio<1){
 						gridxy.stepx = gridxy.step;
 						gridxy.stepy = gridxy.step / self.stampRatio;
@@ -539,6 +539,7 @@ var StampTool = (function(){
             self.isDoodling = true;
             if(self.stampSelected != null){
                 //Hit test stamp rotater here
+                
                 var st = doodler.stamps[self.stampSelected];
                 var zoom = doodler.zoomLevel;
                 var width = st.w * zoom;
@@ -580,7 +581,6 @@ var StampTool = (function(){
 		},
 		mouseMove: function(xpos, ypos, data){
             self.moved = true;
-			
 			
 			if(self.isMovingStamp){
 				self.moveStamp(self.stampHit,xpos, ypos);
