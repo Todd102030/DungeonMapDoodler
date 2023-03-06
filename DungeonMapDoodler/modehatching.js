@@ -11,7 +11,7 @@ var Hatching = (function(){
 		hatchSize: 30,
 		renderScale: 1,
 		id:8,
-		size: 20,
+		size: 70,
 		shape: Shape.Square,
 		title: "Hatch Settings",
 		changeColor: function(evt, type){
@@ -112,7 +112,8 @@ var Hatching = (function(){
 			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
 			ctx.fillStyle = gradient;
 			ctx.fill();*/
-            
+            var filter = doodler.filter;
+            doodler.tmpCtx.filter = filter;
             var drawOnBG = ir.bool("drawFGBG");
             
             if(!drawOnBG){
@@ -138,20 +139,111 @@ var Hatching = (function(){
                 //Draw tmpCanvas to hatchCtx
                 ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
             }
+            doodler.updateFrameBuffer();
+		},
+		drawOverlay: function(xpos, ypos, data){
+			var size = self.size;
+			var border=self.borderSize;
+			var zoom = doodler.zoomLevel;
+			var hatchSize = self.hatchSize;
+			// Radii of the white glow.
+			var innerRadius = self.size * 0.15;
+			var outerRadius = self.size*2+hatchSize;
+			// Radius of the entire circle.
+			var radius = innerRadius; //self.size*2.1+hatchSize;
+            
+            //hatchCtx is part of the layer object, need to paste down a circle of the hatchimg from layer.hatchImg onto hatchCtx/Canvas, then in doodle drawCrossHatchMask just draw hatchCanvas as normal
+            // if we change hatchImg then we'll be pasting down a new circle of stuff, but unless we clear hatchCanvas, it should now have two different textures pasted onto it
+            
+			/*var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
+			gradient.addColorStop(0, self.fillColor);
+			gradient.addColorStop(1, 'transparent');
+			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
+			ctx.fillStyle = gradient;
+			ctx.fill();*/
+            
+            var drawOnBG = ir.bool("drawFGBG");
+            var filter = doodler.filter;
             
             
-            
-            
-            
-            
+            if(!drawOnBG){
+                var ctx = doodler.overlayCtx;
+       /*         ctx.filter = filter;
+                doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                //Draw circle to tmpCanvas
+				ctx.fillStyle = "white";
+				ctx.strokeStyle = "white";
+                ctx.beginPath();
+                ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.globalCompositeOperation = "source-in";
+                ctx.drawImage(data.doodleCanvas,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                ctx.globalCompositeOperation = "source-over";*/
+                //Draw tmpCanvas to hatchCtx
+                //ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                doodler.tmpCtx.filter = filter;
+                doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                //Draw circle to tmpCanvas
+                doodler.tmpCtx.fillStyle = "white";
+				doodler.tmpCtx.strokeStyle = "white";
+                doodler.tmpCtx.beginPath();
+                doodler.tmpCtx.arc(xpos, ypos, size, 0, 2 * Math.PI);
+                doodler.tmpCtx.fill();
+                //doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
+                doodler.tmpCtx.globalCompositeOperation = "source-in";
+                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                doodler.tmpCtx.filter = "none";
+                //THESE GUYS NEED TO GO SOMEWHERE ELSE, BUT DON'T KNOW WHERE. CAUSES WEIRD BLEEDING FROM TRANSPARENT TEXTURES
+                doodler.tmpCtx.drawImage(data.doodleCanvas,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                doodler.tmpCtx.globalCompositeOperation = "source-over";
+                //Draw tmpCanvas to hatchCtx
+                ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            }else{
+                var ctx = doodler.overlayCtx;
+                doodler.tmpCtx.filter = filter;
+                doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+                //Draw circle to tmpCanvas
+                doodler.tmpCtx.fillStyle = "white";
+				doodler.tmpCtx.strokeStyle = "white";
+                doodler.tmpCtx.beginPath();
+                doodler.tmpCtx.arc(xpos, ypos, size, 0, 2 * Math.PI);
+                doodler.tmpCtx.fill();
+                //doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
+                doodler.tmpCtx.globalCompositeOperation = "source-in";
+                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.hatchCanvas.width, data.hatchCanvas.height)
+                doodler.tmpCtx.filter = "none";
+                doodler.tmpCtx.drawImage(data.hatchCanvas,0,0,data.hatchCanvas.width, data.hatchCanvas.height)
+                doodler.tmpCtx.globalCompositeOperation = "source-over";
+                //Draw tmpCanvas to hatchCtx
+                ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            }
             doodler.updateFrameBuffer();
 		},
 		drawCursor : function(ctx, xpos, ypos, data){
-			ctx.strokeStyle = "rgb(60,200,200)";
-			var radius = self.size*2.1+self.hatchSize;
-			ctx.beginPath();
-			ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
-			ctx.stroke();
+			var wh = doodler;
+            var zoom = wh.zoomLevel;
+            var size = self.size;
+            var filter = doodler.filter;
+            ctx.filter = filter;
+			ctx.strokeStyle = "rgb(240,60,60)";
+            ctx.fillStyle = "white"; //self.fillColor;
+            ctx.strokeStyle = "white";//self.fillColor;
+            if(doodler.shiftDown){
+                ctx.fillStyle = "rgb(237, 148, 148)"; //self.fillColor;
+                ctx.strokeStyle = "rgb(237, 148, 148)";
+            }
+            var filter = doodler.filter;
+            ctx.filter = filter;
+			//if(self.shape == Shape.Circle){
+                ctx.beginPath();
+                ctx.arc(xpos, ypos, size, 0, 2 * Math.PI);
+                ctx.fill();
+                
+			//}
+			//else{
+			//	ctx.strokeRect(xpos-(self.size/2)*zoom,ypos-(self.size/2)*zoom,self.size*zoom,self.size*zoom)
+			//}
+            ctx.filter = "none";
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained
@@ -172,19 +264,20 @@ var Hatching = (function(){
             self.doodleStartY = ypos;
             self.doodleEndX = xpos;
             self.doodleEndY = ypos;
-			self.draw(xpos, ypos, data);
+			self.drawOverlay(xpos, ypos, data);
 		},
 		mouseMove: function(xpos, ypos, data){
 			if (self.isDoodling){
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
-				self.draw(xpos, ypos, data);
+				self.drawOverlay(xpos, ypos, data);
 				self.doodleStartX = xpos;
 				self.doodleStartY = ypos;
 			}
 		},
-		mouseUp: function(xpos, ypos){
+		mouseUp: function(xpos, ypos, data){
 			self.isDoodling = false;
+			doodler.drawOverlayCommit(xpos, ypos, data);
 			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;

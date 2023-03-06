@@ -229,7 +229,7 @@ var Doodle = (function(){
 			var expos = self.doodleEndX;
 			var eypos = self.doodleEndY;
             var filter = doodler.filter;
-            ctx.filter = filter;
+            //ctx.filter = filter;
 			ctx.strokeStyle = "rgb(240,60,60)";
             ctx.fillStyle = "white"; //self.fillColor;
             ctx.strokeStyle = "white";//self.fillColor;
@@ -237,8 +237,10 @@ var Doodle = (function(){
                 ctx.fillStyle = "rgb(237, 148, 148)"; //self.fillColor;
                 ctx.strokeStyle = "rgb(237, 148, 148)";
             }
-            var filter = doodler.filter;
-            ctx.filter = filter;
+			if(!doodler.disableFilters){
+            	var filter = doodler.filter;
+            	ctx.filter = filter;
+			}
 			if(self.shape == Shape.Circle){
                 ctx.beginPath();
                 ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);

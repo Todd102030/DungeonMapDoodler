@@ -134,19 +134,19 @@ var doodler = (function(){
 		self.hatchCanvas = document.createElement('canvas');
 		self.hatchCanvas.width = xsize;//self.canvas.width;
 		self.hatchCanvas.height = ysize;//self.canvas.height;
-		self.hatchCtx = self.hatchCanvas.getContext('2d');
+		self.hatchCtx = self.hatchCanvas.getContext("2d", {desynchronized:true});
 		self.hatchCtx.fillStyle = "rgba(0,0,0,0)";
 		self.hatchCtx.fillRect(0,0,self.hatchCanvas.width,self.hatchCanvas.height);
 		self.doodleCanvas = document.createElement('canvas');
 		self.doodleCanvas.width = xsize;//self.canvas.width;
 		self.doodleCanvas.height = ysize;//self.canvas.height;
-		self.doodleCtx = self.doodleCanvas.getContext('2d');
+		self.doodleCtx = self.doodleCanvas.getContext("2d", {desynchronized:true});
 		self.doodleCtx.fillStyle = "rgba(0,0,0,0)";
 		self.doodleCtx.fillRect(0,0,self.doodleCanvas.width,self.doodleCanvas.height);
 		self.outlineCanvas = document.createElement('canvas');
 		self.outlineCanvas.width = xsize;//self.canvas.width;
 		self.outlineCanvas.height = ysize;//self.canvas.height;
-		self.outlineCtx = self.outlineCanvas.getContext('2d');
+		self.outlineCtx = self.outlineCanvas.getContext("2d", {desynchronized:true});
 		self.outlineCtx.fillStyle = "rgba(0,0,0,0)";
 		self.outlineCtx.fillRect(0,0,self.outlineCanvas.width,self.outlineCanvas.height);
 		
@@ -774,6 +774,8 @@ var doodler = (function(){
         self.lastFBUpdate = new Date().getTime();
     },
     drawCanvasNormally: function(canv, ct){
+        //TODO: Need to offload as much work as possible from this loop, anything that can be shoved into framebuffer should be
+        // - 
     	//self.clear();
         if(self.needsRefresh){
             self.updateFBDraw();
@@ -812,7 +814,7 @@ var doodler = (function(){
                 Math.floor(canvas.height));
 
         
-        
+        /*
         if(self.movingTouches && self.movingTouches.length){
             self.ctx.strokeStyle = "rgb(255,0,0)";
             self.ctx.fillStyle = "rgb(255,0,0)";
@@ -822,7 +824,7 @@ var doodler = (function(){
                 self.ctx.fillText(t.identifier, t.clientX,t.clientY)
             }
         }
-        
+        */
         
 		//self.drawStamps(canvas, ctx);
         
@@ -830,6 +832,7 @@ var doodler = (function(){
         self.drawDoodleOverlay(canvas, ctx);
         if(!self.pinchZoom){
             self.overlayHoverCtx.clearRect(0,0,self.overlayHoverCanvas.width, self.overlayHoverCanvas.height);
+            
             var xpos = (self.mouseX-self.globalOffsetX)/self.zoomLevel;
             var ypos = (self.mouseY-self.globalOffsetY)/self.zoomLevel; 
             self.overlayHoverCtx.globalAlpha = 0.8;
@@ -837,31 +840,34 @@ var doodler = (function(){
             self.mouseMode.drawCursor(self.overlayHoverCtx, xpos, ypos,{hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:event});
             self.overlayHoverCtx.globalAlpha = 1;
             
+            //TODO: This outline approach is causing a lot of slowdown, maybe look into putting mouse overlay on completely separate canvas 
+            // html object, need to ensure it follows along properly though
+            // 
+            if(!self.disableFilters){
+                //New outline border
+                var oSize=0;
+                ctx.filter = 'drop-shadow('+oSize+'px '+oSize+'px 3px blue)';
+                ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                    self.globalOffsetY,
+                    self.overlayHoverCanvas.width*self.zoomLevel,
+                    self.overlayHoverCanvas.height*self.zoomLevel);
+                /*ctx.filter = 'drop-shadow(-'+oSize+'px '+oSize+'px red)';
+                ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                    self.globalOffsetY,
+                    self.overlayHoverCanvas.width*self.zoomLevel,
+                    self.overlayHoverCanvas.height*self.zoomLevel);
+                ctx.filter = 'drop-shadow('+oSize+'px -'+oSize+'px red)';
+                ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                    self.globalOffsetY,
+                    self.overlayHoverCanvas.width*self.zoomLevel,
+                    self.overlayHoverCanvas.height*self.zoomLevel);
+                ctx.filter = ' drop-shadow(-'+oSize+'px -'+oSize+'px red)';
+                ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
+                    self.globalOffsetY,
+                    self.overlayHoverCanvas.width*self.zoomLevel,
+                    self.overlayHoverCanvas.height*self.zoomLevel);*/
             
-            //New outline border
-            var oSize=1;
-            ctx.filter = 'drop-shadow('+oSize+'px '+oSize+'px red)';
-            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
-                self.globalOffsetY,
-                self.overlayHoverCanvas.width*self.zoomLevel,
-                self.overlayHoverCanvas.height*self.zoomLevel);
-            ctx.filter = 'drop-shadow(-'+oSize+'px '+oSize+'px red)';
-            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
-                self.globalOffsetY,
-                self.overlayHoverCanvas.width*self.zoomLevel,
-                self.overlayHoverCanvas.height*self.zoomLevel);
-            ctx.filter = 'drop-shadow('+oSize+'px -'+oSize+'px red)';
-            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
-                self.globalOffsetY,
-                self.overlayHoverCanvas.width*self.zoomLevel,
-                self.overlayHoverCanvas.height*self.zoomLevel);
-            ctx.filter = ' drop-shadow(-'+oSize+'px -'+oSize+'px red)';
-            ctx.drawImage(self.overlayHoverCanvas, self.globalOffsetX,
-                self.globalOffsetY,
-                self.overlayHoverCanvas.width*self.zoomLevel,
-                self.overlayHoverCanvas.height*self.zoomLevel);
-            
-            
+            }
             
             ctx.filter = "none";
             
@@ -964,7 +970,7 @@ var doodler = (function(){
                 canv2.width = xfeet*dim.footPixel+1;
                 canv2.height = yfeet*dim.footPixel+1;
                 //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-                var ctx2 = canv2.getContext("2d");
+                var ctx2 = canv2.getContext("2d", {desynchronized:true});
                 ctx2.lineWidth = 1;
                 ctx2.strokeStyle = "#fff";
                 for(var x=0;x<canv2.width;x+=xplus){
@@ -1135,7 +1141,7 @@ var doodler = (function(){
                 canv2.width = xfeet*dim.footPixel+1;
                 canv2.height = yfeet*dim.footPixel+1;
                 //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-                var ctx2 = canv2.getContext("2d");
+                var ctx2 = canv2.getContext("2d", {desynchronized:true});
                 ctx2.lineWidth = 1;
                 ctx2.strokeStyle = "#fff";
                 for(var x=0;x<canv2.width;x+=xplus){
@@ -1342,7 +1348,7 @@ var doodler = (function(){
             canv2.width = xfeet*dim.footPixel+1;
             canv2.height = yfeet*dim.footPixel+1;
             //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-            var ctx2 = canv2.getContext("2d");
+            var ctx2 = canv2.getContext("2d", {desynchronized:true});
             ctx2.lineWidth = 1;
             ctx2.strokeStyle = "#fff";
             for(var x=0;x<canv2.width;x+=xplus){
@@ -1402,10 +1408,10 @@ var doodler = (function(){
         /*ctx.globalCompositeOperation = "source-atop";
         ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
         ctx.globalCompositeOperation = "source-over";*/
-        
-        ctx.filter = 'drop-shadow(0px 0px 5px red)';
-        ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
-
+        if(!self.disableFilters){
+            ctx.filter = 'drop-shadow(0px 0px 5px red)';
+            ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+        }
         ctx.filter = 'none';
         ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
         ctx.globalAlpha = 1;
@@ -1824,7 +1830,7 @@ var doodler = (function(){
         //self.globalOffsetY = 0;
         
 		//console.log("Generating grid of size ", canv.width, canv.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
-		var ctx = canv.getContext("2d");
+		var ctx = canv.getContext("2d", {desynchronized:true});
     	ctx.lineWidth = 2;
     	ctx.strokeStyle = "#000";
 		//ctx.fillStyle = "#fff";
@@ -2039,7 +2045,7 @@ var doodler = (function(){
     	if(!self.isRunning){
 	        //locations = [{}];
 	        self.canvas = document.getElementById("warehouseCanvas");
-	        self.ctx = self.canvas.getContext("2d");
+	        self.ctx = self.canvas.getContext("2d", {desynchronized:true});
 			
 			//self.canvas.width = ir.winWidth()-6 ;
 			//self.canvas.height = ir.winHeight()-90;
@@ -2090,28 +2096,28 @@ var doodler = (function(){
 			self.tmpCanvas = document.createElement("canvas");
 			self.tmpCanvas.width = xsize;
 			self.tmpCanvas.height = ysize;
-			self.tmpCtx = self.tmpCanvas.getContext("2d");
+			self.tmpCtx = self.tmpCanvas.getContext("2d", {desynchronized:true});
 			self.tmpCtx.fillStyle = "rgba(0,0,0,0)";
             self.tmpCtx.fillRect(0,0,self.tmpCanvas.width,self.tmpCanvas.height);
 			
 			self.gridCanvas = document.createElement("canvas");
 			self.gridCanvas.width = xsize;
 			self.gridCanvas.height = ysize;
-			self.gridCtx = self.gridCanvas.getContext("2d");
+			self.gridCtx = self.gridCanvas.getContext("2d", {desynchronized:true});
 			self.gridCtx.fillStyle = "rgba(0,0,0,0)";
             self.gridCtx.fillRect(0,0,self.gridCanvas.width,self.gridCanvas.height);
             
             self.overlayCanvas = document.createElement("canvas");
 			self.overlayCanvas.width = xsize;
 			self.overlayCanvas.height = ysize;
-			self.overlayCtx = self.overlayCanvas.getContext("2d");
+			self.overlayCtx = self.overlayCanvas.getContext("2d", {desynchronized:true});
 			self.overlayCtx.fillStyle = "rgba(0,0,0,0)";
             self.overlayCtx.fillRect(0,0,self.overlayCanvas.width,self.overlayCanvas.height);
             
             self.overlayHoverCanvas = document.createElement("canvas");
 			self.overlayHoverCanvas.width = xsize;
 			self.overlayHoverCanvas.height = ysize;
-			self.overlayHoverCtx = self.overlayHoverCanvas.getContext("2d");
+			self.overlayHoverCtx = self.overlayHoverCanvas.getContext("2d", {desynchronized:true});
 			self.overlayHoverCtx.fillStyle = "rgba(0,0,0,0)";
             self.overlayHoverCtx.fillRect(0,0,self.overlayHoverCanvas.width,self.overlayHoverCanvas.height);
             
@@ -2119,7 +2125,7 @@ var doodler = (function(){
 			self.fbCanvas.width = xsize;
 			self.fbCanvas.height = ysize;
             self.fbCanvas.remove();
-			self.fbCtx = self.fbCanvas.getContext("2d");
+			self.fbCtx = self.fbCanvas.getContext("2d", {desynchronized:true});
 			self.fbCtx.fillStyle = "rgba(0,0,0,0)";
             self.fbCtx.fillRect(0,0,self.fbCanvas.width,self.fbCanvas.height);
 			
@@ -2175,6 +2181,7 @@ var doodler = (function(){
             //document.body.classList.add("loaded");
             //ir.get("appContent").classList.add("loaded");
 			
+            
 	        //Set up animation, using requestAnimationFrame is the smoothest option, works a lot better than a setTimeout/setInterval
 	        window.requestAnimFrame = function(){
 	            return (
@@ -2854,7 +2861,7 @@ var doodler = (function(){
 							stLay.doodleCanvas = document.createElement('canvas');
 							stLay.doodleCanvas.width = xsize;//self.canvas.width;
 							stLay.doodleCanvas.height = ysize;//self.canvas.height;
-							stLay.doodleCtx = stLay.doodleCanvas.getContext('2d');
+							stLay.doodleCtx = stLay.doodleCanvas.getContext("2d", {desynchronized:true});
 							stLay.doodleCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.doodleCtx.clearRect(0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
 							stLay.doodleCtx.drawImage(doodle,0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
@@ -2866,7 +2873,7 @@ var doodler = (function(){
 							stLay.outlineCanvas = document.createElement('canvas');
 							stLay.outlineCanvas.width = xsize;//self.canvas.width;
 							stLay.outlineCanvas.height = ysize;//self.canvas.height;
-							stLay.outlineCtx = stLay.outlineCanvas.getContext('2d');
+							stLay.outlineCtx = stLay.outlineCanvas.getContext("2d", {desynchronized:true});
 							stLay.outlineCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.outlineCtx.clearRect(0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
 							stLay.outlineCtx.drawImage(out,0,0,stLay.outlineCanvas.width, stLay.outlineCanvas.height);
@@ -2876,7 +2883,7 @@ var doodler = (function(){
 							stLay.hatchCanvas = document.createElement('canvas');
 							stLay.hatchCanvas.width = xsize;//self.canvas.width;
 							stLay.hatchCanvas.height = ysize;//self.canvas.height;
-							stLay.hatchCtx = stLay.hatchCanvas.getContext('2d');
+							stLay.hatchCtx = stLay.hatchCanvas.getContext("2d", {desynchronized:true});
 							stLay.hatchCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.hatchCtx.clearRect(0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
 							stLay.hatchCtx.drawImage(hatch,0,0,stLay.hatchCanvas.width, stLay.hatchCanvas.height);
@@ -2904,7 +2911,7 @@ var doodler = (function(){
                     st.canvas = document.createElement("canvas");
                     st.canvas.width = st.w;
                     st.canvas.height = st.h;
-                    st.ctx = st.canvas.getContext("2d")
+                    st.ctx = st.canvas.getContext("2d", {desynchronized:true})
 					
                     if(st.img == null || st.img.src == null){
 						//console.log("Setting stamp img to ", st.path);
@@ -3004,7 +3011,7 @@ var doodler = (function(){
 			layerImg.src = self.getLayerPreview(index);
             //Actually a canvas now
             //var prev = self.getLayerPreview(index);
-            //var ctx = layerImg.getContext("2d");
+            //var ctx = layerImg.getContext("2d", {desynchronized:true});
             //ctx.drawImage(prev.canv, 0, 0, layerImg.width, layerImg.height);
 		},5);
 	},
@@ -3014,7 +3021,7 @@ var doodler = (function(){
 			return;
 		}
 		var canv = document.createElement("canvas");
-		var ctx = canv.getContext("2d");
+		var ctx = canv.getContext("2d", {desynchronized:true});
 		canv.width = layer.hatchCanvas.width;
 		canv.height = layer.hatchCanvas.height;
 		ctx.fillStyle = "#ddd";
@@ -3025,7 +3032,7 @@ var doodler = (function(){
 		self.drawStamps(canv, ctx, i, true);
 		
 		var canvSmall = document.createElement("canvas");
-		var ctxSmall = canvSmall.getContext("2d");
+		var ctxSmall = canvSmall.getContext("2d", {desynchronized:true});
 		canvSmall.width = 150;
 		canvSmall.height = canv.height/canv.width*150;
 		ctxSmall.drawImage(canv, 0, 0, canvSmall.width, canvSmall.height);
@@ -3820,7 +3827,7 @@ var doodler = (function(){
     	if(self.locations.length > 0 || self.walls.length > 0 || self.textFields.length > 0){
 	    	self.setMode(4);
 	    	var canvas = document.createElement("canvas");
-	    	var ctx = canvas.getContext("2d");
+	    	var ctx = canvas.getContext("2d", {desynchronized:true});
 	    	canvas.width = self.dimensions.imgW*3 || 800; //ir.winWidth()*3;
 	    	canvas.height = self.dimensions.imgH*3 || 800; //ir.winHeight()*3;
 	    	self.canvas = canvas;
@@ -3991,7 +3998,7 @@ var doodler = (function(){
     	//self.setMode(4);
     	self.fontSizes = [];
     	var canvas = document.createElement("canvas");
-    	var ctx = canvas.getContext("2d");
+    	var ctx = canvas.getContext("2d", {desynchronized:true});
     	//ctx.imageSmoothingEnabled = false;
 		
 		//self.dimensions.scaleX = 0.5;
@@ -4098,7 +4105,7 @@ var doodler = (function(){
     	//self.setMode(4);
     	self.fontSizes = [];
     	var canvas = document.createElement("canvas");
-    	var ctx = canvas.getContext("2d");
+    	var ctx = canvas.getContext("2d", {desynchronized:true});
     	//ctx.imageSmoothingEnabled = false;
 		
 		//self.dimensions.scaleX = 0.5;
@@ -4600,7 +4607,7 @@ var doodler = (function(){
 
         //create a new canvas
         var newCanvas = document.createElement('canvas');
-        var context = newCanvas.getContext('2d');
+        var context = newCanvas.getContext("2d", {desynchronized:true});
     
         //set dimensions
         newCanvas.width = oldCanvas.width;
@@ -4624,10 +4631,18 @@ var doodler = (function(){
             htm += "Move " + lclick + msp + self.kbd("Undo","Z") + msp + self.kbd("Redo", "Shift", "Z");
         }
         
-        if(evt.shiftKey){
-            htm += "Subtract " + lclick;
+        if(self.mode != Modes.Hatching){
+            if(evt.shiftKey){
+                htm += "Subtract " + lclick;
+            }else{
+                htm += self.kbd("Subtract", "Shift") + " " + lclick;
+            }
         }else{
-            htm += self.kbd("Subtract", "Shift") + " " + lclick;
+            /*if(evt.shiftKey){
+                htm += "Subtract " + lclick;
+            }else{
+                htm += self.kbd("Subtract", "Shift") + " " + lclick;
+            }*/
         }
         if(!evt.ctrlKey && !evt.shiftKey){
             htm += msp + "Zoom "+scroll + msp + self.kbd("Move","M");

@@ -709,19 +709,21 @@
 	<!--<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>-->
 	<br>
     <div class="tooltipParent">
-                <div class="toggle">
-                    <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />
-                    <label for="drawFG">Foreground</label>
-                    <input type="radio" name="drawFGBG" value="1" id="drawBG" />
-                    <label for="drawBG">Background</label>
-                </div>
-                <div class="tooltipError">A message popup above toggle?</div>
-            </div>
+        <div class="toggle">
+            <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />
+            <label for="drawFG">Foreground</label>
+            <input type="radio" name="drawFGBG" value="1" id="drawBG" />
+            <label for="drawBG">Background</label>
+        </div>
+        <div class="tooltipError">Click to choose which layer to draw on</div>
+    </div>
     <div class='textureImgWrap'>
         <div class='textureImg' id='foregroundTexture' onclick="doodler.doBackground=2;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/d2.JPG")'></div>
         <div class='textureImg' id='backgroundTexture' onclick="doodler.doBackground=1;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/w2.JPG")'></div>
     </div>
+    <input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Background Texture</label><br>
     <br>
+    Dynamic Brush Type:
     <select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)' >
         <option value='none'>None</option>
         <option value='ripple1'>Rough Coastline</option>
@@ -814,13 +816,13 @@
 			<div id='toolFlexbox' style='display:flex'>
 				<div class='floatingBtns'>
                     <div class='modeBtn tooltip' title="Move" id='modeMove' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Move</h3><ul><li>[M] to select tool</li><li>Click and drag to pan around canvas</li></ul><i></i></div><img id='imgmMove' src="move.png" width='32px' height='32px'></div>
-                    <div class='modeBtn tooltip' title="Free Draw" id='modeDoodle' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Free Draw/Terrain Tool" id='modeDoodle' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Snap To Grid" id='modeSnapToGrid' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Snap To Grid</h3><ul><li>[G] to select tool</li><li>Draw locked to the grid</li></ul><i></i></div><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Line Tool" id='modeLine' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Line Tool</h3><ul><li>[L] to select tool</li><li>Click and drag to draw straight line</li></ul><i></i></div><img id='imgmLine' src="line.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Wall Tool" id='modeWall' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Interior Wall Tool</h3><ul><li>[W] to select tool</li><li>Click and drag to draw straight walls inside of a room</li></ul><i></i></div><img id='imgmWall' src="wall.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Room Tool" id='modeRoomTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Room Tool</h3><ul><li>[R] to select tool</li><li>Click and drag to select entire room at once, release to draw</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Shape Tool" id='modeShapeTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Shape Tool</h3><ul><li>[P] to select tool</li><li>Click and drag to draw shape, starting point will be the center of the shape, drag outwards to change size and rotation</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
-                    <div class='modeBtn tooltip' title="Hatching" id='modeHatching' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Hatching</h3><ul><li>[H] to select tool</li><li>Draw hatching layer without drawing anything else. Change hatching style and floor tile for selected layer here</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Hatching/Painting Tool" id='modeHatching' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Hatching</h3><ul><li>[H] to select tool</li><li>Draw hatching layer without drawing anything else. Change hatching style and floor tile for selected layer here</li><li>In World Map mode, use to fill in terrain with new textures without altering the shape of your maps</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Stamps" id='modeStampTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Stamps</h3><ul><li>[S] to select tool</li><li>Click to place a stamp. Click an already placed stamp to select it. Drag red circle to rotate stamp.</li><li>Hold Shift to toggle between snapping and not</li></ul><i></i></div><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Text Tool" id='modeTextTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Text Tool</h3><ul><li>[T] to select tool</li><li>Click to create a text object. Click existing text object to edit and delete. Click and drag a text object to move</li></ul><i></i></div><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Erase" id='modeErase' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Erase</h3><ul><li>[E] to select tool</li><li>Use the erase tool to erase floors, outlines, hatching and stamps. Checkboxes are available to choose exactly what you want to erase</li></ul><i></i></div><img id='imgmErase' src="erase.png" width='32px' height='32px'></div>
@@ -1258,6 +1260,7 @@
 <script src='rough.js'></script>
 <script src="warehouseMap.js"></script>  
 <script src="warehouseMap2.js"></script>
+<script src="fps.min.js"></script>
 <script>
   if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
