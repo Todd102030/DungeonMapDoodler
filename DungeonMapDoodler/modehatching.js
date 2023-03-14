@@ -290,7 +290,7 @@ var Hatching = (function(){
 						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200"  value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Scale: </div><input type='number' min='0.125' max='4' step='0.125' style='width:60px' id='hatchingScaleLabel' value="${self.renderScale}" onchange='Modes.Hatching.changeScaleAndRender(event, true)' oninput='Modes.Hatching.changeScale(event, true)'><br>
 						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
-						<input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Hatching</label><br>
+						
                         `;
             htm += `<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>`
             /*htm +=`<div class="tooltipParent">

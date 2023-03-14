@@ -84,9 +84,7 @@ var ShapeTool = (function(){
 			var xmid = Math.min(self.doodleStartX,self.doodleEndX) + Math.abs(self.doodleStartX-self.doodleEndX)/2
 			var ymid = Math.min(self.doodleStartY,self.doodleEndY) + Math.abs(self.doodleStartY-self.doodleEndY)/2
 
-			ctx = data.hatchCtx;
-			ctx.fillStyle = "black";
-			if(self.isSubtractive || data.event.shiftKey){
+			//if(self.isSubtractive || data.event.shiftKey){
 				/*ctx.save();
 				ctx.globalCompositeOperation = "destination-out";
 				ctx.fillStyle = 'black';
@@ -107,11 +105,13 @@ var ShapeTool = (function(){
 			
 				
 				//Path Drawing
-				ctx = data.doodleCtx;
-				ctx.save();
-				ctx.globalCompositeOperation = "destination-out";
-				ctx.fillStyle = 'black';
-				ctx.fillStyle = self.fillColor;
+				ctx = doodler.overlayCtx;
+                ctx.fillStyle = self.fillColor;
+				ctx.strokeStyle = self.fillColor;
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
 				ctx.beginPath();
 				ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
 
@@ -119,10 +119,9 @@ var ShapeTool = (function(){
 				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
-				ctx.restore();
 				
 				//Outline Drawing
-				ctx = data.outlineCtx;
+				/*ctx = data.outlineCtx;
 				ctx.save();
 				ctx.globalCompositeOperation = "destination-out";
 				ctx.fillStyle = 'black';
@@ -136,26 +135,30 @@ var ShapeTool = (function(){
 				  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides + angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides + angleRad));
 				}
 				ctx.fill();
-				ctx.restore();
-			}else{
+				ctx.restore();*/
+			//}else{
 				
 				/*var numberOfSides = self.numSides,
 					size = Math.abs(self.doodleStartX-self.doodleEndX),
 					Xcenter = self.doodleStartX/zoom,
 					Ycenter = self.doodleStartY/zoom;
 				*/
-				var numberOfSides = self.numSides,
+				/*var numberOfSides = self.numSides,
 				size = Math.hypot(Math.abs(self.doodleStartX-self.doodleEndX)*zoom,Math.abs(self.doodleStartY-self.doodleEndY)*zoom),
 				Xcenter = self.doodleStartX,
 				Ycenter = self.doodleStartY;
 				var angleRad = Math.atan2(self.doodleStartY-self.doodleEndY, self.doodleStartX-self.doodleEndX);
-		
-				for(var i=0;i<4;i++){
+		*/
+				/*for(var i=0;i<4;i++){
 				    ctx.drawImage(ir.get("circlefuzzImg"),Xcenter-border-hatchSize-size, Ycenter-border-hatchSize-size, 
 					   size*2+(border*2+hatchSize*2), size*2+(border*2+hatchSize*2))
-                }
+                }*/
 				//Path Drawing
-				ctx = data.doodleCtx;
+			/*	ctx = doodler.overlayCtx;
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
 				ctx.fillStyle = self.fillColor;
 				//ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
 				//		   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
@@ -178,9 +181,9 @@ var ShapeTool = (function(){
 					var rc = rough.canvas(ctx.canvas);
 					rc.polygon(poly, rcopts);
 				}
-				
+				*/
 				//Outline Drawing
-				ctx = data.outlineCtx;
+				/*ctx = data.outlineCtx;
 				ctx.fillStyle = self.outlineColor;
 				size += border + inset;
 				if(!doodler.drawRough){
@@ -199,8 +202,9 @@ var ShapeTool = (function(){
 					var rcopts = { roughness: 2, bowing:3, disableMultiStroke:false, fill:self.outlineColor, fillStyle:'solid', strokeWidth:border};
 					var rc = rough.canvas(ctx.canvas);
 					rc.polygon(poly, rcopts);
-				}
-			}
+				}*/
+			//}
+            ctx.filter = "none";
             doodler.updateFrameBuffer();
 				
 		},
@@ -208,33 +212,57 @@ var ShapeTool = (function(){
 			if(self.mouseIsDown){
 				self.drawOutlineBox(ctx, xpos, ypos, data);
 			}else{
-				if(self.isSubtractive /*|| data.event.shiftKey*/){
-					ctx.strokeStyle = "rgb(55, 222, 126)";
+				//if(self.isSubtractive /*|| data.event.shiftKey*/){
+				/*	ctx.strokeStyle = "rgb(55, 222, 126)";
 				}else{
 					ctx.strokeStyle = "rgb(240,60,60)";
-				}
-				var gridxy = getGridXY2(xpos, ypos);
+				}*/
+                if(doodler.shiftDown){
+                    ctx.fillStyle = "rgb(237, 148, 148)";
+                }else{
+                    ctx.fillStyle = "#ffffff";
+                }
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
+				/*var gridxy = getGridXY2(xpos, ypos);
 				var offx = doodler.globalOffsetX;
 				var offy = doodler.globalOffsetY;
 				var zoom = doodler.zoomLevel;
 				if(self.isSnapping){
-					ctx.strokeRect(gridxy.xgridmid, gridxy.ygridmid, 2, 2);
+					ctx.fillRect(gridxy.xgridmid, gridxy.ygridmid, 2, 2);
 				}else{
-					ctx.strokeRect(xpos, ypos, 2, 2);
-				}
+					ctx.fillRect(xpos, ypos, 2, 2);
+				}*/
 				
-				
-				
-				
-				
+			    var zoom = doodler.zoomLevel;
+				var numberOfSides = self.numSides,
+				size = 40*zoom,
+				Xcenter = xpos,
+				Ycenter = ypos;
+                var angleRad = 0;
+
+                ctx.beginPath();
+                ctx.moveTo (Xcenter +  size * Math.cos(angleRad), Ycenter +  size *  Math.sin(angleRad));          
+
+                for (var i = 1; i <= numberOfSides;i += 1) {
+                  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides+angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides+angleRad));
+                }
+                ctx.fill();
+                ctx.filter = "none";
 			}
 		},
 		drawOutlineBox: function(ctx, xpos, ypos, data){
 			if(doodler.shiftDown){
-				ctx.fillStyle = "rgb(237, 148, 148)";
-			}else{
-				ctx.fillStyle = "white";
-			}
+                ctx.fillStyle = "rgb(237, 148, 148)";
+            }else{
+                ctx.fillStyle = "#ffffff";
+            }
+            if(!doodler.disableFilters){
+                var filter = doodler.filter;
+                ctx.filter = filter;
+            }
 			var offx = doodler.globalOffsetX;
 			var offy = doodler.globalOffsetY;
 			var zoom = doodler.zoomLevel;
@@ -317,7 +345,7 @@ var ShapeTool = (function(){
 		mouseUp: function(xpos, ypos,data){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
-			
+			doodler.drawOverlayCommit(xpos, ypos, data);
 			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;

@@ -78,9 +78,10 @@ var RoomTool = (function(){
 			var xmid = Math.min(self.doodleStartX,self.doodleEndX) + Math.abs(self.doodleStartX-self.doodleEndX)/2
 			var ymid = Math.min(self.doodleStartY,self.doodleEndY) + Math.abs(self.doodleStartY-self.doodleEndY)/2
 
-			ctx = data.hatchCtx;
-			ctx.fillStyle = "black";
-			if(self.isSubtractive || data.event.shiftKey){
+			//ctx = data.hatchCtx;
+			//ctx.fillStyle = "black";
+            
+			//if(self.isSubtractive || data.event.shiftKey){
 				/*ctx.save();
 				ctx.globalCompositeOperation = "destination-out";
 				ctx.fillStyle = 'black';
@@ -89,31 +90,41 @@ var RoomTool = (function(){
 				ctx.restore();*/
 
 				//Path Drawing
-				ctx = data.doodleCtx;
-				ctx.save();
-				ctx.globalCompositeOperation = "destination-out";
-				ctx.fillStyle = 'black';
+				ctx = doodler.overlayCtx;
+                ctx.fillStyle = self.fillColor;
+				ctx.strokeStyle = self.fillColor;
+				//ctx.save();
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
+				//ctx.globalCompositeOperation = "destination-out";
+				//ctx.fillStyle = 'black';
 				ctx.fillStyle = self.fillColor;
 				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
-				ctx.restore();
+				//ctx.restore();
 				
 				//Outline Drawing
-				ctx = data.outlineCtx;
+				/*ctx = data.outlineCtx;
 				ctx.save();
 				ctx.globalCompositeOperation = "destination-out";
 				ctx.fillStyle = 'black';
 				ctx.fillStyle = self.outlineColor;
 				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2);
-				ctx.restore();
-			}else{
-                for(var i=0;i<4;i++){
+				ctx.restore();*/
+			//}else{
+                /*for(var i=0;i<4;i++){
 				    ctx.drawImage(ir.get("squarefuzzImg"),Math.min(self.doodleStartX,self.doodleEndX)-border-hatchSize, Math.min(self.doodleStartY,self.doodleEndY)-border-hatchSize, 
 					   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2+hatchSize*2), Math.abs(self.doodleStartY-self.doodleEndY)+(border*2+hatchSize*2))
-                }
+                }*/
 				//Path Drawing
-				ctx = data.doodleCtx;
+				/*ctx = doodler.overlayCtx;
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
 				ctx.fillStyle = self.fillColor;
 				if(!doodler.drawRough){
 					ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
@@ -123,9 +134,9 @@ var RoomTool = (function(){
 					var rc = rough.canvas(ctx.canvas);
 					rc.rectangle(Math.min(self.doodleStartX,self.doodleEndX)-inset, Math.min(self.doodleStartY,self.doodleEndY)-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+inset*2, rcopts);
-				}
+				}*/
 				//Outline Drawing
-				ctx = data.outlineCtx;
+				/*ctx = data.outlineCtx;
 				ctx.fillStyle = self.outlineColor;
 				if(!doodler.drawRough){
 					ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
@@ -135,8 +146,9 @@ var RoomTool = (function(){
 					var rc = rough.canvas(ctx.canvas);
 					rc.rectangle(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
 						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2, rcopts);
-				}
-			}
+				}*/
+			//}
+            ctx.filter = "none";
             doodler.updateFrameBuffer();
 				
 		},
@@ -144,10 +156,14 @@ var RoomTool = (function(){
 			if(self.mouseIsDown){
 				self.drawOutlineBox(ctx, xpos, ypos, data);
 			}else{
+                if(!doodler.disableFilters){
+                    var filter = doodler.filter;
+                    ctx.filter = filter;
+                }
 				if(doodler.shiftDown){
                     ctx.fillStyle = "rgb(237, 148, 148)";
                 }else{
-                    ctx.fillStyle = "white";
+                    ctx.fillStyle = "#ffffff";
                 }
 				var gridxy = getGridXY2(xpos, ypos);
 				var offx = doodler.globalOffsetX;
@@ -159,24 +175,34 @@ var RoomTool = (function(){
 					ctx.strokeRect(xpos, ypos, 2, 2);
 				}
 			}
+            ctx.filter = "none";
 		},
 		drawOutlineBox: function(ctx, xpos, ypos, data){
-			if(self.isSubtractive /*|| data.event.shiftKey*/){
-				ctx.strokeStyle = "rgb(55, 222, 126)";
+			//if(self.isSubtractive /*|| data.event.shiftKey*/){
+			/*	ctx.strokeStyle = "rgb(55, 222, 126)";
 			}else{
 				ctx.strokeStyle = "rgb(240,60,60)";
-			}
+			}*/
+            if(!doodler.disableFilters){
+                var filter = doodler.filter;
+                ctx.filter = filter;
+            }
+            if(doodler.shiftDown){
+                ctx.fillStyle = "rgb(237, 148, 148)";
+            }else{
+                ctx.fillStyle = "#ffffff";
+            }
 			var offx = doodler.globalOffsetX;
 			var offy = doodler.globalOffsetY;
 			var zoom = doodler.zoomLevel;
 			if(self.isSnapping){
 				var grid1 = getGridXY2(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY));
 				var grid2 = getGridXY2(Math.max(self.doodleStartX,self.doodleEndX), Math.max(self.doodleStartY,self.doodleEndY));
-				ctx.strokeRect(grid1.xpos, grid1.ypos, 
+				ctx.fillRect(grid1.xpos, grid1.ypos, 
 						   Math.abs(grid1.xpos-grid2.xpos), Math.abs(grid1.ypos-grid2.ypos));
 			}
 			else{
-				ctx.strokeRect((Math.min(self.doodleStartX,self.doodleEndX)), (Math.min(self.doodleStartY,self.doodleEndY)), 
+				ctx.fillRect((Math.min(self.doodleStartX,self.doodleEndX)), (Math.min(self.doodleStartY,self.doodleEndY)), 
 						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
 			}
 		},
@@ -229,7 +255,7 @@ var RoomTool = (function(){
 		mouseUp: function(xpos, ypos,data){
             self.mouseIsDown = false;
 			self.draw(xpos, ypos,data);
-			
+			doodler.drawOverlayCommit(xpos, ypos, data);
 			doodler.updateCurrentImage(false, true);
             self.doodleStartX = 0;
             self.doodleStartY = 0;

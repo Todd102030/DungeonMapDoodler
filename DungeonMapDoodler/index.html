@@ -239,8 +239,8 @@
     <h2>Choose Texture</h2>
     <div id="hatchPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;">
     
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("squarefuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("circlefuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
+        <div class='hatchImgWrap' style='display: none' onclick='doodler.selectHatchTexture("squarefuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
+        <div class='hatchImgWrap' style='display: none' onclick='doodler.selectHatchTexture("circlefuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("plainWhite")'><img id='plainWhite' src='images/white.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImg")'><img id='hatchingImg' src='hatching.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("hatchingImgDots")'><img id='hatchingImgDots' src='hatches/dots.png'></div>
@@ -506,7 +506,7 @@
         <div style='width:100%'><div id="exportWait" class="loader" style="display:none;"></div></div>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.exportImageConfirm()">Publish</button>
-	<button type="button" class="canvBtn" onclick="ir.hide('imageExportPopup');doodler.popupShowing=false;">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.unpop('imageExportPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
     
 <div id='randomGenPopup' class='popupPanel' style='text-align: center'>
@@ -566,7 +566,7 @@
 </div>
     
     
-<div id='donJonPopup' class='popupPanel' style='display:none;text-align: center'>
+<div id='donJonPopup' class='popupPanel' style='text-align: center'>
 	<h2>Import donjon Dungeon</h2>
 	<table>
         <tr><td colspan="2">Edit any parameters before importing map from donjon</td></tr>
@@ -588,7 +588,7 @@
 		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.applyDonJonPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="ir.hide('donJonPopup');doodler.popupShowing=false;">Cancel</button>
+	<button type="button" class="canvBtn" onclick="doodler.unpop('donJonPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
     
 <div style='display: none'>
@@ -717,32 +717,57 @@
         </div>
         <div class="tooltipError">Click to choose which layer to draw on</div>
     </div>
-    <div class='textureImgWrap'>
-        <div class='textureImg' id='foregroundTexture' onclick="doodler.doBackground=2;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/d2.JPG")'></div>
-        <div class='textureImg' id='backgroundTexture' onclick="doodler.doBackground=1;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/w2.JPG")'></div>
+    <div class="tooltipParent">
+        <div class='textureImgWrap'>
+            <div class='textureImg' id='foregroundTexture' onclick="doodler.doBackground=2;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/d2.JPG")'></div>
+            <div class='textureImg' id='backgroundTexture' onclick="doodler.doBackground=1;doodler.pop('hatchPopup');doodler.popupShowing = true;" style='background-image: url("hatches/w2.JPG")'></div>
+        </div>
+        <div class="tooltipError">Select texture to use when drawing</div>
     </div>
-    <input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Background Texture</label><br>
+    <div class="tooltipParent">
+        <input type='checkbox' id='hatchingFullHatch' onclick='Modes.Hatching.changeFullHatch()'><label for='hatchingFullHatch'>Full Background Texture</label><br>
+        <div class="tooltipError">Disable to draw various different background textures</div>
+    </div>
     <br>
-    Dynamic Brush Type:
-    <select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)' >
-        <option value='none'>None</option>
-        <option value='ripple1'>Rough Coastline</option>
-        <option value='noise'>Noise</option>
-        <option value='squiggly-1'>Squiggly</option>
-        <option value='displacementFilter' selected="selected">Displacement Filter</option>
-    </select>
+    <div class="tooltipParent">
+        Dynamic Brush Type:
+        <select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)' >
+            <option value='none'>None</option>
+            <option value='ripple1'>Rough Coastline</option>
+            <option value='noise'>Noise</option>
+            <option value='squiggly-1'>Squiggly</option>
+            <option value='displacementFilter' selected="selected">Displacement Filter</option>
+        </select>
+        <div class="tooltipError">Dynamic brushes allow you to draw detailed, natural looking terrain with all the drawing tools</div>
+    </div>
     <br>
-    Brush Turbulence<br>
-    <input type='range' onchange="doodler.changeBrushTurbulence(event)" oninput='doodler.changeBrushTurbulence(event)' min="1" max="8" value="3" step="1"><br><br>
-    Brush Base Frequency<br>
-    <input type='range' onchange="doodler.changeBrushBaseFreq(event)" oninput='doodler.changeBrushBaseFreq(event)' min="0.005" max="0.1" value="0.02" step="0.001"><br><br>
-    Enable fancy outline<br>
-    <input type='checkbox' onchange="doodler.toggleFancyOutlines(event)" > 
-    Soft Shadow<br>
-    <input type='range' id='softShadowRange' onchange="doodler.setSoftShadowSize()" oninput='doodler.setSoftShadowSize()' min="0" max="150" value="50" step="1"><br><br>
-    Outline<br>
-    <input type='range' id='outlineRange' onchange="doodler.setOutlineSize()" oninput='doodler.setOutlineSize()' min="-10" max="10" value="1" step="1"><br><br>
-
+    <details>
+        <summary>Advanced Brush Settings</summary>
+        <div class="tooltipParent">
+            Brush Turbulence<br>
+            <input class='marginLeftRange' type='range' onchange="doodler.changeBrushTurbulence(event)" oninput='doodler.changeBrushTurbulence(event)' min="1" max="8" value="3" step="1"><br><br>
+            <div class="tooltipError">Turbulence changes the level of detail in the brush</div>
+        </div>
+        <div class="tooltipParent">
+            Brush Base Frequency<br>
+            <input class='marginLeftRange' type='range' onchange="doodler.changeBrushBaseFreq(event)" oninput='doodler.changeBrushBaseFreq(event)' min="0.005" max="0.1" value="0.02" step="0.001"><br><br>
+        <div class="tooltipError">Base Frequency changes the overall roughness of the brush shape</div>
+        </div>
+    </details>
+    <div class="tooltipParent">
+        <input type='checkbox' id='fancyOutline' checked=checked onchange="doodler.toggleFancyOutlines(event)" ><label for='fancyOutline'>Enable Fancy Outline</label><br>
+        <div class="tooltipError">Enable/Disable the Soft Shadow and Outline around Foreground</div>
+    </div>
+    <div class="tooltipParent">
+        Soft Shadow<br>
+        <input class='marginLeftRange' type='range' id='softShadowRange' onchange="doodler.setSoftShadowSize()" oninput='doodler.setSoftShadowSize()' min="0" max="150" value="50" step="1"><br><br>
+        <div class="tooltipError">Change size of soft shadow around Foreground</div>
+    </div>
+    <div class="tooltipParent">
+        Outline<br>
+        <input class='marginLeftRange' type='range' id='outlineRange' onchange="doodler.setOutlineSize()" oninput='doodler.setOutlineSize()' min="-10" max="10" value="1" step="1"><br><br>
+        <div class="tooltipError">Change size of outline around Foreground. To the right increases thickness in all directions, to the left increases only in top left direction</div>
+    </div>
 </div>	
 
 <div class='bottomBarWrapper'>
@@ -763,7 +788,7 @@
 	
 <div class="floatingModes popup" id='floatingModes'>
 	<button id='dockOpenCloseBtn' class='modeBtn' style='background-color:ghostwhite;padding:0;margin-left: 0px;float:left;outline:none;' type="button" onclick="doodler.toggleDockOpen()"><img id='dockOpenCloseImg' src="close.png" width='32px' height='32px'></button>
-	<div class='floatingContainer'>
+	<div class='floatingContainer' onmouseover="doodler.centerMouse()">
         <details open id='globalDetails'>
             <summary>Global Options</summary>
 			<button type='button' onclick='doodler.showStylePopup()'>Choose Style</button>

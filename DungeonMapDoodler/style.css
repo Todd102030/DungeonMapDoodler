@@ -375,6 +375,7 @@ table{
 	box-shadow: 0px 5px 20px;
 	border-radius: 15px;
     /*min-width: 50%;*/
+    max-width: 600px;
 }
 
 .canvBtn:hover {
@@ -558,6 +559,24 @@ kbd{
     border-style: solid;
 }
 
+input[type=checkbox]{
+    scale: 1.6;
+    margin: 0.5rem 0.2rem 0.5rem 0.2rem
+}
+
+input[type=range]{
+    scale: 1.3;
+    margin: 0.5rem 0.2rem 0.5rem 0.2rem
+}
+
+input[type=radio]{
+    scale: 1.6;
+    margin: 0.5rem 0.2rem 0.5rem 0.2rem
+}
+
+.floatingControlsLeft > input[type=range], .marginLeftRange{
+    margin: 0.5rem 0.2rem 0.5rem 2rem !important;
+}
 
 /* BEGIN TOGGLE CSS */
 .toggle {
@@ -644,7 +663,7 @@ kbd{
 	box-sizing: border-box;
 	border-radius: 20rem;
 	overflow: hidden;
-	background: #880000;
+	background: #444;
 	color: white;
 	z-index: 10000;
 	padding: 0.5rem;
@@ -655,9 +674,12 @@ kbd{
 	transform-origin: top center;
 }
 .tooltipParent {z-index: unset;position: relative;}
-.tooltipParent:hover .tooltipError, .tooltipParent:hover .tooltip, .tooltipParent:hover + .tooltip, .editCell:hover ~ div, .checkMultiple:hover ~ div {opacity: 1;transform: scale(1);border-radius: 0.5rem;}
+.tooltipParent:hover .tooltipError, .tooltipParent:hover + .tooltip, .editCell:hover ~ div, .checkMultiple:hover ~ div {opacity: 1;transform: scale(1);border-radius: 0.5rem;}
 .tooltip:focus .tooltipError, .tooltip:focus .tooltipErrorTD, .tooltipReg:focus .tooltip, .tooltipReg:focus + .tooltip {opacity: 1;transform: scale(1);border-radius: 0.5rem;}
 
+.tooltipError:hover {
+    opacity: 0 !important;transform: scale(0) !important;
+}
 
 #hatchPopupList{
     display:flex;

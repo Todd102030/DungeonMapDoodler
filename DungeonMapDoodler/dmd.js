@@ -21,6 +21,7 @@ Array.prototype.swap = function (x,y) {
 }
 
 
+
 window.onresize = function(){
 	var canv = ir.get("warehouseCanvas");
 	var parent = canv.parentNode,

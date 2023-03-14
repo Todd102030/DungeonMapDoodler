@@ -127,7 +127,12 @@ var SnapToGrid = (function(){
 			
         },
 		drawCursor : function(ctx, xpos, ypos, data){
-			ctx.strokeStyle = "rgb(240,60,60)";
+            ctx.fillStyle = "white"; //self.fillColor;
+            ctx.strokeStyle = "white";//self.fillColor;
+			if(doodler.shiftDown){
+                ctx.fillStyle = "rgb(237, 148, 148)"; //self.fillColor;
+                ctx.strokeStyle = "rgb(237, 148, 148)";
+            }
 			var dim = doodler.dimensions;
 			var xfeet = dim.wf;
 			var yfeet = dim.hf;
@@ -137,12 +142,12 @@ var SnapToGrid = (function(){
 			var gridxy = getGridXY2(xpos, ypos);
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
-			ctx.strokeRect(gridxy.xpos-inset*zoom, gridxy.ypos-inset*zoom, gridxy.step+inset*2*zoom, gridxy.step+inset*2*zoom);
-			ctx.strokeStyle = "rgb(60,200,200)";
+			ctx.fillRect(gridxy.xpos-inset*zoom, gridxy.ypos-inset*zoom, gridxy.step+inset*2*zoom, gridxy.step+inset*2*zoom);
+			/*ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
 			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
-			ctx.stroke();
+			ctx.stroke();*/
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained
