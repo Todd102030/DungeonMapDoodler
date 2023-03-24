@@ -1,4 +1,8 @@
 "use strict";
+
+var simE = new SimplexNoise();
+var simM = new SimplexNoise();
+
 var doodler = (function(){
   var self={
       showErrors:true,
@@ -2066,6 +2070,7 @@ var doodler = (function(){
 			ir.set("dimensionPopupY", ysize);
 			ir.set("dimensionPopupBoxSize", 70);
             doodler.recalcSize()
+            
 
             
 			ir.set("drawRoughCheck", self.drawRough);
@@ -2209,7 +2214,23 @@ var doodler = (function(){
         var delta = Math.max(-1, Math.min(1, (evn.wheelDelta || -evn.detail)));
         if(evn.ctrlKey && self.mouseMode==Modes.StampTool){
             self.mouseMode.scrollStamp(delta);
-        }else{
+        }
+        else if(evn.ctrlKey && self.mouseMode==Modes.Doodle){
+            self.mouseMode.size += delta*2;
+            ir.set("doodleSizeLabel", self.mouseMode.size);
+            ir.set("doodleSize", self.mouseMode.size);
+        }
+        else if(evn.ctrlKey && self.mouseMode==Modes.SnapToGrid){
+            self.mouseMode.inset += delta*2;
+            ir.set("snapToGridInsetLabel", self.mouseMode.inset);
+            ir.set("snapToGridInset", self.mouseMode.inset);
+        }
+        else if(evn.ctrlKey && self.mouseMode==Modes.Hatching){
+            self.mouseMode.hatchSize += delta*2;
+            ir.set("hatchingHatchSizeLabel", self.mouseMode.hatchSize);
+            ir.set("hatchingHatchSize", self.mouseMode.hatchSize);
+        }
+        else{
             self.zoom(delta);
         }
     },
@@ -2400,6 +2421,134 @@ var doodler = (function(){
     },
     showGenerateDungeonPopup: function(){
         doodler.pop("randomGenPopup");  
+    },
+    generateWorld: async function(){
+        doodler.unpop("worldGenPopup");
+        simE = new SimplexNoise();
+        simM = new SimplexNoise();
+        function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
+        function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
+        var height=doodler.doodleCanvas.height/10;
+        var width=doodler.doodleCanvas.width/10;
+        doodler.doodleCtx.clearRect(0,0,doodler.doodleCanvas.width, doodler.doodleCanvas.height);
+        var noiseArr = [];
+        for(var type=1;type<=4;type++){
+            //type 1==sand, 2==forest, 3==rock, 4=lava
+            if(type==1){
+                Modes.Hatching.changeImageStyle({target:{value:"d2"}});
+                while(!doodler.layers[doodler.currentLayer].floorGenerated){
+                    await sleep(100);
+                }
+            }else if(type==2){
+                Modes.Hatching.changeImageStyle({target:{value:"gr1"}});
+                while(!doodler.layers[doodler.currentLayer].floorGenerated){
+                    await sleep(100);
+                }
+            }
+            else if(type==3){
+                Modes.Hatching.changeImageStyle({target:{value:"r3"}});
+                while(!doodler.layers[doodler.currentLayer].floorGenerated){
+                    await sleep(100);
+                }
+            }
+            else if(type==4){
+                Modes.Hatching.changeImageStyle({target:{value:"magma1"}});
+                while(!doodler.layers[doodler.currentLayer].floorGenerated){
+                    await sleep(100);
+                }
+            }
+            for (var y = -1; y < height+1; y++) {
+              for (var x = -1; x < width+1; x++) {      
+                var nx = x/width - 0.5, ny = y/height - 0.5;
+                var e = (1.00 * noiseE( 1 * nx,  1 * ny)
+                       + 0.50 * noiseE( 2 * nx,  2 * ny)
+                       + 0.25 * noiseE( 4 * nx,  4 * ny)
+                       + 0.13 * noiseE( 8 * nx,  8 * ny)
+                       + 0.06 * noiseE(16 * nx, 16 * ny)
+                       + 0.03 * noiseE(32 * nx, 32 * ny));
+                e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
+                e = Math.pow(e, 1.40);
+                //e = Math.round(e * 6) / 6
+                var m = (1.00 * noiseM( 1 * nx,  1 * ny)
+                       + 0.75 * noiseM( 2 * nx,  2 * ny)
+                       + 0.33 * noiseM( 4 * nx,  4 * ny)
+                       + 0.33 * noiseM( 8 * nx,  8 * ny)
+                       + 0.33 * noiseM(16 * nx, 16 * ny)
+                       + 0.50 * noiseM(32 * nx, 32 * ny));
+                m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
+                /* draw biome(e, m) at x,y */
+                //console.log("X, Y", x, y, "E,M", e, m);
+                self.overlayCtx.fillStyle = "grey";
+             
+                /*else if(e<0.2){
+                    self.doodleCtx.fillStyle = "green";
+                }
+                else if(e<0.3){
+                    self.doodleCtx.fillStyle = "orange";
+                }*/
+                
+                if(e>0.8 && type==4){
+                    self.overlayCtx.filter = doodler.filter;
+                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                }
+                else if(e>0.65 && type==3){
+                    //console.log("Adding some rock")
+                    self.overlayCtx.filter = doodler.filter;
+                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                }
+                else if(e>0.5 && type==2){
+                    //console.log("Adding some forest")
+                    self.overlayCtx.filter = doodler.filter;
+                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                }
+                else if(e>0.4 && type==1){
+                    self.overlayCtx.filter = doodler.filter;
+                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                }
+                
+                
+
+              }
+            }
+            console.log("Drawing world for type " + type);
+            self.overlayCtx.filter = "none";
+            //self.layers[self.currentLayer].doodleCtx.filter = doodler.filter;
+            doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+            //self.layers[self.currentLayer].doodleCtx.filter = doodler.filter;
+        }
+        
+        doodler.updateFrameBuffer();
+        self.overlayCtx.filter = "none";
+    },
+    biome: function(e, m) {      
+      // these thresholds will need tuning to match your generator
+      /*if (e < 0.1) return OCEAN;
+      if (e < 0.12) return BEACH;
+
+      if (e > 0.8) {
+        if (m < 0.1) return SCORCHED;
+        if (m < 0.2) return BARE;
+        if (m < 0.5) return TUNDRA;
+        return SNOW;
+      }
+
+      if (e > 0.6) {
+        if (m < 0.33) return TEMPERATE_DESERT;
+        if (m < 0.66) return SHRUBLAND;
+        return TAIGA;
+      }
+
+      if (e > 0.3) {
+        if (m < 0.16) return TEMPERATE_DESERT;
+        if (m < 0.50) return GRASSLAND;
+        if (m < 0.83) return TEMPERATE_DECIDUOUS_FOREST;
+        return TEMPERATE_RAIN_FOREST;
+      }
+
+      if (m < 0.16) return SUBTROPICAL_DESERT;
+      if (m < 0.33) return GRASSLAND;
+      if (m < 0.66) return TROPICAL_SEASONAL_FOREST;
+      return TROPICAL_RAIN_FOREST;*/
     },
     generateDungeon: function(){
         doodler.unpop("randomGenPopup");
@@ -2913,7 +3062,7 @@ var doodler = (function(){
                                 var yplus = ih*(1/sY);//*self.zoomLevel;
 
 
-                                stLay.floorGenerated = true;
+                                
                                 var canv2 = document.createElement("canvas");
                                 //By foot count
                                 canv2.width = xfeet*dim.footPixel+1;
@@ -2934,6 +3083,7 @@ var doodler = (function(){
                                     img2.width = canv2.width;
                                     img2.height = canv2.height;
                                     stLay.floorImg = img2;
+                                    stLay.floorGenerated = true;
                                     self.updateFrameBuffer();
                                 };
                                 img2.src = dataurl;
@@ -3405,6 +3555,9 @@ var doodler = (function(){
         
         if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
 			self.generateDungeon();
+		}
+        if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
+			self.generateWorld();
 		}
         
         if(evt.ctrlKey && evt.key.toLowerCase() == "z" && !evt.shiftKey){
@@ -3951,7 +4104,7 @@ var doodler = (function(){
 	},
     exportImage: function(){
         doodler.popupShowing=true;
-		ir.show("imageExportPopup");
+		doodler.pop("imageExportPopup");
 		ir.focus("imageExportName");
 	},
 	exportImageConfirm: function(){
@@ -4682,7 +4835,7 @@ var doodler = (function(){
             htm += "Move " + lclick + msp + self.kbd("Undo","Z") + msp + self.kbd("Redo", "Shift", "Z");
         }
         
-        if(self.mode != Modes.Hatching){
+        if(self.mode != Modes.Hatching && !evt.ctrlKey){
             if(evt.shiftKey){
                 htm += "Subtract " + lclick;
             }else{
@@ -4697,6 +4850,9 @@ var doodler = (function(){
         }
         if(!evt.ctrlKey && !evt.shiftKey){
             htm += msp + "Zoom "+scroll + msp + self.kbd("Move","M");
+        }
+        if(evt.ctrlKey && (self.mouseMode==Modes.Doodle || self.mouseMode==Modes.Hatching || self.mouseMode==Modes.SnapToGrid)){
+            htm += msp + "Change Tool Size "+scroll + msp + self.kbd("Move","M");
         }
         bar.innerHTML = htm;
         

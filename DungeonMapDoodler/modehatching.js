@@ -21,7 +21,7 @@ var Hatching = (function(){
 				self.outlineColor = evt.target.value;
 			}
 		},
-		changeImageStyle: function(evt){
+		changeImageStyle: async function(evt){
             //only gets set if clicked from texture images, null otherwise. Overrides the drawFGBG value;
 			var doBackground = doodler.doBackground;
             
@@ -49,12 +49,61 @@ var Hatching = (function(){
                 console.log("ir.get(layer.floorStyle).src" , ir.get(layer.floorStyle).src);
                 var myimg = ir.get("foregroundTexture");
                 myimg.style.backgroundImage = "url('"+ir.get(layer.floorStyle).src+"') ";
+                //await self.loadLayerImage();
             }
 			doodler.doBackground = 0;
             
             doodler.updateFrameBuffer();
             
 		},
+        loadLayerImage: async function(){
+            var layer = doodler.layers[doodler.currentLayer];
+            
+            if(!layer.floorGenerated){	
+            
+                var img = new Image();
+                img.src = ir.get(layer.floorStyle).src;
+                console.log("Generating floor style from " + layer.floorStyle);
+                /// draw the image to be clipped
+                //ctx.drawImage(img, 0, 0, 500, 500);
+                //////
+                await img.decode();
+                //img.onload = function(){
+                    var iw = img.naturalWidth*Modes.Hatching.renderScale;
+                    var ih = img.naturalHeight*Modes.Hatching.renderScale;
+                    var xplus = iw*(1/sX);//*self.zoomLevel;
+                    var yplus = ih*(1/sY);//*self.zoomLevel;
+
+
+                    layer.floorGenerated = true;
+                    var canv2 = document.createElement("canvas");
+                    //By foot count
+                    canv2.width = xfeet*dim.footPixel+1;
+                    canv2.height = yfeet*dim.footPixel+1;
+                    //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+                    var ctx2 = canv2.getContext("2d", {desynchronized:true});
+                    ctx2.lineWidth = 1;
+                    ctx2.strokeStyle = "#fff";
+                    for(var x=0;x<canv2.width;x+=xplus){
+                        for(var y=0;y<canv2.height;y+=yplus){					
+                            ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
+                        }
+                    }
+                    var img2 = new Image();
+                    var dataurl = canv2.toDataURL();
+
+                    img2.onload = function() {
+                        img2.width = canv2.width;
+                        img2.height = canv2.height;
+                        layer.floorImg = img2;
+                        self.updateFrameBuffer();
+                    };
+                    img2.src = dataurl;
+
+                    layer.floorGenerated = true;
+                //}
+            }
+        },
 		changeFloorStyle: function(evt){
 			self.floorStyle = ir.v("hatchFloorStyle");
 			//doodler.hatchGenerated = false;
@@ -142,7 +191,7 @@ var Hatching = (function(){
             doodler.updateFrameBuffer();
 		},
 		drawOverlay: function(xpos, ypos, data){
-			var size = self.size;
+			var size = self.hatchSize;
 			var border=self.borderSize;
 			var zoom = doodler.zoomLevel;
 			var hatchSize = self.hatchSize;
@@ -222,7 +271,7 @@ var Hatching = (function(){
 		drawCursor : function(ctx, xpos, ypos, data){
 			var wh = doodler;
             var zoom = wh.zoomLevel;
-            var size = self.size;
+            var size = self.hatchSize;
             var filter = doodler.filter;
             ctx.filter = filter;
 			ctx.strokeStyle = "rgb(240,60,60)";

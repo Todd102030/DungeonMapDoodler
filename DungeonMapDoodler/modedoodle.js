@@ -301,19 +301,21 @@ var Doodle = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='doodleSizeLabel' value="${self.size}" onchange='Modes.Doodle.changeSize(event, true)' oninput='Modes.Doodle.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="doodleSize" name="doodleSize" min="1" max="150" value='${self.size}' onchange='Modes.Doodle.changeSize(event)' oninput='Modes.Doodle.changeSize(event)'><br>
-						<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='doodleHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Doodle.changeHatchSize(event, true)' oninput='Modes.Doodle.changeHatchSize(event, true)'><br>
-						<input style='width:100px' type="range" id="doodleHatchSize" name="doodleHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Doodle.changeHatchSize(event)' oninput='Modes.Doodle.changeHatchSize(event)'><br>
-						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='doodleBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Doodle.changeBorderSize(event, true)' oninput='Modes.Doodle.changeBorderSize(event, true)'><br>
-						<input style='width:100px' type="range" id="doodleBorderSize" name="doodleBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Doodle.changeBorderSize(event)' oninput='Modes.Doodle.changeBorderSize(event)'><br>
-						<input type="radio" id="doodleSquare" name="doodleShape" value="Square" onchange='Modes.Doodle.changeShape(event)'>
-						<label for="doodleSquare">Square</label><br>
-						<input type="radio" id="doodleCircle" name="doodleShape" value="Circle" onchange='Modes.Doodle.changeShape(event)'>
-						<label for="doodleCircle">Circle</label><br>
+						
+						
 						<input type='color' value='${self.fillColor}' id='doodleFillColor' onchange="Modes.Doodle.changeColor(event, 'fill')">
 						<label for="doodleFillColor">Fill Color</label><br>
 						<input type='color' value='${self.outlineColor}' id='doodleOutlineColor' onchange="Modes.Doodle.changeColor(event, 'outline')">
 						<label for="doodleOutlineColor">Outline Color</label><br>
 						`;
+            /*<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='doodleHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Doodle.changeHatchSize(event, true)' oninput='Modes.Doodle.changeHatchSize(event, true)'><br>
+						<input style='width:100px' type="range" id="doodleHatchSize" name="doodleHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Doodle.changeHatchSize(event)' oninput='Modes.Doodle.changeHatchSize(event)'><br>
+						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='doodleBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Doodle.changeBorderSize(event, true)' oninput='Modes.Doodle.changeBorderSize(event, true)'><br>
+                        <input style='width:100px' type="range" id="doodleBorderSize" name="doodleBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Doodle.changeBorderSize(event)' oninput='Modes.Doodle.changeBorderSize(event)'><br>
+						<input type="radio" id="doodleSquare" name="doodleShape" value="Square" onchange='Modes.Doodle.changeShape(event)'>
+						<label for="doodleSquare">Square</label><br>
+						<input type="radio" id="doodleCircle" name="doodleShape" value="Circle" onchange='Modes.Doodle.changeShape(event)'>
+						<label for="doodleCircle">Circle</label><br>*/
 			container.innerHTML = htm;
 		},
 	}; return self;

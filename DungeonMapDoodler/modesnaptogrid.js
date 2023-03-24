@@ -116,7 +116,7 @@ var SnapToGrid = (function(){
 			var inset=self.inset;
 			//Path Drawing
 			//ctx = data.doodleCtx;
-			ctx.fillStyle = self.fillColor;
+			ctx.fillStyle = "white"; // self.fillColor;
 			if(!doodler.drawRough){
 				ctx.fillRect(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2);
 			}else{
@@ -205,15 +205,13 @@ var SnapToGrid = (function(){
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
 						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='snapToGridInsetLabel' value="${self.inset}" onchange='Modes.SnapToGrid.changeInset(event, true)' oninput='Modes.SnapToGrid.changeInset(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridInset" name="snapToGridInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.SnapToGrid.changeInset(event)' oninput='Modes.SnapToGrid.changeInset(event)'><br>
-                        <div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='snapToGridHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.SnapToGrid.changeHatchSize(event, true)' oninput='Modes.SnapToGrid.changeHatchSize(event, true)'><br>
+                        
+						
+						`;
+            /*<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='snapToGridHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.SnapToGrid.changeHatchSize(event, true)' oninput='Modes.SnapToGrid.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridHatchSize" name="snapToGridHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.SnapToGrid.changeHatchSize(event)' oninput='Modes.SnapToGrid.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='snapToGridBorderSizeLabel' value="${self.borderSize}" onchange='Modes.SnapToGrid.changeBorderSize(event, true)' oninput='Modes.SnapToGrid.changeBorderSize(event, true)'><br>
-						<input style='width:100px' type="range" id="snapToGridBorderSize" name="snapToGridBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.SnapToGrid.changeBorderSize(event)' oninput='Modes.SnapToGrid.changeBorderSize(event)'><br>
-						<input type='color' value='${self.fillColor}' id='snapToGridFillColor' onchange="Modes.SnapToGrid.changeColor(event, 'fill')">
-						<label for="snapToGridFillColor">Fill Color</label><br>
-						<input type='color' value='${self.outlineColor}' id='snapToGridOutlineColor' onchange="Modes.SnapToGrid.changeColor(event, 'outline')">
-						<label for="snapToGridOutlineColor">Outline Color</label><br>
-						`;
+						<input style='width:100px' type="range" id="snapToGridBorderSize" name="snapToGridBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.SnapToGrid.changeBorderSize(event)' oninput='Modes.SnapToGrid.changeBorderSize(event)'><br> */
 			container.innerHTML = htm;
 		},
 	}; return self;

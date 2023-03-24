@@ -73,6 +73,7 @@
 						<ul>
 							<li><a href="#" onclick="doodler.showDonJonLoad()">Import donjon Map</a></li>
 							<li><a href="#" onclick="doodler.showGenerateDungeonPopup()">Generate Dungeon</a></li>
+							<li><a href="#" onclick="doodler.pop('worldGenPopup')">Generate World</a></li>
 						</ul>
 					</li>
                     <li><a href="#" class="last">Info &raquo;</a>
@@ -484,7 +485,7 @@
 	<button type="button" class="canvBtn" onclick="doodler.unpop('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
 </div>
     
-<div id='imageExportPopup' class='popupPanel' style='display:none;text-align: center'>
+<div id='imageExportPopup' class='popupPanel' style='text-align: center'>
 	<h2>Publish Image File</h2>
 	<table>
         <tr><td colspan="2">This will publish your map image to fictionalmaps.com, an online map viewer similar to Google Maps</td></tr>
@@ -561,10 +562,37 @@
 		
         <div style='width:100%'><div id="exportWait" class="loader" style="display:none;"></div></div>
 	</table>
-	<button type="button" class="canvBtn" onclick="doodler.generateDungeon()">Generate</button>
+	<button type="button" class="canvBtn" onclick="doodler.generateDungeon()">Generate Dungeon</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('randomGenPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
-    
+
+    <div id='worldGenPopup' class='popupPanel' style='text-align: center'>
+	<h2>Generate Random World</h2>
+	<table><!-- //Options from user
+        //Width
+        //Height
+        //Linear/Sprawling, number of rooms, room size -->
+        <!--<tr><td colspan="2">Use these parameters to edit </td></tr>-->
+        <tr><td colspan="2">Use this to create a randomly generated world. Changing the parameters below will affect the generated dungeon. You can also use Ctrl 9 to keep generating new ones without returning to this popup.</td></tr>
+		<tr>
+			<td class='tdr'>Width:</td>
+			<td class='tdl'>
+				<input type="number" id="worldGenWidth" value='30' min="15" >
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Height:</td>
+			<td class='tdl'>
+				<input type="number" id="worldGenHeight" value='30' min="15" >
+			</td>
+		</tr>
+        
+		<div id='worldPreviewContainer'><img id='worldPreviewImg'> </div>
+        <div style='width:100%'><div id="worldWait" class="loader" style="display:none;"></div></div>
+	</table>
+	<button type="button" class="canvBtn" onclick="doodler.generateWorld()">Generate World</button>
+	<button type="button" class="canvBtn" onclick="doodler.unpop('worldGenPopup');doodler.popupShowing=false;">Cancel</button>
+</div>
     
 <div id='donJonPopup' class='popupPanel' style='text-align: center'>
 	<h2>Import donjon Dungeon</h2>
@@ -733,16 +761,18 @@
         Dynamic Brush Type:
         <select id='dynamicBrushSelect' onchange='doodler.setDynamicBrush(event)' >
             <option value='none'>None</option>
-            <option value='ripple1'>Rough Coastline</option>
-            <option value='noise'>Noise</option>
+            <option value='ripple1'>Island Coastline</option>
+            <option value='displacementFilter' selected="selected">Rough Coastline</option>
+            <option value='noise'>Noisy</option>
             <option value='squiggly-1'>Squiggly</option>
-            <option value='displacementFilter' selected="selected">Displacement Filter</option>
+            <option value='blur'>Blurred Edge</option>
+            
         </select>
         <div class="tooltipError">Dynamic brushes allow you to draw detailed, natural looking terrain with all the drawing tools</div>
     </div>
     <br>
     <details>
-        <summary>Advanced Brush Settings</summary>
+    <summary>Advanced Brush Settings</summary>
         <div class="tooltipParent">
             Brush Turbulence<br>
             <input class='marginLeftRange' type='range' onchange="doodler.changeBrushTurbulence(event)" oninput='doodler.changeBrushTurbulence(event)' min="1" max="8" value="3" step="1"><br><br>
@@ -758,16 +788,19 @@
         <input type='checkbox' id='fancyOutline' checked=checked onchange="doodler.toggleFancyOutlines(event)" ><label for='fancyOutline'>Enable Fancy Outline</label><br>
         <div class="tooltipError">Enable/Disable the Soft Shadow and Outline around Foreground</div>
     </div>
+    <hr>				
     <div class="tooltipParent">
-        Soft Shadow<br>
+        Soft Shadow &emsp;<input type='color' value='#ffffff' id='snapToGridFillColor' onchange="Modes.SnapToGrid.changeColor(event, 'fill')"><br>
         <input class='marginLeftRange' type='range' id='softShadowRange' onchange="doodler.setSoftShadowSize()" oninput='doodler.setSoftShadowSize()' min="0" max="150" value="50" step="1"><br><br>
         <div class="tooltipError">Change size of soft shadow around Foreground</div>
     </div>
+    <hr>
     <div class="tooltipParent">
-        Outline<br>
+        Outline &emsp;<input type='color' value='#000000' id='snapToGridOutlineColor' onchange="Modes.SnapToGrid.changeColor(event, 'outline')"><br>
         <input class='marginLeftRange' type='range' id='outlineRange' onchange="doodler.setOutlineSize()" oninput='doodler.setOutlineSize()' min="-10" max="10" value="1" step="1"><br><br>
         <div class="tooltipError">Change size of outline around Foreground. To the right increases thickness in all directions, to the left increases only in top left direction</div>
     </div>
+    
 </div>	
 
 <div class='bottomBarWrapper'>
@@ -843,11 +876,11 @@
                     <div class='modeBtn tooltip' title="Move" id='modeMove' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Move</h3><ul><li>[M] to select tool</li><li>Click and drag to pan around canvas</li></ul><i></i></div><img id='imgmMove' src="move.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Free Draw/Terrain Tool" id='modeDoodle' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Free Draw</h3><ul><li>[D] to select tool</li><li>Draw freely around the canvas</li></ul><i></i></div><img id='imgmDoodle' src="doodle.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Snap To Grid" id='modeSnapToGrid' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Snap To Grid</h3><ul><li>[G] to select tool</li><li>Draw locked to the grid</li></ul><i></i></div><img id='imgmSnapToGrid' src="snaptogrid.png" width='32px' height='32px'></div>
+                    <div class='modeBtn tooltip' title="Hatching/Painting Tool" id='modeHatching' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Paint Tool</h3><ul><li>[H] to select tool</li><li>Use to fill in drawn areas with new textures without altering the shape of your map</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Line Tool" id='modeLine' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Line Tool</h3><ul><li>[L] to select tool</li><li>Click and drag to draw straight line</li></ul><i></i></div><img id='imgmLine' src="line.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Wall Tool" id='modeWall' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Interior Wall Tool</h3><ul><li>[W] to select tool</li><li>Click and drag to draw straight walls inside of a room</li></ul><i></i></div><img id='imgmWall' src="wall.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Room Tool" id='modeRoomTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Room Tool</h3><ul><li>[R] to select tool</li><li>Click and drag to select entire room at once, release to draw</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmRoomTool' src="roomtool.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Shape Tool" id='modeShapeTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Shape Tool</h3><ul><li>[P] to select tool</li><li>Click and drag to draw shape, starting point will be the center of the shape, drag outwards to change size and rotation</li><li>Hold Shift to enable subtractive mode</li></ul><i></i></div><img id='imgmShapeTool' src="shapetool.png" width='32px' height='32px'></div>
-                    <div class='modeBtn tooltip' title="Hatching/Painting Tool" id='modeHatching' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Hatching</h3><ul><li>[H] to select tool</li><li>Draw hatching layer without drawing anything else. Change hatching style and floor tile for selected layer here</li><li>In World Map mode, use to fill in terrain with new textures without altering the shape of your maps</li></ul><i></i></div><img id='imgmHatching' src="hatch.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Stamps" id='modeStampTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Stamps</h3><ul><li>[S] to select tool</li><li>Click to place a stamp. Click an already placed stamp to select it. Drag red circle to rotate stamp.</li><li>Hold Shift to toggle between snapping and not</li></ul><i></i></div><img id='imgmStampTool' src="stamp.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Text Tool" id='modeTextTool' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Text Tool</h3><ul><li>[T] to select tool</li><li>Click to create a text object. Click existing text object to edit and delete. Click and drag a text object to move</li></ul><i></i></div><img id='imgmTextTool' src="images/texttool.png" width='32px' height='32px'></div>
                     <div class='modeBtn tooltip' title="Erase" id='modeErase' onmouseover='doodler.hoverHelp(event)' onclick='doodler.clickMode(event)'><div class="left"><h3>Erase</h3><ul><li>[E] to select tool</li><li>Use the erase tool to erase floors, outlines, hatching and stamps. Checkboxes are available to choose exactly what you want to erase</li></ul><i></i></div><img id='imgmErase' src="erase.png" width='32px' height='32px'></div>
@@ -882,6 +915,10 @@
     
 <svg id="svgfilters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<defs>
+            <filter id="blur">
+          <feGaussianBlur stdDeviation="15"/>
+        </filter>
+
 			<filter id="teal-white" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 				<feColorMatrix type="matrix" values=".33 .33 .33 0 0
 					.33 .33 .33 0 0
@@ -1262,6 +1299,7 @@
     }
 </script>	
 	
+<script src='simplex-noise.js'></script>
 <script src='irutil.js'></script>
 <script src='irstore.js'></script>
 <script src='keyedarray.js'></script>

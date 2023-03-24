@@ -25,6 +25,10 @@ function Wall(x, y, w, h) {
     return this;
 };
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function StampObj(x, y, w, h, img, imgPath, angle, layer, colour, canColour) {
 	var self = this;
 	img.onload = function(){

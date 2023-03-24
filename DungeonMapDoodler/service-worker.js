@@ -1,4 +1,4 @@
-var cacheName = 'cache-v18'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
+var cacheName = 'cache-v19'; //UPDATE THIS ON EACH ADDITION OF NEW FILES
 var resourcesToPrecache = [
 	"/",
 "./Bugs.txt",
