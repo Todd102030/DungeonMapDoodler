@@ -2428,8 +2428,11 @@ var doodler = (function(){
         simM = new SimplexNoise();
         function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
         function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
-        var height=doodler.doodleCanvas.height/10;
-        var width=doodler.doodleCanvas.width/10;
+
+        
+        var resolution = ir.vn("worldGenResolution");
+        var height=doodler.doodleCanvas.height/resolution;
+        var width=doodler.doodleCanvas.width/resolution;
         doodler.doodleCtx.clearRect(0,0,doodler.doodleCanvas.width, doodler.doodleCanvas.height);
         var noiseArr = [];
         for(var type=1;type<=4;type++){
@@ -2437,26 +2440,33 @@ var doodler = (function(){
             if(type==1){
                 Modes.Hatching.changeImageStyle({target:{value:"d2"}});
                 while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(100);
+                    await sleep(500);
                 }
             }else if(type==2){
                 Modes.Hatching.changeImageStyle({target:{value:"gr1"}});
                 while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(100);
+                    await sleep(500);
                 }
             }
             else if(type==3){
                 Modes.Hatching.changeImageStyle({target:{value:"r3"}});
                 while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(100);
+                    await sleep(500);
                 }
             }
             else if(type==4){
-                Modes.Hatching.changeImageStyle({target:{value:"magma1"}});
+                Modes.Hatching.changeImageStyle({target:{value:"sn1"}});
                 while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(100);
+                    await sleep(500);
                 }
             }
+
+            var l1 = ir.vn("worldGenL1");
+            var l2 = ir.vn("worldGenL2");
+            var l3 = ir.vn("worldGenL3");
+            var l4 = ir.vn("worldGenL4");
+            var exponent = ir.vn("worldGenExponent");
+
             for (var y = -1; y < height+1; y++) {
               for (var x = -1; x < width+1; x++) {      
                 var nx = x/width - 0.5, ny = y/height - 0.5;
@@ -2467,7 +2477,7 @@ var doodler = (function(){
                        + 0.06 * noiseE(16 * nx, 16 * ny)
                        + 0.03 * noiseE(32 * nx, 32 * ny));
                 e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
-                e = Math.pow(e, 1.40);
+                e = Math.pow(e, exponent);
                 //e = Math.round(e * 6) / 6
                 var m = (1.00 * noiseM( 1 * nx,  1 * ny)
                        + 0.75 * noiseM( 2 * nx,  2 * ny)
@@ -2487,23 +2497,23 @@ var doodler = (function(){
                     self.doodleCtx.fillStyle = "orange";
                 }*/
                 
-                if(e>0.8 && type==4){
+                if(e>l4 && type==4){
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
                 }
-                else if(e>0.65 && type==3){
+                else if(e>l3 && type==3){
                     //console.log("Adding some rock")
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
                 }
-                else if(e>0.5 && type==2){
+                else if(e>l2 && type==2){
                     //console.log("Adding some forest")
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
                 }
-                else if(e>0.4 && type==1){
+                else if(e>l1 && type==1){
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*10, y*10, 10, 10);
+                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
                 }
                 
                 
@@ -3541,6 +3551,7 @@ var doodler = (function(){
         
 	},
 	onKeyUp: function(evt){
+        evt.preventDefault();
 		//console.log("Clicked key", evt.key);
         if(self.popupShowing){
 			return;
@@ -3556,7 +3567,7 @@ var doodler = (function(){
         if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
 			self.generateDungeon();
 		}
-        if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
+        if(evt.ctrlKey && evt.key.toLowerCase() == "-"){
 			self.generateWorld();
 		}
         

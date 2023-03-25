@@ -283,6 +283,8 @@
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w2")'><img id='w2' src='hatches/w2.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w3")'><img id='w3' src='hatches/w3.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w4")'><img id='w4' src='hatches/w4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn1")'><img id='sn1' src='hatches/sn1.jpg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn2")'><img id='sn2' src='hatches/sn2.jpg'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di1")'><img id='di1' src='hatches/di1.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di2")'><img id='di2' src='hatches/di2.JPG'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr1")'><img id='gr1' src='hatches/gr1.JPG'></div>
@@ -584,6 +586,27 @@
 			<td class='tdr'>Height:</td>
 			<td class='tdl'>
 				<input type="number" id="worldGenHeight" value='30' min="15" >
+			</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Resolution:</td>
+			<td class='tdl'>
+				<input type="number" id="worldGenResolution" value='50' min="1" max="1000" step="1" >
+			</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Exponent:</td>
+			<td class='tdl'>
+				<input type="number" id="worldGenExponent" value='1.4' min="0" max="10" step="0.1" >
+			</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Thresholds:</td>
+			<td class='tdl'>
+				Sand <input type="number" id="worldGenL1" value='0.4' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
+				Grass <input type="number" id="worldGenL2" value='0.5' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
+				Rock <input type="number" id="worldGenL3" value='0.6' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
+				Snow <input type="number" id="worldGenL4" value='0.7' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
 			</td>
 		</tr>
         
