@@ -570,11 +570,10 @@
 
     <div id='worldGenPopup' class='popupPanel' style='text-align: center'>
 	<h2>Generate Random World</h2>
-	<table><!-- //Options from user
-        //Width
-        //Height
-        //Linear/Sprawling, number of rooms, room size -->
-        <!--<tr><td colspan="2">Use these parameters to edit </td></tr>-->
+	<table>
+		<tr>
+			<td>
+	<table>
         <tr><td colspan="2">Use this to create a randomly generated world. Changing the parameters below will affect the generated dungeon. You can also use Ctrl 9 to keep generating new ones without returning to this popup.</td></tr>
 		<tr>
 			<td class='tdr'>X Offset:</td>
@@ -625,9 +624,13 @@
         
 		
 	</table>
+	</td>
+	<td>
         <button  class="canvBtn" onclick="doodler.previewWorld()">Preview</button>
         <div id='worldPreviewContainer'><img id='worldPreviewImg' width="300px" style="image-rendering: crisp-edges;"> </div>
-        
+	</td>
+	</tr>
+	</table>
         <div style='width:100%'><div id="worldWait" class="loader" style="display:none;"></div></div>
 	<button type="button" class="canvBtn" onclick="doodler.generateWorld()">Generate World</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('worldGenPopup');doodler.popupShowing=false;">Cancel</button>
