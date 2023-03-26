@@ -1752,6 +1752,7 @@ var doodler = (function(){
         }
     },
     drawLoop: function(){
+        //TODO: COMMENT OUT THIS LINE AND PUT DOODLER.DRAWLOOP EVERYWHERE NEEDED (MOUSEMOVE, MOUSEDOWN, MOUSEUP, ZOOM, SLIDER CHANGES, DUNGEON AND WORLD GEN)
     	self.animationId = requestAnimFrame(self.drawLoop);
     	if(self.ctx){
     		self.drawCanvas();
@@ -2422,10 +2423,99 @@ var doodler = (function(){
     showGenerateDungeonPopup: function(){
         doodler.pop("randomGenPopup");  
     },
+    aleaRNG: aleaPRNG("123456789"),
+    randomSeed: function(){
+        ir.set("worldGenSeed", Math.floor(Math.random()*10000000));
+        self.previewWorld();
+    },
+    previewWorld: function(){
+        self.aleaRNG = aleaPRNG(ir.v("worldGenSeed"));
+        self.aleaRNG.restart();
+        simE = new SimplexNoise(self.aleaRNG);
+        simM = new SimplexNoise(self.aleaRNG);
+        function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
+        function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
+
+        
+        var resolution = ir.vn("worldGenResolution");
+        var height=doodler.doodleCanvas.height/resolution;
+        var width=doodler.doodleCanvas.width/resolution;
+        
+        var previewCanvas = document.createElement("canvas");
+        previewCanvas.width = width;
+        previewCanvas.height = height;
+        var pCtx = previewCanvas.getContext("2d");
+        
+        pCtx.clearRect(0,0,previewCanvas.width, previewCanvas.height);
+        var noiseArr = [];
+        for(var type=1;type<=4;type++){
+            //type 1==sand, 2==forest, 3==rock, 4=snow
+       
+            var l1 = ir.vn("worldGenL1");
+            var l2 = ir.vn("worldGenL2");
+            var l3 = ir.vn("worldGenL3");
+            var l4 = ir.vn("worldGenL4");
+            var exponent = ir.vn("worldGenExponent");
+
+            for (var y = -1; y < height+1; y++) {
+              for (var x = -1; x < width+1; x++) {      
+                var nx = x/width - 0.5, ny = y/height - 0.5;
+                var e = (1.00 * noiseE( 1 * nx,  1 * ny)
+                       + 0.50 * noiseE( 2 * nx,  2 * ny)
+                       + 0.25 * noiseE( 4 * nx,  4 * ny)
+                       + 0.13 * noiseE( 8 * nx,  8 * ny)
+                       + 0.06 * noiseE(16 * nx, 16 * ny)
+                       + 0.03 * noiseE(32 * nx, 32 * ny));
+                e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
+                e = Math.pow(e, exponent);
+                //e = Math.round(e * 6) / 6
+                var m = (1.00 * noiseM( 1 * nx,  1 * ny)
+                       + 0.75 * noiseM( 2 * nx,  2 * ny)
+                       + 0.33 * noiseM( 4 * nx,  4 * ny)
+                       + 0.33 * noiseM( 8 * nx,  8 * ny)
+                       + 0.33 * noiseM(16 * nx, 16 * ny)
+                       + 0.50 * noiseM(32 * nx, 32 * ny));
+                m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
+                /* draw biome(e, m) at x,y */
+                pCtx.fillStyle = "grey";
+  
+                if(e>l4 && type==4){
+                    pCtx.fillStyle = "#e6e6e6";
+                    pCtx.fillRect(x, y, 1, 1);
+                }
+                else if(e>l3 && type==3){
+                    pCtx.fillStyle = "#7a7a7a";
+                    pCtx.fillRect(x, y, 1, 1);
+                }
+                else if(e>l2 && type==2){
+                    pCtx.fillStyle = "#6f8745";
+                    pCtx.fillRect(x, y, 1, 1);
+                }
+                else if(e>l1 && type==1){
+                    pCtx.fillStyle = "#ccbe97";
+                    pCtx.fillRect(x, y, 1, 1);
+                }else if(type==1){
+                    pCtx.fillStyle = "#09add0";
+                    pCtx.fillRect(x, y, 1, 1);
+                }
+              }
+            }
+            self.overlayCtx.filter = "none";
+            doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+        }
+        doodler.updateFrameBuffer();
+        self.overlayCtx.filter = "none";
+        
+        
+        ir.get("worldPreviewImg").src = previewCanvas.toDataURL();
+        
+    },
     generateWorld: async function(){
         doodler.unpop("worldGenPopup");
-        simE = new SimplexNoise();
-        simM = new SimplexNoise();
+        self.aleaRNG = aleaPRNG(ir.v("worldGenSeed"));
+        self.aleaRNG.restart();
+        simE = new SimplexNoise(self.aleaRNG);
+        simM = new SimplexNoise(self.aleaRNG);
         function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
         function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
 
@@ -2487,46 +2577,31 @@ var doodler = (function(){
                        + 0.50 * noiseM(32 * nx, 32 * ny));
                 m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
                 /* draw biome(e, m) at x,y */
-                //console.log("X, Y", x, y, "E,M", e, m);
                 self.overlayCtx.fillStyle = "grey";
-             
-                /*else if(e<0.2){
-                    self.doodleCtx.fillStyle = "green";
-                }
-                else if(e<0.3){
-                    self.doodleCtx.fillStyle = "orange";
-                }*/
-                
+  
                 if(e>l4 && type==4){
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
+                    self.overlayCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution+1, resolution+1);
                 }
                 else if(e>l3 && type==3){
                     //console.log("Adding some rock")
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
+                    self.overlayCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution+1, resolution+1);
                 }
                 else if(e>l2 && type==2){
                     //console.log("Adding some forest")
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
+                    self.overlayCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution+1, resolution+1);
                 }
                 else if(e>l1 && type==1){
                     self.overlayCtx.filter = doodler.filter;
-                    self.overlayCtx.fillRect(x*resolution, y*resolution, resolution, resolution);
+                    self.overlayCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution+1, resolution+1);
                 }
-                
-                
-
               }
             }
-            console.log("Drawing world for type " + type);
             self.overlayCtx.filter = "none";
-            //self.layers[self.currentLayer].doodleCtx.filter = doodler.filter;
             doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
-            //self.layers[self.currentLayer].doodleCtx.filter = doodler.filter;
         }
-        
         doodler.updateFrameBuffer();
         self.overlayCtx.filter = "none";
     },
@@ -3621,6 +3696,7 @@ var doodler = (function(){
 		}
 	},
     onMouseMove: function(evt){
+        //self.drawLoop();
         if(self.popupShowing){
 			return;
 		}

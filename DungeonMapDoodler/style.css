@@ -108,10 +108,12 @@ table{
 
 .tdl {
     text-align: left;
+    width:50%;
 }
 
 .tdr{
     text-align: right;
+    width: 50%;
 }
 
 #dockOpenCloseBtn{

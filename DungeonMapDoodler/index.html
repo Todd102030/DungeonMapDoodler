@@ -588,31 +588,41 @@
 				<input type="number" id="worldGenHeight" value='30' min="15" >
 			</td>
 		</tr>
-		<tr>
-			<td class='tdr'>Resolution:</td>
+        <tr>
+			<td class='tdr'>Seed:</td>
 			<td class='tdl'>
-				<input type="number" id="worldGenResolution" value='50' min="1" max="1000" step="1" >
+				<input type="text" id="worldGenSeed" value='123456789'  >
+                <button class="canvBtn" onclick="doodler.randomSeed()">Random Seed</button>
+			</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Resolution (Lower is better):</td>
+			<td class='tdl'>
+				<input type="number" id="worldGenResolution" value='15' min="5" max="1000" step="1" onchange="doodler.previewWorld()" >
 			</td>
 		</tr>
 		<tr>
 			<td class='tdr'>Exponent:</td>
 			<td class='tdl'>
-				<input type="number" id="worldGenExponent" value='1.4' min="0" max="10" step="0.1" >
+				<input type="number" id="worldGenExponent" value='1.4' min="0" max="10" step="0.1"  onchange="doodler.previewWorld()">
 			</td>
 		</tr>
 		<tr>
 			<td class='tdr'>Thresholds:</td>
 			<td class='tdl'>
-				Sand <input type="number" id="worldGenL1" value='0.4' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
-				Grass <input type="number" id="worldGenL2" value='0.5' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
-				Rock <input type="number" id="worldGenL3" value='0.6' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
-				Snow <input type="number" id="worldGenL4" value='0.7' min="0" max="0.99" step="0.01" style="width:60px;" ><br>
+				Sand <input type="number" id="worldGenL1" value='0.4' min="0" max="0.99" step="0.01" style="width:60px;" onchange="doodler.previewWorld()" ><br>
+				Grass <input type="number" id="worldGenL2" value='0.5' min="0" max="0.99" step="0.01" style="width:60px;" onchange="doodler.previewWorld()" ><br>
+				Rock <input type="number" id="worldGenL3" value='0.6' min="0" max="0.99" step="0.01" style="width:60px;" onchange="doodler.previewWorld()" ><br>
+				Snow <input type="number" id="worldGenL4" value='0.7' min="0" max="0.99" step="0.01" style="width:60px;" onchange="doodler.previewWorld()" ><br>
 			</td>
 		</tr>
         
-		<div id='worldPreviewContainer'><img id='worldPreviewImg'> </div>
-        <div style='width:100%'><div id="worldWait" class="loader" style="display:none;"></div></div>
+		
 	</table>
+        <button  class="canvBtn" onclick="doodler.previewWorld()">Preview</button>
+        <div id='worldPreviewContainer'><img id='worldPreviewImg' width="300px" style="image-rendering: crisp-edges;"> </div>
+        
+        <div style='width:100%'><div id="worldWait" class="loader" style="display:none;"></div></div>
 	<button type="button" class="canvBtn" onclick="doodler.generateWorld()">Generate World</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('worldGenPopup');doodler.popupShowing=false;">Cancel</button>
 </div>
@@ -786,6 +796,7 @@
             <option value='none'>None</option>
             <option value='ripple1'>Island Coastline</option>
             <option value='displacementFilter' selected="selected">Rough Coastline</option>
+            <option value='displacementFilter2'>Coastline</option>
             <option value='noise'>Noisy</option>
             <option value='squiggly-1'>Squiggly</option>
             <option value='blur'>Blurred Edge</option>
@@ -1311,7 +1322,12 @@
                 <feDisplacementMap in2="turbulence" in="SourceGraphic"
                     scale="50" xChannelSelector="R" yChannelSelector="G"/>
               </filter>
-
+            <filter id="displacementFilter2">
+                <feTurbulence baseFrequency="0.02"  id='displacementFilter2-turbulence'
+                    numOctaves="3" result="turbulence"/>
+                <feDisplacementMap in2="turbulence" in="SourceGraphic"
+                    scale="50" xChannelSelector="R" yChannelSelector="G"/>
+              </filter>
 		</defs>
 	</svg>
 
@@ -1322,6 +1338,7 @@
     }
 </script>	
 	
+<script src='alea.js'></script>
 <script src='simplex-noise.js'></script>
 <script src='irutil.js'></script>
 <script src='irstore.js'></script>
