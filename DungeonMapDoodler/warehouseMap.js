@@ -2456,10 +2456,13 @@ var doodler = (function(){
             var l3 = ir.vn("worldGenL3");
             var l4 = ir.vn("worldGenL4");
             var exponent = ir.vn("worldGenExponent");
+            var zoom = ir.vn("worldGenZoom");
+            var xoff = ir.vn("worldGenXOffset");
+            var yoff = ir.vn("worldGenYOffset");
 
             for (var y = -1; y < height+1; y++) {
               for (var x = -1; x < width+1; x++) {      
-                var nx = x/width - 0.5, ny = y/height - 0.5;
+                var nx = (x*zoom+xoff)/width - 0.5, ny = (y*zoom+yoff)/height - 0.5;
                 var e = (1.00 * noiseE( 1 * nx,  1 * ny)
                        + 0.50 * noiseE( 2 * nx,  2 * ny)
                        + 0.25 * noiseE( 4 * nx,  4 * ny)
@@ -2556,10 +2559,13 @@ var doodler = (function(){
             var l3 = ir.vn("worldGenL3");
             var l4 = ir.vn("worldGenL4");
             var exponent = ir.vn("worldGenExponent");
+            var zoom = ir.vn("worldGenZoom");
+            var xoff = ir.vn("worldGenXOffset");
+            var yoff = ir.vn("worldGenYOffset");
 
             for (var y = -1; y < height+1; y++) {
               for (var x = -1; x < width+1; x++) {      
-                var nx = x/width - 0.5, ny = y/height - 0.5;
+                var nx = (x*zoom+xoff)/width - 0.5, ny = (y*zoom+yoff)/height - 0.5;
                 var e = (1.00 * noiseE( 1 * nx,  1 * ny)
                        + 0.50 * noiseE( 2 * nx,  2 * ny)
                        + 0.25 * noiseE( 4 * nx,  4 * ny)

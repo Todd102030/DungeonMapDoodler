@@ -577,15 +577,21 @@
         <!--<tr><td colspan="2">Use these parameters to edit </td></tr>-->
         <tr><td colspan="2">Use this to create a randomly generated world. Changing the parameters below will affect the generated dungeon. You can also use Ctrl 9 to keep generating new ones without returning to this popup.</td></tr>
 		<tr>
-			<td class='tdr'>Width:</td>
+			<td class='tdr'>X Offset:</td>
 			<td class='tdl'>
-				<input type="number" id="worldGenWidth" value='30' min="15" >
+				<input type="range" id="worldGenXOffset" value='0' min="0" max="1000" step="1" oninput="doodler.previewWorld()" onchange="doodler.previewWorld()" style='scale:1;margin:2px;' >
 			</td>
 		</tr>
         <tr>
-			<td class='tdr'>Height:</td>
+			<td class='tdr'>Y Offset:</td>
 			<td class='tdl'>
-				<input type="number" id="worldGenHeight" value='30' min="15" >
+				<input type="range" id="worldGenYOffset" value='0' min="0" max="1000" step="1" oninput="doodler.previewWorld()" onchange="doodler.previewWorld()" style='scale:1;margin:2px;' >
+			</td>
+		</tr>
+        <tr>
+			<td class='tdr'>Zoom:</td>
+			<td class='tdl'>
+				<input type="range" id="worldGenZoom" value='1' min="0.01" max="5" step="0.01" oninput="doodler.previewWorld()" onchange="doodler.previewWorld()" style='scale:1;margin:2px;' >
 			</td>
 		</tr>
         <tr>
