@@ -93,7 +93,7 @@ function getGridXY(xpos, ypos){
 	var sx = dim.scaleX;
 	var sy = dim.scaleY;
 	var zoom = wh.zoomLevel;
-	var step = dim.footPixel * dim.stepSize / sx * zoom;
+	var step = dim.footPixel * dim.stepSize * dim.stepScale / sx * zoom;
 	var offx = (wh.globalOffsetX % step);
 	var offy = (wh.globalOffsetY % step);
 	var xgridtop = Math.floor((xpos-offx)/step)*step+offx;
@@ -110,7 +110,7 @@ function getGridXY2(xpos, ypos){
 	var yfeet = dim.hf;
 	var sx = dim.scaleX;
 	var sy = doodler.dimensions.scaleY;
-	var step = dim.footPixel * dim.stepSize / sx;
+	var step = dim.footPixel * dim.stepSize * dim.stepScale / sx;
 	var zoom = doodler.zoomLevel;
 	var xgridtop = Math.floor(xpos/step)*step;
 	var ygridtop = Math.floor(ypos/step)*step;

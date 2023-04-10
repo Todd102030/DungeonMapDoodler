@@ -36,9 +36,9 @@ var Hatching = (function(){
                 layer.hatchStyle = self.imageStyle;
                 layer.hatchImg = null;
                 layer.hatchGenerated = false;
-                console.log("ir.get(layer.hatchStyle).src" , ir.get(layer.hatchStyle).src);
                 var myimg = ir.get("backgroundTexture");
                 myimg.style.backgroundImage = "url('"+ir.get(layer.hatchStyle).src+"') ";
+                self.loadImage(layer, true);
             }
             else{
                 self.floorStyle = evt.target.value;//ir.v("hatchFloorStyle");
@@ -46,9 +46,9 @@ var Hatching = (function(){
                 layer.floorStyle = self.floorStyle;
                 layer.floorImg = null;
                 layer.floorGenerated = false;
-                console.log("ir.get(layer.floorStyle).src" , ir.get(layer.floorStyle).src);
                 var myimg = ir.get("foregroundTexture");
                 myimg.style.backgroundImage = "url('"+ir.get(layer.floorStyle).src+"') ";
+                self.loadImage(layer, false);
                 //await self.loadLayerImage();
             }
 			doodler.doBackground = 0;
@@ -56,6 +56,64 @@ var Hatching = (function(){
             doodler.updateFrameBuffer();
             
 		},
+        loadImage: function(layer, doBg){
+            var img = new Image();
+            var dim = doodler.dimensions;
+            var sX =dim.scaleX;
+            var sY =dim.scaleY;
+            var xfeet = dim.wf;
+            var yfeet = dim.hf;
+            var step = dim.stepSize * dim.footPixel;
+            var stepX = xfeet/dim.stepSize;
+            var stepY = yfeet/dim.stepSize;
+            img.src = ir.get(layer.floorStyle).src;
+            console.log("Generating floor style from " + layer.floorStyle);
+            /// draw the image to be clipped
+            //ctx.drawImage(img, 0, 0, 500, 500);
+            //////
+            img.onload = function(){
+                var iw = img.naturalWidth*Modes.Hatching.renderScale;
+                var ih = img.naturalHeight*Modes.Hatching.renderScale;
+                var xplus = iw*(1/sX);//*self.zoomLevel;
+                var yplus = ih*(1/sY);//*self.zoomLevel;
+
+
+                layer.floorGenerated = true;
+                var canv2 = document.createElement("canvas");
+                //By foot count
+                canv2.width = xfeet*dim.footPixel+1;
+                canv2.height = yfeet*dim.footPixel+1;
+                //console.log("Generating hatch of size ", canv2.width, canv2.height, " from stepSize=", dim.stepSize, "and footPixel=", dim.footPixel, " and boxSize is ", step, " and stepX is ", stepX, " and stepY is ", stepY);
+                var ctx2 = canv2.getContext("2d", {desynchronized:true});
+                ctx2.lineWidth = 1;
+                ctx2.strokeStyle = "#fff";
+                for(var x=0;x<canv2.width;x+=xplus){
+                    for(var y=0;y<canv2.height;y+=yplus){					
+                        ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
+                    }
+                }
+                var img2 = new Image();
+                var dataurl = canv2.toDataURL();
+
+                img2.onload = function() {
+                    img2.width = canv2.width;
+                    img2.height = canv2.height;
+                    if(doBg){
+                        layer.hatchImg = img2;
+                    }else{
+                        layer.floorImg = img2;
+                    }
+                    
+                    doodler.updateFrameBuffer();
+                };
+                img2.src = dataurl;
+                if(doBg){
+                    layer.hatchGenerated = true;
+                }else{
+                    layer.floorGenerated = true;
+                }
+            }  
+        },
         loadLayerImage: async function(){
             var layer = doodler.layers[doodler.currentLayer];
             

@@ -344,6 +344,12 @@ table{
 	min-height:0;
 }
 
+.bigSelect{
+    width: 100%;
+    font-size: 130%;
+    border-radius: 10px;
+}
+
 .popupPanel {
     /*border-style:double;*/
     background-color:#fff;
@@ -351,6 +357,7 @@ table{
     max-width:94%;
     bottom: 10%;
     overflow: auto;
+    max-width: 1000px;
     height:auto;
     position:fixed;
     left: 50%;

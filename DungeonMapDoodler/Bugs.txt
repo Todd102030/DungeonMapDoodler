@@ -75,6 +75,18 @@ Drawing hatch layer possibly needs to be theme edited option that toggles code o
 
 
 
+
+Changelog 2023 
+March 26, 2023
+Added random world generation tool
+Added fractional grid snapping (1/2, 1/4, 1/8)
+Fixed graphical bugs on Snap to Grid and Room tools
+
+
+
+March 22, 2023
+World Map beta update
+
 Changelog 1.2:
 Offline support - install DMD to your tablet or computer's home screen and use without internet
 Floor Tiles - Lots of different styles to customize the look and feel of your dungeons

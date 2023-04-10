@@ -48,6 +48,7 @@ var StampTool = (function(){
                 img.onload = function() {
                     self.custStampIndex++;
 					Stamps.push({src:img.src, ratio:(img.naturalWidth/img.naturalHeight), name:"Custom"+self.custStampIndex, group:StampGroup.Custom, defMult: 1,alias:""});
+                    //self.sortedStamps.push({src:img.src, ratio:(img.naturalWidth/img.naturalHeight), name:"Custom"+self.custStampIndex, group:StampGroup.Custom, defMult: 1,alias:""});
 					self.setParameterBox(ir.get("paramBox"));
                     self.changeStamp(self.sortedStamps.length-1, true);
                 };

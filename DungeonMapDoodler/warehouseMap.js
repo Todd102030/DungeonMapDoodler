@@ -27,6 +27,7 @@ var doodler = (function(){
 		scaleX: 1,
 		scaleY: 1,
 		stepSize: 5,
+        stepScale: 1,
 		footPixel:10,
 		sx: 0,
 		sy: 0,
@@ -391,6 +392,7 @@ var doodler = (function(){
     	dim.hf = yfeet;
     	dim.stepSize = stepsize;
 		dim.footPixel = boxsize / dim.stepSize;
+        dim.stepScale = 1;
     	var tmp;
     	if(dim.sx > dim.ex){
             tmp = dim.sx;
@@ -814,6 +816,10 @@ var doodler = (function(){
             Math.floor(self.globalOffsetY), 
             Math.floor(self.fbCanvas.width*self.zoomLevel),
             Math.floor(self.fbCanvas.height*self.zoomLevel));*/
+        
+        if(self.fbCanvas == null){
+            return;
+        }
         
         ctx.drawImage(self.fbCanvas,
                 -self.globalOffsetX/self.zoomLevel,
@@ -1753,7 +1759,7 @@ var doodler = (function(){
     },
     drawLoop: function(){
         //TODO: COMMENT OUT THIS LINE AND PUT DOODLER.DRAWLOOP EVERYWHERE NEEDED (MOUSEMOVE, MOUSEDOWN, MOUSEUP, ZOOM, SLIDER CHANGES, DUNGEON AND WORLD GEN)
-    	self.animationId = requestAnimFrame(self.drawLoop);
+    	//self.animationId = requestAnimFrame(self.drawLoop);
     	if(self.ctx){
     		self.drawCanvas();
     	}
@@ -2428,6 +2434,10 @@ var doodler = (function(){
         ir.set("worldGenSeed", Math.floor(Math.random()*10000000));
         self.previewWorld();
     },
+    matchGridSize: function(){
+        ir.set("worldGenResolution", ir.vn("dimensionPopupBoxSize"));
+        self.previewWorld();
+    },
     previewWorld: function(){
         self.aleaRNG = aleaPRNG(ir.v("worldGenSeed"));
         self.aleaRNG.restart();
@@ -2501,13 +2511,17 @@ var doodler = (function(){
                     pCtx.fillStyle = "#09add0";
                     pCtx.fillRect(x, y, 1, 1);
                 }
+                if(type==4){
+                    pCtx.fillStyle = "rgba(30, 30, 30, "+(0.8-e)+")";
+                    pCtx.fillRect(x, y, 1, 1);
+                }
               }
             }
-            self.overlayCtx.filter = "none";
-            doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+            //self.overlayCtx.filter = "none";
+            //doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
         }
-        doodler.updateFrameBuffer();
-        self.overlayCtx.filter = "none";
+        //doodler.updateFrameBuffer();
+        //self.overlayCtx.filter = "none";
         
         
         ir.get("worldPreviewImg").src = previewCanvas.toDataURL();
@@ -2522,7 +2536,7 @@ var doodler = (function(){
         function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
         function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
 
-        
+        doodler.layers[doodler.currentLayer].name = "World";
         var resolution = ir.vn("worldGenResolution");
         var height=doodler.doodleCanvas.height/resolution;
         var width=doodler.doodleCanvas.width/resolution;
@@ -2532,25 +2546,25 @@ var doodler = (function(){
             //type 1==sand, 2==forest, 3==rock, 4=lava
             if(type==1){
                 Modes.Hatching.changeImageStyle({target:{value:"d2"}});
-                while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(500);
+                while(!doodler.layers[doodler.currentLayer].floorGenerated || doodler.layers[doodler.currentLayer].floorImg == null){
+                    await sleep(200);
                 }
             }else if(type==2){
                 Modes.Hatching.changeImageStyle({target:{value:"gr1"}});
-                while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(500);
+                while(!doodler.layers[doodler.currentLayer].floorGenerated || doodler.layers[doodler.currentLayer].floorImg == null){
+                    await sleep(200);
                 }
             }
             else if(type==3){
                 Modes.Hatching.changeImageStyle({target:{value:"r3"}});
-                while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(500);
+                while(!doodler.layers[doodler.currentLayer].floorGenerated || doodler.layers[doodler.currentLayer].floorImg == null){
+                    await sleep(200);
                 }
             }
             else if(type==4){
                 Modes.Hatching.changeImageStyle({target:{value:"sn1"}});
-                while(!doodler.layers[doodler.currentLayer].floorGenerated){
-                    await sleep(500);
+                while(!doodler.layers[doodler.currentLayer].floorGenerated || doodler.layers[doodler.currentLayer].floorImg == null){
+                    await sleep(200);
                 }
             }
 
@@ -2606,10 +2620,80 @@ var doodler = (function(){
               }
             }
             self.overlayCtx.filter = "none";
+            //TODO: SOMETHING BREAKING HERE, IMAGE HASN'T LOADED SOMEHOW
             doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+            self.drawLoop();
+            setTimeout(function (){doodler.drawLoop()}, 200);
         }
+        //HEIGHT MAP
+        doodler.addLayer();
+        self.aleaRNG.restart();
+        simE = new SimplexNoise(self.aleaRNG);
+        simM = new SimplexNoise(self.aleaRNG);
+        
+        var l1 = ir.vn("worldGenL1");
+        var l2 = ir.vn("worldGenL2");
+        var l3 = ir.vn("worldGenL3");
+        var l4 = ir.vn("worldGenL4");
+        var exponent = ir.vn("worldGenExponent");
+        var zoom = ir.vn("worldGenZoom");
+        var xoff = ir.vn("worldGenXOffset");
+        var yoff = ir.vn("worldGenYOffset");
+        var heightCtx = doodler.layers[doodler.currentLayer].doodleCtx;
+        doodler.layers[doodler.currentLayer].hatchVisible = false;
+        doodler.layers[doodler.currentLayer].name = "Height Map";
+        //for(var type=1;type<=4;type++){
+            for (var y = -1; y < height+1; y++) {
+              for (var x = -1; x < width+1; x++) {      
+                var nx = (x*zoom+xoff)/width - 0.5, ny = (y*zoom+yoff)/height - 0.5;
+                var e = (1.00 * noiseE( 1 * nx,  1 * ny)
+                       + 0.50 * noiseE( 2 * nx,  2 * ny)
+                       + 0.25 * noiseE( 4 * nx,  4 * ny)
+                       + 0.13 * noiseE( 8 * nx,  8 * ny)
+                       + 0.06 * noiseE(16 * nx, 16 * ny)
+                       + 0.03 * noiseE(32 * nx, 32 * ny));
+                e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
+                e = Math.pow(e, exponent);
+                //e = Math.round(e * 6) / 6
+                var m = (1.00 * noiseM( 1 * nx,  1 * ny)
+                       + 0.75 * noiseM( 2 * nx,  2 * ny)
+                       + 0.33 * noiseM( 4 * nx,  4 * ny)
+                       + 0.33 * noiseM( 8 * nx,  8 * ny)
+                       + 0.33 * noiseM(16 * nx, 16 * ny)
+                       + 0.50 * noiseM(32 * nx, 32 * ny));
+                m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
+                /* draw biome(e, m) at x,y */
+
+                heightCtx.fillStyle = "rgba(70, 70, 70, "+((l2+0.05-e)/2)+")";
+
+                if(e<l1){
+                    heightCtx.filter = doodler.filter;
+                    heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
+                }
+                else{
+                    heightCtx.fillStyle = "rgba(70, 70, 70, "+((l4+0.05-e)/6)+")";
+                    heightCtx.filter = doodler.filter;
+                    heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
+                }
+              }
+            }
+        //}
+        heightCtx.filter = "none";
+        //TODO: SOMETHING BREAKING HERE, IMAGE HASN'T LOADED SOMEHOW
+        doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+        self.drawLoop();
+        
+        //END HEIGHT MAP
+        
+        
+        
+        
+        
+        
         doodler.updateFrameBuffer();
         self.overlayCtx.filter = "none";
+        self.drawLoop();
+        setTimeout(function (){doodler.drawLoop()}, 200);
     },
     biome: function(e, m) {      
       // these thresholds will need tuning to match your generator
@@ -3486,6 +3570,7 @@ var doodler = (function(){
       return result;
     },
     onMouseDown: function(evt){
+        self.drawLoop();
         if(self.popupShowing){
 			return;
 		}
@@ -3617,6 +3702,7 @@ var doodler = (function(){
 		}
     },
       onKeyDown: function(evt){
+        self.drawLoop();
         //console.log("Clicked key", evt.key);
         if(self.popupShowing){
             return;
@@ -3632,6 +3718,7 @@ var doodler = (function(){
         
 	},
 	onKeyUp: function(evt){
+        self.drawLoop();
         evt.preventDefault();
 		//console.log("Clicked key", evt.key);
         if(self.popupShowing){
@@ -3702,7 +3789,7 @@ var doodler = (function(){
 		}
 	},
     onMouseMove: function(evt){
-        //self.drawLoop();
+        self.drawLoop();
         if(self.popupShowing){
 			return;
 		}
@@ -3808,6 +3895,7 @@ var doodler = (function(){
         
     },
     onMouseUp: function(evt){
+        self.drawLoop();
         if(self.popupShowing){
 			return;
 		}
@@ -3895,6 +3983,7 @@ var doodler = (function(){
 		else if(self.mouseMode){
 			self.mouseMode.mouseUp(xpos, ypos, {hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, event:evt});
 		}
+        self.drawLoop();
         
     },
     pinchStart: function(e){
@@ -5086,6 +5175,7 @@ var doodler = (function(){
 		}
 	},
     zoom: function(zoom, suppressOffset, useCenter){
+        
         if(self.lastZoomTime && new Date().getTime() - self.lastZoomTime < 100){
             return;
         }
@@ -5128,6 +5218,7 @@ var doodler = (function(){
         }
         ir.set("zoomSizeLabel", Math.round(self.zoomLevel*10000)/100+"%")
     	self.lastZoomTime = new Date().getTime();
+        self.drawLoop();
     },
     zz_warehouseMap: 0};
   return self;

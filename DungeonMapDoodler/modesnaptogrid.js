@@ -44,6 +44,15 @@ var SnapToGrid = (function(){
 			}
             doodler.needsRefresh = true;
 		},
+        changeScale: function(evt, fromInput){
+			doodler.dimensions.stepScale = parseFloat(evt.target.value);
+			if(!fromInput){
+				ir.set("snapToGridScaleLabel", doodler.dimensions.stepScale);
+			}else{
+				ir.set("snapToGridScale", doodler.dimensions.stepScale);
+			}
+            doodler.needsRefresh = true;
+		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
 			var border=self.borderSize;
@@ -117,8 +126,9 @@ var SnapToGrid = (function(){
 			//Path Drawing
 			//ctx = data.doodleCtx;
 			ctx.fillStyle = "white"; // self.fillColor;
+            var gridxy = getGridXY2(xpos, ypos);
 			if(!doodler.drawRough){
-				ctx.fillRect(xgridtop-inset, ygridtop-inset, step+inset*2, step+inset*2);
+				ctx.fillRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
 			}else{
 				var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
 				var rc = rough.canvas(ctx.canvas);
@@ -142,7 +152,7 @@ var SnapToGrid = (function(){
 			var gridxy = getGridXY2(xpos, ypos);
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
-			ctx.fillRect(gridxy.xpos-inset*zoom, gridxy.ypos-inset*zoom, gridxy.step+inset*2*zoom, gridxy.step+inset*2*zoom);
+			ctx.fillRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
 			/*ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
@@ -206,7 +216,8 @@ var SnapToGrid = (function(){
 						<div class='paramTitle'>In/Outset: </div><input type='number' style='width:60px' id='snapToGridInsetLabel' value="${self.inset}" onchange='Modes.SnapToGrid.changeInset(event, true)' oninput='Modes.SnapToGrid.changeInset(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridInset" name="snapToGridInset" min="${doodler.dimensions.footPixel * doodler.dimensions.stepSize * -1}" max="${doodler.dimensions.footPixel * doodler.dimensions.stepSize}" value='${self.inset}' onchange='Modes.SnapToGrid.changeInset(event)' oninput='Modes.SnapToGrid.changeInset(event)'><br>
                         
-						
+						<div class='paramTitle'>Scale: </div><input type='number' style='width:60px' id='snapToGridScaleLabel' value="${doodler.dimensions.stepScale}" onchange='Modes.SnapToGrid.changeScale(event, true)' oninput='Modes.SnapToGrid.changeScale(event, true)'><br>
+						<input style='width:100px' type="range" id="snapToGridScale" name="snapToGridScale" min="0.125" max="2" step="0.125" value='${doodler.dimensions.stepScale}' onchange='Modes.SnapToGrid.changeScale(event)' oninput='Modes.SnapToGrid.changeScale(event)'><br>
 						`;
             /*<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='snapToGridHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.SnapToGrid.changeHatchSize(event, true)' oninput='Modes.SnapToGrid.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridHatchSize" name="snapToGridHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.SnapToGrid.changeHatchSize(event)' oninput='Modes.SnapToGrid.changeHatchSize(event)'><br>

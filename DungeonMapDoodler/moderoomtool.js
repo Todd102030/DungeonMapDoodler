@@ -101,8 +101,8 @@ var RoomTool = (function(){
 				//ctx.globalCompositeOperation = "destination-out";
 				//ctx.fillStyle = 'black';
 				ctx.fillStyle = self.fillColor;
-				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX)-border-inset, Math.min(self.doodleStartY,self.doodleEndY)-border-inset, 
-						   Math.abs(self.doodleStartX-self.doodleEndX)+(border*2)+inset*2, Math.abs(self.doodleStartY-self.doodleEndY)+(border*2)+inset*2);
+				ctx.fillRect(Math.min(self.doodleStartX,self.doodleEndX), Math.min(self.doodleStartY,self.doodleEndY), 
+						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
 				//ctx.restore();
 				
 				//Outline Drawing
@@ -170,9 +170,9 @@ var RoomTool = (function(){
 				var offy = doodler.globalOffsetY;
 				var zoom = doodler.zoomLevel;
 				if(self.isSnapping){
-					ctx.strokeRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
+					ctx.fillRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
 				}else{
-					ctx.strokeRect(xpos, ypos, 2, 2);
+					ctx.fillRect(xpos, ypos, 2, 2);
 				}
 			}
             ctx.filter = "none";
