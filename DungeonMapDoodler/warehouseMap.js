@@ -1696,13 +1696,16 @@ var doodler = (function(){
             
 			if(st.img == null){
 				st.img = new Image(st.w, st.h);
+                st.img.onload = function(){
+                    st.ctx.drawImage(st.img, 0,0,st.canvas.width, st.canvas.height);
+                };
 				st.img.src = st.path;
-               // st.img.width = st.w;
-               // st.img.height = st.h;
-			}
-            var im = st.canvas || st.img;
-			//Modes.StampTool.drawImageRotated(ctx,st.img, self.globalOffsetX + (st.x * self.zoomLevel*(1/sX)),self.globalOffsetY + (st.y * self.zoomLevel*(1/sY)), st.w * self.zoomLevel*(1/sX), st.h * self.zoomLevel*(1/sY), st.angle);
-			Modes.StampTool.drawImageRotated(ctx,im, st.x, st.y, st.w, st.h, st.angle);
+                //TODO THIS IS GETTING BROKEN ON LOADING CUSTOM STAMPS, ST.CANVAS IS EMPTY/NOT DRAWN TO
+      
+			}else{
+                var im = st.canvas || st.img;
+                Modes.StampTool.drawImageRotated(ctx,im, st.x, st.y, st.w, st.h, st.angle);
+            }
             //self.updateFrameBuffer
         }
     },
