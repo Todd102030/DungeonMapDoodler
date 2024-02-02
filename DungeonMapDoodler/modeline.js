@@ -325,8 +325,6 @@ var Line = (function(){
 						<label for="lineCircle">Circle</label><br>-->
 						<input type='color' value='${self.fillColor}' id='lineFillColor' onchange="Modes.Line.changeColor(event, 'fill')">
 						<label for="lineFillColor">Fill Color</label><br>
-						<input type='color' value='${self.outlineColor}' id='lineOutlineColor' onchange="Modes.Line.changeColor(event, 'outline')">
-						<label for="lineOutlineColor">Outline Color</label><br>
 						`;
 			container.innerHTML = htm;
 		},

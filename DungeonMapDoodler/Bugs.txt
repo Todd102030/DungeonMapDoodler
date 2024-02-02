@@ -1,3 +1,9 @@
+
+Feb 2 2024:
+Added toggle to only apply overlay to background layer and not foreground
+Fix - added fill color back to snap to grid
+
+
 Jan 17, 2024:
 Fixed svg quality regression with recolored stamps and increased stamp sizes
 

@@ -101,12 +101,14 @@ var doodler = (function(){
     overlayCanvas: null,
     overlayHoverCanvas: null,
     overlayCtx: null,
+    onlyOverlayBackground: false,
     /** Warehouse object */
     rec:{Row:0,Name:"Warehouse Name"},
     /** SeedPickup objects for this warehouse */
     seeds:[],
 	stamps: [],
 	sortedStamps: [],
+    softShadowColor: "#ffffff",
     softShadowSize: 50,
     outlineSize: 1,
     //Holds all text displayed on screen
@@ -332,6 +334,11 @@ var doodler = (function(){
             ir.set("dimensionSize", sizex + "px x " + sizey + "px<br>(Size is above recommended resolution, issues may occur on less powerful computers)");
         }
         
+    },
+    changeOnlyOverlayBackground: function(evt){
+        self.onlyOverlayBackground = ir.bool("globalOnlyOverlayBackground");
+        self.updateFBDraw();
+        self.drawLoop();
     },
     clickDimension: function(sizeFt){
         ir.set("dimensionPopupX", sizeFt);
@@ -674,6 +681,23 @@ var doodler = (function(){
             if(style.floor.length>0){
                 fg.style.backgroundImage = "url('"+ir.get(style.floor).src+"') ";
             }
+            if(style.noGrid){
+                self.drawGridLines = false;
+            }
+            if(style.fillColor){
+                Modes.Doodle.fillColor = style.fillColor;
+                Modes.SnapToGrid.fillColor = style.fillColor;
+                Modes.Line.fillColor = style.fillColor;
+            }else{
+                Modes.Doodle.fillColor = "#ffffff";
+                Modes.SnapToGrid.fillColor = "#ffffff";
+                Modes.Line.fillColor = "#ffffff";
+            }
+            if(style.softShadowSize != null){
+                self.softShadowSize = style.softShadowSize;
+            }else{
+                self.softShadowSize = 50;
+            }
             
         }
         self.overlayImg = null;
@@ -816,7 +840,9 @@ var doodler = (function(){
 		})
 		self.drawGrid(canvas, ctx);
         
-        //self.drawOverlay(canvas, ctx);
+        if(!self.onlyOverlayBackground){
+            self.drawOverlay(canvas, ctx);
+        }
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
         self.lastFBUpdate = new Date().getTime();
@@ -1085,8 +1111,15 @@ var doodler = (function(){
                 
             }
 		}
-        self.drawOverlay(canv, ct);
+        if(self.onlyOverlayBackground){
+            self.drawOverlay(canv, ct);
+        }
     },
+    setSoftShadowColor: function(){
+        self.softShadowColor = ir.v("softShadowColor");
+          self.updateFrameBuffer();
+          self.drawLoop();
+      },
     setSoftShadowSize: function(){
       self.softShadowSize = ir.vn("softShadowRange");
         self.updateFrameBuffer();
@@ -1125,7 +1158,7 @@ var doodler = (function(){
                             
                             var hSize = self.softShadowSize;
                             var oSize = self.outlineSize;
-                            ctx.filter = filter + 'drop-shadow(0px 0px '+hSize+'px '+Modes.SnapToGrid.fillColor+')';
+                            ctx.filter = filter + 'drop-shadow(0px 0px '+hSize+'px '+doodler.softShadowColor+')';
                             ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
 
 
@@ -3244,8 +3277,8 @@ var doodler = (function(){
                 self.filter = "url(\'#"+obj.brushName+"\')";
                 ir.set("fancyOutline", obj.drawFancyOutlines);
                 self.drawFancyOutlines = obj.drawFancyOutlines;
-                ir.set("snapToGridFillColor", obj.softShadowColor);
-                Modes.SnapToGrid.fillColor = obj.softShadowColor;
+                ir.set("softShadowColor", obj.softShadowColor);
+                self.softShadowColor = obj.softShadowColor;
                 ir.get("softShadowRange").value = obj.softShadowSize;
                 self.softShadowSize = obj.softShadowSize;
                 ir.set("snapToGridOutlineColor", obj.outlineColor);
@@ -4529,7 +4562,7 @@ var doodler = (function(){
             fullHatch: Modes.Hatching.fullHatch,
             brushName: self.brushName,
             drawFancyOutlines: self.drawFancyOutlines,
-            softShadowColor: Modes.SnapToGrid.fillColor,
+            softShadowColor: self.softShadowColor,
             softShadowSize: self.softShadowSize,
             outlineColor: Modes.SnapToGrid.outlineColor,
             outlineSize: self.outlineSize,

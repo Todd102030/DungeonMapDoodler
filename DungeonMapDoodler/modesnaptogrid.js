@@ -130,7 +130,7 @@ var SnapToGrid = (function(){
 			var inset=self.inset;
 			//Path Drawing
 			//ctx = data.doodleCtx;
-			ctx.fillStyle = "white"; // self.fillColor;
+			ctx.fillStyle = self.fillColor;
             var gridxy = getGridXY2(xpos, ypos);
 			if(!doodler.drawRough){
 				ctx.fillRect(gridxy.xpos-inset, gridxy.ypos-inset, gridxy.step+inset*2, gridxy.step+inset*2);
@@ -223,6 +223,8 @@ var SnapToGrid = (function(){
                         
 						<div class='paramTitle'>Scale: </div><input type='number' style='width:60px' id='snapToGridScaleLabel' value="${doodler.dimensions.stepScale}" onchange='Modes.SnapToGrid.changeScale(event, true)' oninput='Modes.SnapToGrid.changeScale(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridScale" name="snapToGridScale" min="0.125" max="2" step="0.125" value='${doodler.dimensions.stepScale}' onchange='Modes.SnapToGrid.changeScale(event)' oninput='Modes.SnapToGrid.changeScale(event)'><br>
+						<input type='color' value='${self.fillColor}' id='snapToGridFillColor' onchange="Modes.SnapToGrid.changeColor(event, 'fill')">
+						<label for="snapToGridFillColor">Fill Color</label><br>
 						`;
             /*<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='snapToGridHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.SnapToGrid.changeHatchSize(event, true)' oninput='Modes.SnapToGrid.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="snapToGridHatchSize" name="snapToGridHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.SnapToGrid.changeHatchSize(event)' oninput='Modes.SnapToGrid.changeHatchSize(event)'><br>

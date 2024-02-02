@@ -296,8 +296,6 @@ var Doodle = (function(){
 						
 						<input type='color' value='${self.fillColor}' id='doodleFillColor' onchange="Modes.Doodle.changeColor(event, 'fill')">
 						<label for="doodleFillColor">Fill Color</label><br>
-						<input type='color' value='${self.outlineColor}' id='doodleOutlineColor' onchange="Modes.Doodle.changeColor(event, 'outline')">
-						<label for="doodleOutlineColor">Outline Color</label><br>
 						`;
             /*<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='doodleHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Doodle.changeHatchSize(event, true)' oninput='Modes.Doodle.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="doodleHatchSize" name="doodleHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Doodle.changeHatchSize(event)' oninput='Modes.Doodle.changeHatchSize(event)'><br>

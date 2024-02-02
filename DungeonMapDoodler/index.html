@@ -914,7 +914,7 @@
     </div>
     <hr>				
     <div class="tooltipParent">
-        Soft Shadow &emsp;<input type='color' value='#ffffff' id='snapToGridFillColor' onchange="Modes.SnapToGrid.changeColor(event, 'fill')"><br>
+        Soft Shadow &emsp;<input type='color' value='#ffffff' id='softShadowColor' onchange="doodler.setSoftShadowColor()"><br>
         <input class='marginLeftRange' type='range' id='softShadowRange' onchange="doodler.setSoftShadowSize()" oninput='doodler.setSoftShadowSize()' min="0" max="150" value="50" step="1"><br><br>
         <div class="tooltipError">Change size of soft shadow around Foreground</div>
     </div>
@@ -981,6 +981,8 @@
 			<option name='Woven' value='overlays/white-woven-fabric-close-up-texture.jpg'>Woven Fabric</option>
 			<option name='Blueprint' value='overlays/blueprint.png'>Blueprint</option>
             </select><br>
+			<div class='paramTitle'><label for='globalOnlyOverlayBackground'>Only On Background</label></div><input type='checkbox' id="globalOnlyOverlayBackground" onchange="doodler.changeOnlyOverlayBackground(event)" />
+			<br>
             <div class='paramTitle'>Blend Mode</div><br><select id='overlayBlend' style='max-width:140px;' onchange='doodler.changeOverlayBlend(event)'>
 			<option name='Multiply' value='multiply'>Multiply</option>
 			<option name='Lighter' value='lighter'>Lighter</option>
