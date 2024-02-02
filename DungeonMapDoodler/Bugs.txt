@@ -1,3 +1,22 @@
+Jan 17, 2024:
+Fixed svg quality regression with recolored stamps and increased stamp sizes
+
+Jan 15, 2024
+Added ability to recolor stamps
+Fixed issues with upscaling of svgs, stamps now look a lot better
+- need to add inputs to be able to change stamp colours
+
+
+October 8 2023:
+Things to do before releasing current stuff to public
+- Add link to classic version
+- Get ads working on new map
+- Images in tooltips for different tools
+- Finish up new website design
+- Refresh the How To page, maybe add some pictures as well
+
+
+
 Todo Bugfixes:
 Add cursor outline to line draw tool - not lining up on zoom
 Right click acts as draw as well
@@ -82,6 +101,10 @@ Added random world generation tool
 Added fractional grid snapping (1/2, 1/4, 1/8)
 Fixed graphical bugs on Snap to Grid and Room tools
 
+
+April 17:
+Fixed bugs with layers
+Fixed layer name popup constantly appearing
 
 
 March 22, 2023

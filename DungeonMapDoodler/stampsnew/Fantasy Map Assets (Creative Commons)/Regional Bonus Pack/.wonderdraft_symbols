@@ -1,0 +1,205 @@
+{
+    "regional_bonus_sample_01": {
+        "name": "regional_bonus_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_02": {
+        "name": "regional_bonus_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_03": {
+        "name": "regional_bonus_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_04": {
+        "name": "regional_bonus_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_05": {
+        "name": "regional_bonus_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_06": {
+        "name": "regional_bonus_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_07": {
+        "name": "regional_bonus_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "regional_bonus_sample_08": {
+        "name": "regional_bonus_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+    
+    
+    
+   
+    
+  
+
+
+
+
+
+
+    
+  
+    "regional_bonus_custom_01": {
+        "name": "regional_bonus_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_02": {
+        "name": "regional_bonus_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_03": {
+        "name": "regional_bonus_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_04": {
+        "name": "regional_bonus_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_05": {
+        "name": "regional_bonus_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_06": {
+        "name": "regional_bonus_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_07": {
+        "name": "regional_bonus_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "regional_bonus_custom_08": {
+        "name": "regional_bonus_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ 
+    
+    
+    
+
+
+
+
+
+
+
+
+
+    "regional_bonus_normal_01": {
+        "name": "regional_bonus_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_02": {
+        "name": "regional_bonus_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_03": {
+        "name": "regional_bonus_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_04": {
+        "name": "regional_bonus_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_05": {
+        "name": "regional_bonus_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_06": {
+        "name": "regional_bonus_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_07": {
+        "name": "regional_bonus_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "regional_bonus_normal_08": {
+        "name": "regional_bonus_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+ 
+
+   
+   
+   
+    
+ 
+}

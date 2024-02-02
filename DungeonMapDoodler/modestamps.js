@@ -9,7 +9,7 @@ var StampTool = (function(){
 		outlineColor: "black",
 		hatchSize: 30,
 		chosenStamp: {
-            path:'stamps/decor/bed.svg',
+            path:'stampsnew/ Dungeon Map Doodler/Decor/bed.svg',
             name: "Bed",
             alias: "",
             group: StampGroup.Decor,
@@ -22,11 +22,24 @@ var StampTool = (function(){
 		multiplyer:1,
 		paintVariance: 0,
 		paintDistance: 50,
+        recolorStamp: false,
+        redRed: 255,
+        redGreen: 0,
+        redBlue: 0,
+        
+        greenRed: 0,
+        greenGreen: 255,
+        greenBlue: 0,
+        
+        blueRed: 0,
+        blueGreen: 0,
+        blueBlue: 255,
 		size: 50,
-		stampRatio: 1,
+        //ratio of default bed.svg stamp
+		stampRatio: 0.602,
         scrolledStamp: 0,
         recentStamps: [{
-            path:'stamps/decor/bed.svg',
+            path:'stampsnew/ Dungeon Map Doodler/Decor/bed.svg',
             name: "Bed",
             alias: "",
             group: StampGroup.Decor,
@@ -60,12 +73,14 @@ var StampTool = (function(){
 		},
 		changeAngle: function(evt){
 			self.angle = evt.target.value;	
+            doodler.drawLoop();
 		},
 		changeSnapping: function(evt){
 			self.isSnapping = ir.bool("stampsIsSnapping");
             
             ir.enable("stampSize",!self.isSnapping);
             ir.enable("stampSizeLabel", !self.isSnapping);
+            doodler.drawLoop();
             
 		},
 		changeSize: function(evt, fromInput){
@@ -99,6 +114,8 @@ var StampTool = (function(){
                 st.w = gridxy.stepx*self.multiplyer;
                 st.h = gridxy.stepy*self.multiplyer;
             }
+            
+            self.rebuildChosenStamp();
 		},
 		changeSizeMult: function(evt, fromInput){
 			self.multiplyer = parseFloat(evt.target.value);
@@ -130,16 +147,40 @@ var StampTool = (function(){
                 }
                 st.w = gridxy.stepx*self.multiplyer;
                 st.h = gridxy.stepy*self.multiplyer;
+                
             }
+            self.rebuildChosenStamp();
 		},
+        rebuildChosenStamp: function(){
+            self.chosenStampImg = new Image();
+            self.chosenStampImg.onload = function(){
+                self.stampRatio = this.naturalWidth/this.naturalHeight;
+                //Upscale small svgs
+                if((self.chosenStamp.path && self.chosenStamp.path.endsWith(".svg")) || (self.chosenStamp.src && self.chosenStamp.src.endsWith(".svg"))) {
+                    if(self.chosenStampImg.width < 300){
+                        self.chosenStampImg.width *= self.multiplyer;
+                        self.chosenStampImg.height *= self.multiplyer;
+                        console.log("Setting stamp image sizes to ", self.chosenStampImg.width, self.chosenStampImg.height);
+                    }
+                }
+            }
+            self.chosenStampImg.src = self.chosenStamp.path || self.chosenStamp.src;
+            self.recoloredChosenStamp = null;
+        },
+        changeStampNew: function(name, path){
+            self.changeStamp({alias:"", group:0, defMult:1, name:name, path:path}, true);
+        },
 		changeStamp: function(stamp, hidePopup){
             if(hidePopup){  
-                self.chosenStamp = self.sortedStamps[stamp];
-                
+                if(typeof stamp === 'object'){
+                    self.chosenStamp = stamp;
+                }else{
+                    self.chosenStamp = self.sortedStamps[stamp];
+                }
                 //insert into recentstamps if not already there
                 var doinsert = true;
                 self.recentStamps.forEach(function(st, i){
-                    if(st.path == self.chosenStamp.path && st.name == self.chosenStamp.name){
+                    if(st.path == self.chosenStamp.path /*&& st.name == self.chosenStamp.name*/){
                         doinsert = false;
                     }
                 })
@@ -149,23 +190,38 @@ var StampTool = (function(){
             }else{
                 self.chosenStamp = self.recentStamps[stamp];
             }
-			if(self.chosenStampImg==null){
+			//if(self.chosenStampImg==null){
 				self.chosenStampImg = new Image();
-			}
+			//}
+            self.chosenStampImg.onload = function(){
+                self.stampRatio = this.naturalWidth/this.naturalHeight;
+                //Upscale small svgs
+                if((self.chosenStamp.path && self.chosenStamp.path.endsWith(".svg")) || (self.chosenStamp.src && self.chosenStamp.src.endsWith(".svg"))) {
+                    if(self.chosenStampImg.width < 300){
+                        self.chosenStampImg.width *= self.multiplyer;
+                        self.chosenStampImg.height *= self.multiplyer;
+                        console.log("Setting stamp image sizes to ", self.chosenStampImg.width, self.chosenStampImg.height);
+                    }
+                }
+            }
 			self.chosenStampImg.src = self.chosenStamp.path || self.chosenStamp.src;
+            self.recoloredChosenStamp = null;
             
-			self.multiplyer = self.chosenStamp.defMult;
-			ir.set("stampSizeMultLabel", self.chosenStamp.defMult);
-			ir.set("stampSizeMult", self.chosenStamp.defMult);
+			//self.multiplyer = self.chosenStamp.defMult;
+			//ir.set("stampSizeMultLabel", self.chosenStamp.defMult);
+			//ir.set("stampSizeMult", self.chosenStamp.defMult);
             ir.get("stampsCurrentStamp").src = self.chosenStampImg.src;
             ir.get("stampsCurrentStampBtn").title = self.chosenStamp.name;
             self.setParameterBox(ir.get("paramBox"));
+
+            
 
             if(hidePopup){
                 doodler.unpop("stampPopup");
             }
             doodler.popupShowing = false;
             self.stampSelected = null;
+            doodler.drawLoop();
 		},
 		changeColor: function(evt, type){
 			if(type=='fill'){
@@ -173,12 +229,62 @@ var StampTool = (function(){
 			}else{
 				self.outlineColor = evt.target.value;
 			}
+            doodler.drawLoop();
 		},
+        recolorRedHex: "#ff0000",
+        recolorGreenHex: "#00ff00",
+        recolorBlueHex: "#0000ff",
+        changeRecolorRed: function(evt){
+            self.recolorRedHex = evt.target.value;
+            var colors = self.hexToRGB(self.recolorRedHex);
+            self.redRed = colors.red;
+            self.redGreen = colors.green;
+            self.redBlue = colors.blue;
+            self.recoloredChosenStamp = null;
+        },
+        changeRecolorGreen: function(evt){
+            self.recolorGreenHex = evt.target.value;
+            var colors = self.hexToRGB(self.recolorGreenHex);
+            self.greenRed = colors.red;
+            self.greenGreen = colors.green;
+            self.greenBlue = colors.blue;
+            self.recoloredChosenStamp = null;
+        },
+        changeRecolorBlue: function(evt){
+            self.recolorBlueHex = evt.target.value;
+            var colors = self.hexToRGB(self.recolorBlueHex);
+            self.blueRed = colors.red;
+            self.blueGreen = colors.green;
+            self.blueBlue = colors.blue;
+            self.recoloredChosenStamp = null;
+        },
+        hexToRGB: function(h) {
+            let r = 0, g = 0, b = 0;
+          
+            // 3 digits
+            if (h.length == 4) {
+              r = "0x" + h[1] + h[1];
+              g = "0x" + h[2] + h[2];
+              b = "0x" + h[3] + h[3];
+          
+            // 6 digits
+            } else if (h.length == 7) {
+              r = "0x" + h[1] + h[2];
+              g = "0x" + h[3] + h[4];
+              b = "0x" + h[5] + h[6];
+            }
+            
+            return { red:+r, green: +g, blue: +b };
+        },
 		changePaintMode: function(evt){
 			self.isPaintMode = ir.bool("stampsIsPaintMode");
-            
-       
 			ir.show("stampPaintStuff",self.isPaintMode);
+            doodler.drawLoop();
+		},
+        toggleRecolor: function(evt){
+			self.recolorStamp = ir.bool("stampsRecolorStamp");
+			ir.show("stampRecolorStuff",self.recolorStamp);
+            doodler.drawLoop();
 		},
 		changePaintVariance: function(evt, fromInput){
 			self.paintVariance = parseFloat(evt.target.value);   
@@ -187,6 +293,7 @@ var StampTool = (function(){
 			}else{
 				ir.set("stampPaintVariance", self.paintVariance);
 			}
+            doodler.drawLoop();
 		},
 		changePaintDistance: function(evt, fromInput){
 			self.paintDistance = parseFloat(evt.target.value);  
@@ -195,6 +302,7 @@ var StampTool = (function(){
 			}else{
 				ir.set("stampPaintDistance", self.paintDistance);
 			}
+            doodler.drawLoop();
 		},
 		deleteFn: function(fromBtn){
             if(!fromBtn){
@@ -213,59 +321,95 @@ var StampTool = (function(){
             }
             ir.hide("stampsDeleteBtn");
             doodler.updateFrameBuffer();
+            doodler.drawLoop();
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
             var zoom = doodler.zoomLevel;
             var offX = doodler.globalOffsetX;
             var offY = doodler.globalOffsetY;
-            xpos = xpos*zoom+offX;
-            ypos = ypos*zoom+offY;
-			var border=self.borderSize;
-			var ctx = data.hatchCtx;
-			var newimg = new Image();
-			newimg.src = self.chosenStampImg.src;
-			var stampobj = null;
-            if(self.chosenStamp.canColour){
-                self.chosenColour = ir.v("stampColor");
-            }
-			if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
-				var gridxy = getGridXY(xpos, ypos);
-				
-				if(self.stampRatio<1){
-					gridxy.stepx = gridxy.step;
-					gridxy.stepy = gridxy.step / self.stampRatio;
-				}else{
-					gridxy.stepx = gridxy.step * self.stampRatio;
-					gridxy.stepy = gridxy.step;
-				}
-				stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
-				doodler.stamps.push(stampobj);
-                doodler.updateFrameBuffer();
-			}
-			else{
-				console.log("Clicking to create stamp")
-				if(self.stampRatio<1){
-					self.stepx = self.size;
-					self.stepy = self.size / self.stampRatio;
-				}else{
-					self.stepx = self.size * self.stampRatio;
-					self.stepy = self.size;
-				}
-				stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, newimg, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
-				doodler.stamps.push(stampobj);
-                doodler.updateFrameBuffer();
-				
-			}
             
+			var border=self.borderSize;
+			var newimg = self.chosenStampImg;
+			var stampobj = null;
+            //if(self.chosenStamp.canColour){
+            //    self.chosenColour = ir.v("stampColor");
+            //}
+            if(self.isPaintMode){
+                var ctx = doodler.overlayCtx;
+                if(self.stampRatio<1){
+                    self.stepx = self.size;
+                    self.stepy = self.size / self.stampRatio;
+                }else{
+                    self.stepx = self.size * self.stampRatio;
+                    self.stepy = self.size;
+                }
+                var img2 = newimg;
+                if(self.recolorStamp){
+                    img2 = self.recolorImage(newimg, img2, 255, 0, 0, self.redRed, self.redGreen, self.redBlue);
+                    img2 = self.recolorImage(newimg, img2, 0, 255, 0, self.greenRed, self.greenGreen, self.greenBlue);
+                    img2 = self.recolorImage(newimg, img2, 0, 0, 255, self.blueRed, self.blueGreen, self.blueBlue);
+                }
+                self.drawImageRotated(ctx, img2,xpos-(self.stepx*self.multiplyer)/2, ypos-(self.stepy*self.multiplyer)/2, self.stepx*self.multiplyer, self.stepy*self.multiplyer, self.angle, false);
+            }
+            else{
+                xpos = xpos*zoom+offX;
+                ypos = ypos*zoom+offY;
+                if((self.isSnapping && !doodler.shiftDown) || (!self.isSnapping && doodler.shiftDown)){
+                    var gridxy = getGridXY(xpos, ypos);
+                    
+                    if(self.stampRatio<1){
+                        gridxy.stepx = gridxy.step;
+                        gridxy.stepy = gridxy.step / self.stampRatio;
+                    }else{
+                        gridxy.stepx = gridxy.step * self.stampRatio;
+                        gridxy.stepy = gridxy.step;
+                    }                
+                    var img2 = newimg;
+                    if(self.recolorStamp){
+                        img2 = self.recolorImage(newimg, img2, 255, 0, 0, self.redRed, self.redGreen, self.redBlue);
+                        img2 = self.recolorImage(newimg, img2, 0, 255, 0, self.greenRed, self.greenGreen, self.greenBlue);
+                        img2 = self.recolorImage(newimg, img2, 0, 0, 255, self.blueRed, self.blueGreen, self.blueBlue);
+                    }
+                    stampobj = new StampObj(((gridxy.xgridmid-gridxy.step/2)-offX)/zoom, ((gridxy.ygridmid-gridxy.step/2)-offY)/zoom, gridxy.stepx/zoom*self.multiplyer, gridxy.stepy/zoom*self.multiplyer, img2, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
+                    doodler.stamps.push(stampobj);
+                    doodler.updateFrameBuffer();
+                }
+                else{
+                    console.log("Clicking to create stamp")
+                    if(self.stampRatio<1){
+                        self.stepx = self.size;
+                        self.stepy = self.size / self.stampRatio;
+                    }else{
+                        self.stepx = self.size * self.stampRatio;
+                        self.stepy = self.size;
+                    }
+                    var img2 = newimg;
+                    if(self.recolorStamp){
+                        img2 = self.recolorImage(newimg, img2, 255, 0, 0, self.redRed, self.redGreen, self.redBlue);
+                        img2 = self.recolorImage(newimg, img2, 0, 255, 0, self.greenRed, self.greenGreen, self.greenBlue);
+                        img2 = self.recolorImage(newimg, img2, 0, 0, 255, self.blueRed, self.blueGreen, self.blueBlue);
+                    }
+                    stampobj = new StampObj(((xpos-(self.stepx*zoom/2))-offX)/zoom, ((ypos-(self.stepy*zoom/2))-offY)/zoom, self.stepx*self.multiplyer, self.stepy*self.multiplyer, img2, self.chosenStamp.path||self.chosenStamp.src, self.angle, doodler.layers[doodler.currentLayer].layerIndex, self.chosenColour, self.chosenStamp.canColour);
+                    doodler.stamps.push(stampobj);
+                    doodler.updateFrameBuffer();
+                    
+                }
+            }
 		},
+        recoloredChosenStamp: null,
 		drawCursor : function(ctx, xpos, ypos, data){
 			if(self.chosenStampImg==null){
 				self.chosenStampImg = new Image();
 				self.chosenStampImg.src = self.chosenStamp.path||self.chosenStamp.src;
-				self.chosenStampImg.onload = function() {
+				/*self.chosenStampImg.onload = function() {
+                    //console.log("Setting stamp ratio", this.naturalWidth, this.naturalHeight);
 					self.stampRatio = this.naturalWidth/this.naturalHeight;
-				}
+                    if((self.chosenStampImg.path && self.chosenStampImg.path.endsWith(".svg")) || self.chosenStampImg.src && self.chosenStampImg.src.endsWith(".svg")) {
+                        self.chosenStampImg.width *= 4;
+                        self.chosenStampImg.height *= 4;
+                    }
+				}*/
 			}
             var zoom = doodler.zoomLevel;
 			var offX = doodler.globalOffsetX;
@@ -284,7 +428,17 @@ var StampTool = (function(){
 						gridxy.stepx = gridxy.step * self.stampRatio;
 						gridxy.stepy = gridxy.step;
 					}
-					self.drawImageRotated(ctx, self.chosenStampImg, gridxy.xgridmid-gridxy.step/2, gridxy.ygridmid-gridxy.step/2, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle, true);				
+                    var img2 = self.chosenStampImg;
+                    if(self.recolorStamp && self.recoloredChosenStamp == null){
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 255, 0, 0, self.redRed, self.redGreen, self.redBlue);
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 0, 255, 0, self.greenRed, self.greenGreen, self.greenBlue);
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 0, 0, 255, self.blueRed, self.blueGreen, self.blueBlue);
+                        self.recoloredChosenStamp = img2;
+                    }
+                    if(self.recolorStamp){
+                        img2 = self.recoloredChosenStamp;
+                    }
+					self.drawImageRotated(ctx, img2, gridxy.xgridmid-gridxy.step/2, gridxy.ygridmid-gridxy.step/2, gridxy.stepx*self.multiplyer, gridxy.stepy*self.multiplyer, self.angle, true);				
 				}
 				else{
 					if(self.stampRatio<1){
@@ -294,7 +448,17 @@ var StampTool = (function(){
 						self.stepx = self.size * self.stampRatio;
 						self.stepy = self.size;
 					}
-					self.drawImageRotated(ctx, self.chosenStampImg,xpos-(self.stepx/2*zoom), ypos-(self.stepy/2*zoom), self.stepx*zoom*self.multiplyer, self.stepy*zoom*self.multiplyer, self.angle, true);
+                    var img2 = self.chosenStampImg;
+                    if(self.recolorStamp && self.recoloredChosenStamp == null){
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 255, 0, 0, self.redRed, self.redGreen, self.redBlue);
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 0, 255, 0, self.greenRed, self.greenGreen, self.greenBlue);
+                        img2 = self.recolorImage(self.chosenStampImg, img2, 0, 0, 255, self.blueRed, self.blueGreen, self.blueBlue);
+                        self.recoloredChosenStamp = img2;
+                    }
+                    if(self.recolorStamp){
+                        img2 = self.recoloredChosenStamp;
+                    }
+					self.drawImageRotated(ctx, img2, xpos-(self.stepx/2), ypos-(self.stepy/2), self.stepx*self.multiplyer, self.stepy*self.multiplyer, self.angle, true);
 				}
 				
 			}
@@ -355,12 +519,17 @@ var StampTool = (function(){
 			var angleInRadians = angleDeg / 180 * Math.PI;
 			ctx.translate(x+width/2, y+height/2);
 			ctx.rotate(angleInRadians);
-			ctx.drawImage(image, Math.floor(-width / 2), Math.floor(-height / 2), width, height);
+
+            var img2 = image;
+         
+            
+			ctx.drawImage(img2, Math.floor(-width / 2), Math.floor(-height / 2), width, height);
 			ctx.rotate(-angleInRadians);
 			ctx.translate(-x-width/2, -y-height/2);
             if(transparent){
                 ctx.globalAlpha = 1;
             }
+            return img2;
 		},
         drawResizeMarkers: function(ctx, xpos, ypos, data, st){
             if(st == null){
@@ -595,11 +764,11 @@ var StampTool = (function(){
 				var distSinceLast = Math.hypot((self.paintX||0)-xpos, (self.paintY||0)-ypos);
 				if(self.paintX == null || distSinceLast > self.paintDistance){
 					
-					var angle = self.angle;
+					var angle = 0;
 					self.angle = angle + (Math.random()*self.paintVariance*2*360) - (self.paintVariance*360);
 					self.draw(xpos, ypos, data);
 					
-					self.angle = angle;
+					//self.angle = angle;
 					self.paintX = xpos;
 					self.paintY = ypos;
 				}
@@ -617,7 +786,11 @@ var StampTool = (function(){
 		},
 		mouseUp: function(xpos, ypos, data){
 			self.isDoodling = false;
-            if(self.placingStamp && !self.rotatingStamp){
+            if(self.isPaintMode){
+                doodler.drawOverlayStampCommit(xpos, ypos, data);
+			    doodler.updateCurrentImage(false, true);
+            }
+            else if(self.placingStamp && !self.rotatingStamp){
 				self.draw(xpos, ypos, data);
 			}
             if(self.stampHit != null){
@@ -689,6 +862,58 @@ var StampTool = (function(){
             
             return theta;
         },
+        recolorImage: function(checkimg, img, oldRed, oldGreen, oldBlue, newRed, newGreen, newBlue) {
+
+            var c = document.createElement('canvas');
+            var ctx = c.getContext("2d");
+            var checkc = document.createElement('canvas');
+            var checkctx = checkc.getContext("2d");
+            var w = img.width;
+            var h = img.height;
+            c.width = w;
+            c.height = h;
+            checkc.width = w;
+            checkc.height = h;
+
+        
+            // draw the image on the temporary canvas
+            ctx.drawImage(img, 0, 0, w, h);
+            checkctx.drawImage(checkimg, 0, 0, w, h);
+        
+            // pull the entire image into an array of pixel data
+            var imageData = ctx.getImageData(0, 0, w, h);
+            var check = checkctx.getImageData(0, 0, w, h);
+        
+            // examine every pixel, 
+            // change any old rgb to the new-rgb
+            for (var i = 0; i < check.data.length; i += 4) {
+                // if pixel red has any red in it, change it to a proportional amount of newred (newRed * (oldRed/255))
+                // in darker red, red value isn't just lower, green and blue are higher, but match
+                if (check.data[i] > 0 && oldRed > 0 && check.data[i] >check.data[i+1] && check.data[i] >check.data[i+2]) {
+                    // change to your new rgb
+                    var redIntensity = (check.data[i])/255;
+                    imageData.data[i] = newRed * redIntensity;
+                    imageData.data[i + 1] = newGreen * redIntensity;
+                    imageData.data[i + 2] = newBlue * redIntensity;
+                }
+                else if (check.data[i+1] > 0 && oldGreen > 0  && check.data[i+1] >check.data[i] && check.data[i+1] >check.data[i+2]) {
+                    imageData.data[i] = newRed * ((check.data[i+1])/255);
+                    imageData.data[i + 1] = newGreen * ((check.data[i+1])/255);
+                    imageData.data[i + 2] = newBlue * ((check.data[i+1])/255);
+                }
+                else if (check.data[i+2] > 0 && oldBlue > 0  && check.data[i+2] >check.data[i+1] && check.data[i+2] >check.data[i]) {
+                    imageData.data[i] = newRed * ((check.data[i+2])/255);
+                    imageData.data[i + 1] = newGreen * ((check.data[i+2])/255);
+                    imageData.data[i + 2] = newBlue * ((check.data[i+2])/255);
+                }
+            }
+            // put the altered data back on the canvas  
+            ctx.putImageData(imageData, 0, 0);
+        
+            return c;
+        
+        },
+        stopDebug: false,
         scrollStamp: function(delta){
             self.scrolledStamp += delta ;
             if(self.scrolledStamp >= self.recentStamps.length){
@@ -703,18 +928,18 @@ var StampTool = (function(){
         },
         searchStamp: function(event){
             self.searchText = event.target.value.toLowerCase();
-            self.showStampPopup();
+            self.showStampPopup(true);
         },
 		setParameterBox: function(container){
             var colourStampHtm = "";
-            if(self.chosenStamp.canColour){
-                colourStampHtm = `<div class='paramTitle'>Colour</div><input list value='${self.chosenColour}'' type='color' id='stampColor'>`;
-            }
+            //if(self.chosenStamp.canColour){
+            //    colourStampHtm = `<div class='paramTitle'>Colour</div><input list value='${self.chosenColour}'' type='color' id='stampColor'>`;
+            //}
 
             var recentStamps = self.recentStamps;
             var recHtm = "";
             if(recentStamps.length>0){
-			 recHtm += `<details><summary>Recent Stamps</summary><br>`
+			 recHtm += `<details open><summary>Recent Stamps</summary>`
             }
 			recentStamps.forEach(function(stamp, i){
 				recHtm += `<div class='stampBtn' title='${stamp.name}' onclick='Modes.StampTool.changeStamp(${i})'><img src='${stamp.path || stamp.src}' style='transform:unset;'  ></div>`;
@@ -723,7 +948,7 @@ var StampTool = (function(){
 
 			var htm = `<div class='paramTitle'>${self.title}</div><br>
                         <div class='paramTitle' title='Click to choose stamp'>Current Stamp: </div><br>
-                        <div class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div><br>
+                        <div style='background-color:#aaa;' class='stampBtn' id='stampsCurrentStampBtn' title='${self.chosenStamp.name}' onclick='Modes.StampTool.showStampPopup()'><img id='stampsCurrentStamp' style='transform:unset;' src='${self.chosenStamp.path || self.chosenStamp.src}' ></div><br><div class='stampBtn' style='display:none;' id='stampsDeleteBtn' title='Delete selected stamp' onclick='Modes.StampTool.deleteFn(true)'><img id='stampsDeleteStamp' src='images/delete.png' ></div><br>
 						${colourStampHtm}
                         ${recHtm}
                         <div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='stampSizeLabel' value="${self.size}" onchange='Modes.StampTool.changeSize(event, true)' oninput='Modes.StampTool.changeSize(event, true)'><br>
@@ -738,7 +963,13 @@ var StampTool = (function(){
 						<input style='width:100px' type="range" id="stampPaintDistance" name="stampPaintDistance" step='1' min="1" max="200" value='${self.paintDistance}' onchange='Modes.StampTool.changePaintDistance(event)' oninput='Modes.StampTool.changePaintDistance(event)'><br>
 						<div class='paramTitle' id='stampVarTitle'>Paint Variance: </div><input type='number' style='width:60px' step='0.01' id='stampPaintVarianceLabel' value="${self.paintVariance}" onchange='Modes.StampTool.changePaintVariance(event, true)' oninput='Modes.StampTool.changePaintVariance(event, true)'><br>
 						<input style='width:100px' type="range" id="stampPaintVariance" name="stampPaintVariance" step='0.01' min="0" max="1" value='${self.paintVariance}' onchange='Modes.StampTool.changePaintVariance(event)' oninput='Modes.StampTool.changePaintVariance(event)'><br>
-						</div>
+                        </div>
+                        <input type='checkbox' id='stampsRecolorStamp' onclick='Modes.StampTool.toggleRecolor(event)'><label for='stampsRecolorStamp'>Custom Stamp Colors</label><br>
+                        <div id='stampRecolorStuff'>
+                        <div class='paramTitle'>Red</div><input list value='${self.recolorRedHex}' type='color' id='stampRecolorRed' onchange='Modes.StampTool.changeRecolorRed(event)'><br>
+                        <div class='paramTitle'>Green</div><input list value='${self.recolorGreenHex}' type='color' id='stampRecolorGreen' onchange='Modes.StampTool.changeRecolorGreen(event)'><br>
+                        <div class='paramTitle'>Blue</div><input list value='${self.recolorBlueHex}' type='color' id='stampRecolorBlue' onchange='Modes.StampTool.changeRecolorBlue(event)'>
+                        </div>
 						`;
 			
 			htm += `<br><a href='#' class='' onclick='Modes.StampTool.addStamp()'>+ Add Stamp</a><br> `
@@ -757,14 +988,20 @@ var StampTool = (function(){
 			
 			ir.set("stampsIsSnapping", self.isSnapping);
 			ir.set("stampsIsPaintMode", self.isPaintMode);
+			ir.set("stampsRecolorStamp", self.recolorStamp);
             ir.enable("stampSize",!self.isSnapping);
             ir.enable("stampSizeLabel", !self.isSnapping);
             ir.show("stampPaintStuff", self.isPaintMode);
+            ir.show("stampRecolorStuff", self.recolorStamp);
             
 		},
-        showStampPopup: function(){
+        showStampPopup: function(fromSearch){
             doodler.popupShowing = true;
             var container = ir.get("stampPopupList");
+            if(container.innerHTML.length>10 && fromSearch==undefined){
+                doodler.pop("stampPopup");
+                return;
+            }
             var htm = "";
             var searchText = self.searchText || "";
 			
@@ -787,8 +1024,73 @@ var StampTool = (function(){
 				}
 			});
 			htm += `</div>`;
-			container.innerHTML = htm;            
+
+            //new stamp directory stuff
+
+            var stampDir = allStampJson;
+            stampDir.children.sort((a, b)=>{
+                if (a.name < b.name) {
+                    return -1;
+                  }
+                  if (a.name > b.name) {
+                    return 1;
+                  }
+            })
+            this.stampHtml = "";
+            for(var i=0;i<stampDir.children.length;i++){
+                this.processDir(stampDir.children[i], 0);
+            }
+			container.innerHTML = this.stampHtml;            
             doodler.pop("stampPopup");
         },
+        stampHtml: "",
+        processDir: function(myDir, depth){
+            var searchText = self.searchText || "";
+            if(searchText.length >= 2){
+                if(myDir.type == "folder" && myDir.children != null){
+                    myDir.children.sort((a, b)=>{
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                    })
+                    for(var i=0;i<myDir.children.length;i++){
+                        this.processDir(myDir.children[i], depth +1);
+                    }
+                }
+                if(myDir.type == "file" && (myDir.path.endsWith(".png") || myDir.path.endsWith(".jpg") || myDir.path.endsWith(".svg")) && (searchText=="" || myDir.name.toLowerCase().indexOf(searchText)>-1)){
+                    
+                    this.stampHtml += `<div class='stampBtn' style='background-color:#aaa;text-align:center;width:60px;height:60px;line-height:60px;' title='${myDir.name}' 
+                    onclick="Modes.StampTool.changeStampNew('${myDir.name}', 'stampsnew/${ myDir.path.substring(2)}')"><img loading="lazy" src='stampsnew/${myDir.path.substring(2)}' ></div>`;
+                }
+            }else{
+                if(myDir.type == "folder" && myDir.children != null){
+                    if(depth == 0){
+                        this.stampHtml += `<details style='font-size:18pt;text-align:left;margin-left:${depth*6}px;' ><summary>${myDir.name}</summary>`;
+                    }else{
+                        this.stampHtml += `<details style='font-size:14pt;text-align:left;margin-left:${depth*6}px;'><summary>${myDir.name}</summary>`;
+                    }
+                    myDir.children.sort((a, b)=>{
+                        if (a.name < b.name) {
+                            return -1;
+                        }
+                        if (a.name > b.name) {
+                            return 1;
+                        }
+                    })
+                    for(var i=0;i<myDir.children.length;i++){
+                        this.processDir(myDir.children[i], depth +1);
+                    }
+                    this.stampHtml += `</details>`;
+                }else if(myDir.type == "file" && (myDir.path.endsWith(".png") || myDir.path.endsWith(".jpg") || myDir.path.endsWith(".svg")) && (searchText=="" || myDir.name.toLowerCase().indexOf(searchText)>-1)){
+                    
+                    this.stampHtml += `<div class='stampBtn' style='background-color:#aaa;text-align:center;width:60px;height:60px;line-height:60px;' title='${myDir.name}' 
+                    onclick="Modes.StampTool.changeStampNew('${myDir.name}', 'stampsnew/${ myDir.path.substring(2)}')"><img loading="lazy" src='stampsnew/${myDir.path.substring(2)}' ></div>`;
+                }
+            }
+        },
+
 	}; return self;
 	})()

@@ -158,6 +158,7 @@ var doodler = (function(){
 		self.outlineCtx.fillStyle = "rgba(0,0,0,0)";
 		self.outlineCtx.fillRect(0,0,self.outlineCanvas.width,self.outlineCanvas.height);
 		
+        //TODO: HERE THERE"S NO FLOOR STYLE BEING ADDED TO LAYER OBJECT
 		self.layers.push(new Layer("Layer #"+(self.layerIndex+1), self.layerIndex, self.hatchCanvas, self.hatchCtx, self.outlineCanvas, self.outlineCtx, self.doodleCanvas, self.doodleCtx, self.hatchStyleImage, self.floorStyle, true));
 		self.switchLayer(self.layerIndex);
 		self.layerIndex ++;
@@ -218,12 +219,22 @@ var doodler = (function(){
     pop: function(id){
         self.popupShowing = true;
         var popup = ir.get(id);
-        popup.style.transform = "translateX(-50%) translateY(-0%)";
+        if(popup.classList.contains("popupPanelText")){
+            popup.style.transform = "translateX(-50%) translateY(25vh)";
+        }
+        else{
+            popup.style.transform = "translateX(-50%) translateY(-0%)";
+        }
     },
-    unpop: function(id){
+    unpop: function(id, isBottom){
         self.popupShowing = false;
         var popup = ir.get(id);
-        popup.style.transform = "translateX(-50%) translateY(-120%)";
+        if(!isBottom){
+            popup.style.transform = "translateX(-50%) translateY(-120%)";
+        }
+        else{
+            popup.style.transform = "translateX(-50%) translateY(100vh)";
+        }
     },
 	switchLayer: function(layerIndex, allowChange){
         if(layerIndex==self.currentLayer && allowChange){
@@ -244,6 +255,12 @@ var doodler = (function(){
                     self.outlineCtx = layer.outlineCtx;
                     self.doodleCtx = layer.doodleCtx;
                     self.currentLayer = i;
+                    doodler.floorStyle = layer.floorStyle;
+                    doodler.hatchStyleImage = layer.hatchStyle;
+                    if(layer.floorStyle!=""){
+                        ir.get("foregroundTexture").src= ir.get(layer.floorStyle).src;
+                    }
+                    ir.get("backgroundTexture").src = ir.get(layer.hatchStyle).src;
                     //console.log("Changed to layer "+layerIndex);
                     //return self.layers[i];
                 }
@@ -345,6 +362,8 @@ var doodler = (function(){
             floor: "plainWhite",
             fullHatch: true,
         })
+        doodler.floorStyle = "plainWhite";
+        doodler.hatchStyleImage = "hatchingImg";
         self.drawGridLines = true;
         ir.set("outlineRange", 3);
         
@@ -370,6 +389,8 @@ var doodler = (function(){
             floor: "d2",
             fullHatch: true,
         })
+        doodler.floorStyle = "d2";
+        doodler.hatchStyleImage = "w2";
         self.drawGridLines = false;
         ir.set("outlineRange", -2);
        
@@ -383,6 +404,7 @@ var doodler = (function(){
     	var yfeet = ir.vn("dimensionPopupY");
     	var stepsize = ir.vn("dimensionPopupStep");
     	var boxsize = ir.vn("dimensionPopupBoxSize");
+        StampTool.size = boxsize;
     	var mapType = ir.v("dimensionMapType");
     	self.drawRough = ir.bool("dimensionPopupBoxIsRough");
 		ir.set("drawRoughCheck", self.drawRough);
@@ -415,12 +437,13 @@ var doodler = (function(){
 		self.floorGenerated = false;
         
         console.log("maptype is ", mapType)
-        if(mapType == "dungeon"){
-            self.setDungeonDefaults();
-        }else{
-            self.setWorldDefaults();
+        if(!self.loadingSave){
+            if(mapType == "dungeon"){
+                self.setDungeonDefaults();
+            }else{
+                self.setWorldDefaults();
+            }
         }
-        
         
 		
 		if(self.hatchCanvas){
@@ -504,7 +527,7 @@ var doodler = (function(){
     	//self.enableButtons(true);
     },
     applyDeleteTextPopup: function(){
-    	ir.hide("textEditPopup");
+    	doodler.unpop("textEditPopup", true);
     	var id = ir.vn("textEditId");
 		
 		self.popupShowing = false;
@@ -558,7 +581,7 @@ var doodler = (function(){
     	self.enableButtons(true);
     },
     applyEditTextPopup: function(){
-    	ir.hide("textEditPopup");
+    	//doodler.unpop("textEditPopup");
     	var text = self.textFields[ir.vn("textEditId")];
 		self.popupShowing = false;
     	text.text = ir.v("textEditVal");
@@ -566,12 +589,18 @@ var doodler = (function(){
     	text.f = ir.vn("textEditFontSize");
     	text.font = ir.v("textEditFont");
         text.justify = ir.v("textEditJustify");
+    	text.doCurve = ir.bool("textEditCurvedText");
+    	text.curveIntensity = ir.vn("textEditCurveIntensity");
+        if(text.text == ""){
+            self.textFields.splice(ir.vn("textEditId"), 1);
+        }
+        doodler.drawLoop();
     	//self.enableButtons(true);
     },
     applyTextPopup: function(){
         self.popupShowing = false;
     	var text = ir.get("textPopupVal").value;
-    	if(text != ""){
+    	//if(text != ""){
     		ir.hide("textPopup");
 			self.popupShowing = false;
     		self.isPlacingText = true;
@@ -579,9 +608,11 @@ var doodler = (function(){
 	    	var fontSize = ir.vn("textPopupFontSize");
 	    	var font = ir.v("textPopupFont");
 		    var justify = ir.v("textPopupJustify");
-	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font, justify));
+            var doCurve = ir.bool("textPopupCurvedText");
+            var curveIntensity = ir.vn("textPopupCurveIntensity");
+	    	self.textFields.push(new TextField(text, self.tempTextX, self.tempTextY, isVert, fontSize, font, justify, doCurve, curveIntensity));
 	    	self.textId = self.textFields.length-1;
-    	}
+    	//}
     },
     cancelDimensionPopup: function(){
         self.popupShowing = false;
@@ -640,7 +671,9 @@ var doodler = (function(){
             var bg = ir.get("backgroundTexture");
             bg.style.backgroundImage = "url('"+ir.get(style.hatch).src+"') ";
             var fg = ir.get("foregroundTexture");
-            fg.style.backgroundImage = "url('"+ir.get(style.floor).src+"') ";
+            if(style.floor.length>0){
+                fg.style.backgroundImage = "url('"+ir.get(style.floor).src+"') ";
+            }
             
         }
         self.overlayImg = null;
@@ -672,6 +705,7 @@ var doodler = (function(){
 		if(self.mouseMode && self.mouseMode.endMode){
 			self.mouseMode.endMode();
 		}
+        self.canvas.style.cursor = "default";
 		var modeName = evt.target.id.substring(4,evt.target.id.length);
 		if(Modes[modeName] != null){
 			self.mouseMode = Modes[modeName];
@@ -688,6 +722,7 @@ var doodler = (function(){
 			myBtn.style.border = "2px inset darkred";
 			myBtn.style.backgroundColor = "#ddd";
 		}
+        self.updateShortcutsBar(evt);
 	},
     close:function() {
       view.showPrevious();
@@ -776,12 +811,12 @@ var doodler = (function(){
             if(doodler.stopStamps){
 
             }else{
-            self.drawStamps(canvas, ctx, index);
+                self.drawStamps(canvas, ctx, index);
             }
 		})
 		self.drawGrid(canvas, ctx);
         
-        self.drawOverlay(canvas, ctx);
+        //self.drawOverlay(canvas, ctx);
         self.ctx.strokeStyle = "rgb(255,0,0)";
         self.ctx.fillStyle = "rgb(255,0,0)";    
         self.lastFBUpdate = new Date().getTime();
@@ -798,7 +833,8 @@ var doodler = (function(){
         var ctx = ct || self.ctx;
         var isSaving = canv != null;
         ctx.clearRect(0,0,canvas.width, canvas.height);
- 
+        //Clear out any paths that weren't closed properly
+        ctx.beginPath();
         
         self.ctx.fillStyle = self.darkMode ? "#777" : "#bbb";
         self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
@@ -1049,14 +1085,17 @@ var doodler = (function(){
                 
             }
 		}
+        self.drawOverlay(canv, ct);
     },
     setSoftShadowSize: function(){
       self.softShadowSize = ir.vn("softShadowRange");
         self.updateFrameBuffer();
+        self.drawLoop();
     },
     setOutlineSize: function(){
       self.outlineSize = ir.vn("outlineRange");
         self.updateFrameBuffer();
+        self.drawLoop();
     },
 	drawDoodleMap: function(canv, ct, index, skipZoomPos){
 		var canvas = canv || self.canvas;
@@ -1396,44 +1435,52 @@ var doodler = (function(){
         
         ctx.globalAlpha = 0.8;
 
-        if(self.shiftDown){
-            self.overlayCtx.save()
-            self.overlayCtx.globalCompositeOperation = "source-in";
-			self.overlayCtx.fillStyle = "rgb(237, 148, 148)";
-			self.overlayCtx.fillRect(0,0,self.overlayCanvas.width, self.overlayCanvas.height);
-            self.overlayCtx.restore();
-        }
-        
-        //var ctx = data.doodleCtx;
-        //doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
-        //doodler.tmpCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
-        var layer = self.layers[self.currentLayer];
-        if(layer.hatchImg && !self.shiftDown){
-            doodler.overlayCtx.globalCompositeOperation = "source-atop";
-            if(ir.bool("drawFGBG")){
-                if(layer.hatchImg != null){
-                    doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-                }
-            }else{
-                if(layer.floorImg != null){
-                    doodler.overlayCtx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-                }
-            }
-            doodler.overlayCtx.globalCompositeOperation = "source-over";
-        }
-        //ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
-        //Draw tmpCanvas to hatchCtx
-        /*ctx.globalCompositeOperation = "source-atop";
-        ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
-        ctx.globalCompositeOperation = "source-over";*/
-        if(!self.disableFilters){
-            ctx.filter = 'drop-shadow(0px 0px 5px red)';
+        //Need to override the foreground and background colors when painting down stamps
+        if(self.mouseMode==Modes.StampTool && Modes.StampTool.isPaintMode){
+            ctx.filter = 'none';
             ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+            ctx.globalAlpha = 1;
         }
-        ctx.filter = 'none';
-        ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
-        ctx.globalAlpha = 1;
-        //ctx.filter = "none";
+        else{
+            if(self.shiftDown){
+                self.overlayCtx.save()
+                self.overlayCtx.globalCompositeOperation = "source-in";
+                self.overlayCtx.fillStyle = "rgb(237, 148, 148)";
+                self.overlayCtx.fillRect(0,0,self.overlayCanvas.width, self.overlayCanvas.height);
+                self.overlayCtx.restore();
+            }
+            
+            //var ctx = data.doodleCtx;
+            //doodler.tmpCtx.clearRect(0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            //doodler.tmpCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
+            var layer = self.layers[self.currentLayer];
+            if(layer.hatchImg && !self.shiftDown){
+                doodler.overlayCtx.globalCompositeOperation = "source-atop";
+                if(ir.bool("drawFGBG")){
+                    if(layer.hatchImg != null){
+                        doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                    }
+                }else{
+                    if(layer.floorImg != null){
+                        doodler.overlayCtx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                    }
+                }
+                doodler.overlayCtx.globalCompositeOperation = "source-over";
+            }
+            //ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            //Draw tmpCanvas to hatchCtx
+            /*ctx.globalCompositeOperation = "source-atop";
+            ctx.drawImage(doodler.tmpCanvas, 0,0,doodler.tmpCanvas.width,doodler.tmpCanvas.height);
+            ctx.globalCompositeOperation = "source-over";*/
+            if(!self.disableFilters){
+                ctx.filter = 'drop-shadow(0px 0px 5px red)';
+                ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+            }
+            ctx.filter = 'none';
+            ctx.drawImage(self.overlayCanvas, self.globalOffsetX,self.globalOffsetY,self.overlayCanvas.width*self.zoomLevel, self.overlayCanvas.height*self.zoomLevel);
+            ctx.globalAlpha = 1;
+            //ctx.filter = "none";
+        }
     },
     drawOverlayCommit: function(xpos, ypos, data){
         //TODO
@@ -1482,6 +1529,25 @@ var doodler = (function(){
                 data.doodleCtx.restore();
             }
         }
+        doodler.overlayCtx.fillStyle = "rgba(0,0,0,0)";
+        //doodler.debugCanvas(doodler.overlayCanvas)
+        doodler.overlayCtx.clearRect(0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
+        doodler.needsRefresh = true;
+    },
+    drawOverlayStampCommit: function(xpos, ypos, data){
+        var dobg = ir.bool("drawFGBG");
+        doodler.overlayCtx.fillStyle = "rgba(1,1,1,1)";
+        var layer = self.layers[self.currentLayer];
+
+        doodler.overlayCtx.globalCompositeOperation = "source-over";
+        if(dobg){
+            data.hatchCtx.globalCompositeOperation = "source-over";
+            data.hatchCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        }else{
+            data.doodleCtx.globalCompositeOperation = "source-over";
+            data.doodleCtx.drawImage(doodler.overlayCanvas, 0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height );
+        }
+  
         doodler.overlayCtx.fillStyle = "rgba(0,0,0,0)";
         //doodler.debugCanvas(doodler.overlayCanvas)
         doodler.overlayCtx.clearRect(0,0,doodler.overlayCanvas.width,doodler.overlayCanvas.height);
@@ -1725,22 +1791,26 @@ var doodler = (function(){
 		var offx = self.globalOffsetX;
 		var offy = self.globalOffsetY;
 		var zoom = self.zoomLevel;
-        if(textField.vert){
-            ctx.save();
-            ctx.rotate(-Math.PI/2);
-            for(var j = 0;j < textLines.length; j++){
-              ctx.fillText(textLines[j],
-              		(offy+(textField.y*zoom))*-1, 
-              		offx+(textField.x*zoom)+(textField.f*self.zoomLevel*j));
+        if(!textField.doCurve || textField.curveIntensity==0){
+            if(textField.vert){
+                ctx.save();
+                ctx.rotate(-Math.PI/2);
+                for(var j = 0;j < textLines.length; j++){
+                    ctx.fillText(textLines[j],
+                        (offy+(textField.y*zoom))*-1, 
+                        offx+(textField.x*zoom)+(textField.f*self.zoomLevel*j));
+                }
+                ctx.restore();
             }
-        	ctx.restore();
-        }
-        else{
-        	for(var j = 0;j < textLines.length; j++){
-              ctx.fillText(textLines[j],
-            		offx+(textField.x*zoom), 
-            		offy+(textField.y*zoom)+(textField.f*self.zoomLevel*j));
-        	}
+            else{
+                for(var j = 0;j < textLines.length; j++){
+                    ctx.fillText(textLines[j],
+                        offx+(textField.x*zoom), 
+                        offy+(textField.y*zoom)+(textField.f*self.zoomLevel*j));
+                }
+            }
+        }else{
+            TextTool.drawTextAlongArc(ctx, textField, textField.text, offx+(textField.x*zoom), offy+(textField.y*zoom), textField.curveIntensity);
         }
       }
     },
@@ -1935,33 +2005,45 @@ var doodler = (function(){
     getTextBounds: function(textField){
         self.setFont(textField.f * self.zoomLevel, textField.font, null, textField.justify);
         
-  		var textLines = textField.text.split(/\r?\n/g);
-  		var textSizeArray = [];
-  		for (var n=0;n<textLines.length; n++){
-  			textSizeArray[n] = self.ctx.measureText(textLines[n]).width;
-  		}
-  		var newx = 0, newy = 0, neww = 0, newh = 0;
-  		if(textField.vert){
-  			newx = textField.x - textField.f;
-  			newy = textField.y-(Array.max(textSizeArray)/self.zoomLevel);
-  			neww = textField.f*textLines.length;//*self.zoomLevel;
-  			newh = Array.max(textSizeArray)/self.zoomLevel;
-  		}else{
-  			newx = textField.x;
-  			newy = textField.y - textField.f;
-  			neww = Array.max(textSizeArray)/self.zoomLevel;
-  			newh = textField.f*textLines.length;//*self.zoomLevel;
-  		}
-        if(textField.justify == "left"){
-            return {x:newx.f2(), y:newy.f2(), w:neww.f2(), h:newh.f2()};
-        }
-        else if(textField.justify == "center"){
-            return {x:newx.f2()-neww/2, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+        if(textField.doCurve && textField.curveIntensity != 0){
+            var w = self.ctx.measureText(textField.text).width/self.zoomLevel;
+            var h = (textField.f*Math.max(Math.abs(textField.curveIntensity), 3)/3);
+            var radius = TextTool.getCurveTextRadius(textField.curveIntensity);
+            if(textField.curveIntensity<0){
+                return {x:textField.x-w/2, y:textField.y-h, w:w, h:h};
+            }else{
+                return {x:textField.x-w/2, y:textField.y-textField.f, w:w, h:h};
+            }
+            
         }
         else{
-            return {x:newx.f2()-neww, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+            var textLines = textField.text.split(/\r?\n/g);
+            var textSizeArray = [];
+            for (var n=0;n<textLines.length; n++){
+                textSizeArray[n] = self.ctx.measureText(textLines[n]).width;
+            }
+            var newx = 0, newy = 0, neww = 0, newh = 0;
+            if(textField.vert){
+                newx = textField.x - textField.f;
+                newy = textField.y-(Array.max(textSizeArray)/self.zoomLevel);
+                neww = textField.f*textLines.length;//*self.zoomLevel;
+                newh = Array.max(textSizeArray)/self.zoomLevel;
+            }else{
+                newx = textField.x;
+                newy = textField.y - textField.f;
+                neww = Array.max(textSizeArray)/self.zoomLevel;
+                newh = textField.f*textLines.length;//*self.zoomLevel;
+            }
+            if(textField.justify == "left"){
+                return {x:newx.f2(), y:newy.f2(), w:neww.f2(), h:newh.f2()};
+            }
+            else if(textField.justify == "center"){
+                return {x:newx.f2()-neww/2, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+            }
+            else{
+                return {x:newx.f2()-neww, y:newy.f2(), w:neww.f2(), h:newh.f2()};
+            }
         }
-  		
     },
     getScaledTextBounds: function(textField){
      	self.setFont(textField.f * self.zoomLevel);
@@ -2412,6 +2494,7 @@ var doodler = (function(){
             doodler.donJonData = null;
             doodler.popupShowing = false;
             doodler.reloadLayerPreview(self.currentLayer);
+            doodler.updateCurrentImage();
             doodler.unpop("donJonPopup");
         });
         
@@ -2469,6 +2552,7 @@ var doodler = (function(){
             var l3 = ir.vn("worldGenL3");
             var l4 = ir.vn("worldGenL4");
             var exponent = ir.vn("worldGenExponent");
+            var genHeightMap = ir.bool("worldGenHeightMap");
             var zoom = ir.vn("worldGenZoom");
             var xoff = ir.vn("worldGenXOffset");
             var yoff = ir.vn("worldGenYOffset");
@@ -2514,7 +2598,8 @@ var doodler = (function(){
                     pCtx.fillStyle = "#09add0";
                     pCtx.fillRect(x, y, 1, 1);
                 }
-                if(type==4){
+
+                if(type==4 && genHeightMap){
                     pCtx.fillStyle = "rgba(30, 30, 30, "+(0.8-e)+")";
                     pCtx.fillRect(x, y, 1, 1);
                 }
@@ -2538,7 +2623,10 @@ var doodler = (function(){
         simM = new SimplexNoise(self.aleaRNG);
         function noiseE(nx, ny) { return simE.noise2D(nx, ny)/2 + 0.5; }
         function noiseM(nx, ny) { return simM.noise2D(nx, ny)/2 + 0.5; }
-
+        
+        doodler.layers = [];
+        doodler.addLayer();
+        var maplayer = self.currentLayer;
         doodler.layers[doodler.currentLayer].name = "World";
         var resolution = ir.vn("worldGenResolution");
         var height=doodler.doodleCanvas.height/resolution;
@@ -2626,66 +2714,76 @@ var doodler = (function(){
             //TODO: SOMETHING BREAKING HERE, IMAGE HASN'T LOADED SOMEHOW
             doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
             self.drawLoop();
-            setTimeout(function (){doodler.drawLoop()}, 200);
+            setTimeout(function (){doodler.drawLoop();}, 200);
         }
         //HEIGHT MAP
-        doodler.addLayer();
-        self.aleaRNG.restart();
-        simE = new SimplexNoise(self.aleaRNG);
-        simM = new SimplexNoise(self.aleaRNG);
-        
-        var l1 = ir.vn("worldGenL1");
-        var l2 = ir.vn("worldGenL2");
-        var l3 = ir.vn("worldGenL3");
-        var l4 = ir.vn("worldGenL4");
-        var exponent = ir.vn("worldGenExponent");
-        var zoom = ir.vn("worldGenZoom");
-        var xoff = ir.vn("worldGenXOffset");
-        var yoff = ir.vn("worldGenYOffset");
-        var heightCtx = doodler.layers[doodler.currentLayer].doodleCtx;
-        doodler.layers[doodler.currentLayer].hatchVisible = false;
-        doodler.layers[doodler.currentLayer].name = "Height Map";
-        //for(var type=1;type<=4;type++){
-            for (var y = -1; y < height+1; y++) {
-              for (var x = -1; x < width+1; x++) {      
-                var nx = (x*zoom+xoff)/width - 0.5, ny = (y*zoom+yoff)/height - 0.5;
-                var e = (1.00 * noiseE( 1 * nx,  1 * ny)
-                       + 0.50 * noiseE( 2 * nx,  2 * ny)
-                       + 0.25 * noiseE( 4 * nx,  4 * ny)
-                       + 0.13 * noiseE( 8 * nx,  8 * ny)
-                       + 0.06 * noiseE(16 * nx, 16 * ny)
-                       + 0.03 * noiseE(32 * nx, 32 * ny));
-                e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
-                e = Math.pow(e, exponent);
-                //e = Math.round(e * 6) / 6
-                var m = (1.00 * noiseM( 1 * nx,  1 * ny)
-                       + 0.75 * noiseM( 2 * nx,  2 * ny)
-                       + 0.33 * noiseM( 4 * nx,  4 * ny)
-                       + 0.33 * noiseM( 8 * nx,  8 * ny)
-                       + 0.33 * noiseM(16 * nx, 16 * ny)
-                       + 0.50 * noiseM(32 * nx, 32 * ny));
-                m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
-                /* draw biome(e, m) at x,y */
+        var genHeightMap = ir.bool("worldGenHeightMap");
+        if(genHeightMap){
+            doodler.addLayer();
+            self.aleaRNG.restart();
+            simE = new SimplexNoise(self.aleaRNG);
+            simM = new SimplexNoise(self.aleaRNG);
+            
+            var l1 = ir.vn("worldGenL1");
+            var l2 = ir.vn("worldGenL2");
+            var l3 = ir.vn("worldGenL3");
+            var l4 = ir.vn("worldGenL4");
+            
+            var exponent = ir.vn("worldGenExponent");
+            var zoom = ir.vn("worldGenZoom");
+            var xoff = ir.vn("worldGenXOffset");
+            var yoff = ir.vn("worldGenYOffset");
+            var heightCtx = doodler.layers[doodler.currentLayer].doodleCtx;
+            doodler.layers[doodler.currentLayer].hatchVisible = false;
+            doodler.layers[doodler.currentLayer].name = "Height Map";
+            //for(var type=1;type<=4;type++){
+                for (var y = -1; y < height+1; y++) {
+                for (var x = -1; x < width+1; x++) {      
+                    var nx = (x*zoom+xoff)/width - 0.5, ny = (y*zoom+yoff)/height - 0.5;
+                    var e = (1.00 * noiseE( 1 * nx,  1 * ny)
+                        + 0.50 * noiseE( 2 * nx,  2 * ny)
+                        + 0.25 * noiseE( 4 * nx,  4 * ny)
+                        + 0.13 * noiseE( 8 * nx,  8 * ny)
+                        + 0.06 * noiseE(16 * nx, 16 * ny)
+                        + 0.03 * noiseE(32 * nx, 32 * ny));
+                    e = e / (1.00 + 0.50 + 0.25 + 0.13 + 0.06 + 0.03);
+                    e = Math.pow(e, exponent);
+                    //e = Math.round(e * 6) / 6
+                    var m = (1.00 * noiseM( 1 * nx,  1 * ny)
+                        + 0.75 * noiseM( 2 * nx,  2 * ny)
+                        + 0.33 * noiseM( 4 * nx,  4 * ny)
+                        + 0.33 * noiseM( 8 * nx,  8 * ny)
+                        + 0.33 * noiseM(16 * nx, 16 * ny)
+                        + 0.50 * noiseM(32 * nx, 32 * ny));
+                    m = m / (1.00 + 0.75 + 0.33 + 0.13 + 0.13 + 0.10);
+                    /* draw biome(e, m) at x,y */
 
-                heightCtx.fillStyle = "rgba(70, 70, 70, "+((l2+0.05-e)/2)+")";
+                    //pretty good but a little dark
+                    //heightCtx.fillStyle = "rgba(70, 70, 70, "+((l2+0.05-e)/2)+")";
 
-                if(e<l1){
-                    heightCtx.filter = doodler.filter;
-                    heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
+                    heightCtx.fillStyle = "rgba(70, 70, 70, "+((l2+0.05-e)/3)+")";
+                    
+                    if(e<l1){
+                        heightCtx.filter = doodler.filter;
+                        heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
+                    }
+                    else{
+                        //also pretty good but a little dark
+                        //heightCtx.fillStyle = "rgba(70, 70, 70, "+((l4+0.05-e)/6)+")";
+                        heightCtx.fillStyle = "rgba(70, 70, 70, "+((l4+0.05-e)/8)+")";
+                        heightCtx.filter = doodler.filter;
+                        heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
+                    }
                 }
-                else{
-                    heightCtx.fillStyle = "rgba(70, 70, 70, "+((l4+0.05-e)/6)+")";
-                    heightCtx.filter = doodler.filter;
-                    heightCtx.fillRect(x*resolution-0.5, y*resolution-0.5, resolution, resolution);
                 }
-              }
-            }
-        //}
-        heightCtx.filter = "none";
-        //TODO: SOMETHING BREAKING HERE, IMAGE HASN'T LOADED SOMEHOW
-        doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
-        self.drawLoop();
-        
+            //}
+            heightCtx.filter = "none";
+            //TODO: SOMETHING BREAKING HERE, IMAGE HASN'T LOADED SOMEHOW
+            doodler.drawOverlayCommit(0,0,self.layers[self.currentLayer]);
+            
+            setTimeout(function (){doodler.drawLoop();}, 200);
+            self.drawLoop();
+        }
         //END HEIGHT MAP
         
         
@@ -2696,7 +2794,7 @@ var doodler = (function(){
         doodler.updateFrameBuffer();
         self.overlayCtx.filter = "none";
         self.drawLoop();
-        setTimeout(function (){doodler.drawLoop()}, 200);
+        setTimeout(function (){doodler.drawLoop();self.switchLayer(doodler.layers[maplayer].layerIndex);doodler.updateCurrentImage();}, 200);
     },
     biome: function(e, m) {      
       // these thresholds will need tuning to match your generator
@@ -3123,17 +3221,42 @@ var doodler = (function(){
 	loadFile: function(data){
 		//console.log("load file called");
         //JSON parse data into objects
-		
+		var xfeet = ir.vn("dimensionPopupX");
+    	var yfeet = ir.vn("dimensionPopupY");
+        
 		try{
 			var obj = JSON.parse(data);
 			doodler.loadingSave = true;
 			self.dimensions = obj.dimensions;
+            var dim = self.dimensions;
 			//console.log("Save file dimensions are ", self.dimensions);
 			ir.set("dimensionPopupX", self.dimensions.wf);
     		ir.set("dimensionPopupY", self.dimensions.hf);
     		ir.set("dimensionPopupStep", self.dimensions.stepSize);
     		ir.set("dimensionPopupBoxSize", self.dimensions.footPixel * self.dimensions.stepSize);
-			
+
+            if(obj.drawGridLines != null){
+                self.drawGridLines = obj.drawGridLines || true;
+                self.drawGridOutside = obj.drawGridOutside || true;
+                ir.set("hatchingFullHatch", obj.fullHatch);
+                Modes.Hatching.fullHatch = obj.fullHatch;
+                self.brushName = obj.brushName;
+                self.filter = "url(\'#"+obj.brushName+"\')";
+                ir.set("fancyOutline", obj.drawFancyOutlines);
+                self.drawFancyOutlines = obj.drawFancyOutlines;
+                ir.set("snapToGridFillColor", obj.softShadowColor);
+                Modes.SnapToGrid.fillColor = obj.softShadowColor;
+                ir.get("softShadowRange").value = obj.softShadowSize;
+                self.softShadowSize = obj.softShadowSize;
+                ir.set("snapToGridOutlineColor", obj.outlineColor);
+                Modes.SnapToGrid.outlineColor = obj.outlineColor;
+                ir.set("outlineRange", obj.outlineSize);
+                console.log("Setting outlineRange to ", obj.outlineSize);
+                self.outlineSize = obj.outlineSize;
+                ir.set("gridScale", obj.gridScale);
+                doodler.dimensions.stepScale = obj.gridScale;
+            }
+
 			var xsize = self.dimensions.footPixel * self.dimensions.wf;
 			var ysize = self.dimensions.footPixel * self.dimensions.hf;
 			self.applyDimensions(function(){
@@ -3165,7 +3288,7 @@ var doodler = (function(){
 					obj.layers.forEach(function(layer, i){
 						//TODO: Change these thing||true spots to actually allow for a false value
 						var stLay = {
-							layerIndex: i,
+							layerIndex: layer.layerIndex,
 							//hatchCanvas: layer.hatchCanvas,
 							//outlineCanvas: layer.outlineCanvas,
 							//doodleCanvas: layer.doodleCanvas,
@@ -3197,8 +3320,8 @@ var doodler = (function(){
 							stLay.doodleCtx.fillStyle = "rgba(0,0,0,0)";
 							stLay.doodleCtx.clearRect(0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
 							stLay.doodleCtx.drawImage(doodle,0,0,stLay.doodleCanvas.width, stLay.doodleCanvas.height);
-							self.loadLayerList(0);
-							self.switchLayer(0);
+							self.loadLayerList(stLay.layerIndex);
+							self.switchLayer(stLay.layerIndex);
                             self.updateFrameBuffer();
 						}
 						out.onload = function(){
@@ -3236,8 +3359,8 @@ var doodler = (function(){
                             img.onload = function(){
                                 var iw = img.naturalWidth*Modes.Hatching.renderScale;
                                 var ih = img.naturalHeight*Modes.Hatching.renderScale;
-                                var xplus = iw*(1/sX);//*self.zoomLevel;
-                                var yplus = ih*(1/sY);//*self.zoomLevel;
+                                var xplus = iw;//*(1/sX);//*self.zoomLevel;
+                                var yplus = ih;//*(1/sY);//*self.zoomLevel;
 
 
                                 
@@ -3251,7 +3374,7 @@ var doodler = (function(){
                                 ctx2.strokeStyle = "#fff";
                                 for(var x=0;x<canv2.width;x+=xplus){
                                     for(var y=0;y<canv2.height;y+=yplus){					
-                                        ctx2.drawImage(img, x,y,Math.floor(iw*(1/sX)), Math.floor(ih*(1/sY)));
+                                        ctx2.drawImage(img, x,y,Math.floor(iw), Math.floor(ih));
                                     }
                                 }
                                 var img2 = new Image();
@@ -3325,7 +3448,7 @@ var doodler = (function(){
 		for(var i=self.layers.length-1; i>=0;i--){
 			var layer = self.layers[i];
 			var layerSelect = layer.layerIndex == layerSelected;
-			htm += `<div onclick='doodler.switchLayer(${layer.layerIndex}, true)' class='layerRow ${layerSelect?"layerSelected":""}'>
+			htm += `<div class='layerRow ${layerSelect?"layerSelected":""}'>
 						<div class='layerPreview'><img class='layerPreviewImg' id='layerPreview${i}' src="${self.getLayerPreview(i)}" width="50px"><br>`
 			
             //htm += `<div onclick='doodler.switchLayer(${layer.layerIndex})' class='layerRow ${layerSelect?"layerSelected":""}'>
@@ -3335,11 +3458,15 @@ var doodler = (function(){
 			if(layerSelect){	
 				htm += `<img id='layerVisible${i}' class='layerSmallBtn' onclick='doodler.changeVisibility(${i})' src='images/eye${layer.visible?"":"-off"}.png' width='26px' height='26px'>`;
 				htm += `<img id='layerHatchVisible${i}' class='layerSmallBtn' onclick='doodler.changeHatchVisibility(${i})' src='hatch${layer.hatchVisible?"":"-off"}.png'  width='26px' height='26px'>`;
-			}			
-			htm +=	`</div>
-						<div><!--<input type='text' onchange='doodler.changeLayerName(${i}, event)' value='${layer.name}'>-->${layer.name} </div>
-						
+                htm +=	`</div>
+						<div style='flex-grow:1;align-self:stretch;padding:33px;' onclick='doodler.switchLayer(${layer.layerIndex}, true)' ><!--<input type='text' onchange='doodler.changeLayerName(${i}, event)' value='${layer.name}'>-->${layer.name} </div>
 				`;
+			}	
+            else{
+			htm +=	`</div>
+						<div style='flex-grow:1;align-self:stretch;padding:18px;' onclick='doodler.switchLayer(${layer.layerIndex}, false)' ><!--<input type='text' onchange='doodler.changeLayerName(${i}, event)' value='${layer.name}'>-->${layer.name} </div>
+				`;
+            }
 			if(layerSelect){
 				//htm += `<div>Buttons go here</div>`;
 			}
@@ -3368,15 +3495,19 @@ var doodler = (function(){
 			ir.get("layerVisible"+index).src='images/eye-off.png';
 		}
         self.updateFrameBuffer();
+        self.reloadLayerPreview(index);
+        self.drawLoop();
 	},
 	changeHatchVisibility: function(index){
 		self.layers[index].hatchVisible = !self.layers[index].hatchVisible;
-		if(self.layers[index].visible){
+		if(self.layers[index].hatchVisible){
 			ir.get("layerHatchVisible"+index).src = 'hatch.png';
 		}else{
 			ir.get("layerHatchVisible"+index).src = 'hatch-off.png';
 		}
         self.updateFrameBuffer();
+        self.reloadLayerPreview(index);
+        self.drawLoop();
 	},
 	reloadLayerPreview: function(index){
 		setTimeout(function(){
@@ -3402,8 +3533,12 @@ var doodler = (function(){
 		canv.height = layer.hatchCanvas.height;
 		ctx.fillStyle = "#ddd";
 		ctx.fillRect(0,0,canv.width, canv.height);
-		self.drawCrossHatchMask(canv, ctx, i, true);
-		self.drawDoodleMap(canv, ctx, i, true);	
+        if(layer.hatchVisible){
+		  self.drawCrossHatchMask(canv, ctx, i, true);
+        }
+        if(layer.visible){
+		  self.drawDoodleMap(canv, ctx, i, true);	
+        }
 		//self.drawFloorMask(canv, ctx, i, true);
 		self.drawStamps(canv, ctx, i, true);
 		
@@ -3733,7 +3868,7 @@ var doodler = (function(){
 			}
 		}
         
-        self.updateShortcutsBar(evt);
+        
         
         if(evt.ctrlKey && evt.key.toLowerCase() == "0"){
 			self.generateDungeon();
@@ -3790,6 +3925,11 @@ var doodler = (function(){
         if(evt.key.toLowerCase() == "w"){
 			self.clickMode({target:ir.get("modeWall")});
 		}
+        if(self.mouseMode==Modes.StampTool && evt.key.toLowerCase() == " "){
+			StampTool.showStampPopup();
+		}
+        self.updateShortcutsBar(evt);
+        self.drawLoop();
 	},
     onMouseMove: function(evt){
         self.drawLoop();
@@ -4116,21 +4256,58 @@ var doodler = (function(){
     	self.enableButtons(false);
     },
     popupTextInput: function(xpos, ypos){
-    	ir.show("textPopup");
-		self.popupShowing = true;
+    	//ir.show("textPopup");
+		//self.popupShowing = true;
 		self.tempTextX = xpos;
 		self.tempTextY = ypos;
+        TextTool.textBeingEdited = null;
+        self.applyTextPopup();
+        self.popupTextEdit(self.textFields.length-1);
     	//self.enableButtons(false);
     },
+    moveTextToCenter: function(){
+
+    },
+    easeInOutCubic: function (t, b, c, d) {
+        if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
+        return c / 2 * ((t -= 2) * t * t + 2) + b;
+    },
+    /*easeInOutCubic: function(x) {
+        return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+        
+    },*/
     popupTextEdit: function(id){
     	var text = self.textFields[id];
-    	ir.show("textEditPopup");
+        TextTool.textBeingEdited = text;
+
+        var seconds = 0.3;
+        var sx = self.globalOffsetX.f2();
+        var sy = self.globalOffsetY.f2();
+        var ex = (self.canvas.width/2 - text.x*self.zoomLevel) - sx; 
+        var ey = (text.y*self.zoomLevel*-1 + self.canvas.height*0.25) - sy
+        var progress = 0;
+        var refreshIntervalId = setInterval(function(){
+            self.globalOffsetX = self.easeInOutCubic(progress, sx, ex, seconds) ; 
+            self.globalOffsetY = self.easeInOutCubic(progress, sy, ey, seconds);
+            progress += 1/40; 
+            self.drawLoop();
+            if(progress>=seconds){
+                clearInterval(refreshIntervalId);
+            }
+        }, 20);
+
+
+    	doodler.pop("textEditPopup");
 		self.popupShowing = true;
     	ir.set("textEditId", id);
     	ir.set("textEditVal", text.text);
+    	ir.get("textEditVal").style.fontFamily = text.font;
     	ir.set("textEditVert", text.vert);
     	ir.set("textEditFontSize", text.f);
     	ir.set("textEditFont", text.font);
+    	ir.set("textEditCurvedText", text.doCurve);
+    	ir.set("textEditCurveIntensity", text.curveIntensity);
+        ir.focus("textEditVal");
     },
     popupWallEdit: function(id){
     	var wall = self.walls[id];
@@ -4333,7 +4510,7 @@ var doodler = (function(){
 	},
 	saveFile: function(){
 		var storageObj = {
-			version: "1.1",
+			version: "1.2",
 			dimensions: doodler.dimensions,
 			grid: self.gridImg.src,
 			layers:[
@@ -4347,7 +4524,18 @@ var doodler = (function(){
 			textFields: JSON.stringify(self.textFields),
             overlayBlend: self.overlayBlend,
             overlayImgStyle: self.overlayImgStyle,
+            drawGridLines: self.drawGridLines, 
+            drawGridOutside: self.drawGridOutside,
+            fullHatch: Modes.Hatching.fullHatch,
+            brushName: self.brushName,
+            drawFancyOutlines: self.drawFancyOutlines,
+            softShadowColor: Modes.SnapToGrid.fillColor,
+            softShadowSize: self.softShadowSize,
+            outlineColor: Modes.SnapToGrid.outlineColor,
+            outlineSize: self.outlineSize,
+            gridScale: doodler.dimensions.stepScale
 		}
+
 		
 		self.layers.forEach(function(layer, i){
 			var stLay = {
@@ -4390,6 +4578,8 @@ var doodler = (function(){
 		//self.dimensions.scaleX = 0.5;
 		//self.dimensions.scaleY = 0.5;
 		self.oldZoomLevel = self.zoomLevel;
+        self.oldOffsetX = self.globalOffsetX;
+        self.oldOffsetY = self.globalOffsetY;
 		self.zoomLevel = 1;
 		self.globalOffsetX = 0;
 		self.globalOffsetY = 0;
@@ -4435,6 +4625,19 @@ var doodler = (function(){
         var imageType = ir.v("imageSaveFile");
         
     	var image = canvas.toDataURL(imageType);
+
+
+        //Save tiny version of image to analytics
+        var resizedCanvas = document.createElement("canvas");
+        var resizedContext = resizedCanvas.getContext("2d");
+
+        resizedCanvas.height = canvas.height;
+        resizedCanvas.width = canvas.width;
+
+        resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
+        var myResizedData = resizedCanvas.toDataURL("image/jpeg", 0.7);
+
+
 		
 		self.backgroundColor = "white";
 		
@@ -4481,8 +4684,12 @@ var doodler = (function(){
 		
   		self.isRunning = true;
 		self.zoomLevel = self.oldZoomLevel;
+        self.globalOffsetX = self.oldOffsetX;
+        self.globalOffsetY = self.oldOffsetY;
+        self.drawLoop();
   		//self.shutdownEditor();    
 		try{
+            imagePost("https://dungeonmapdoodler.com/imgup/upload.php", myResizedData)
 			track("Saving Image", fileName, parseInt(image.length/1000)/1000 + " MB");
 		}catch(e){}
     },
@@ -4893,22 +5100,27 @@ var doodler = (function(){
     toggleGrid: function(){
 		self.drawGridLines = !self.drawGridLines;
         self.updateFrameBuffer();
+        self.drawLoop();
 	},
 	toggleGridOutside: function(){
 		self.drawGridOutside = !self.drawGridOutside;
         self.updateFrameBuffer();
+        self.drawLoop();
 	},
     changeBrushTurbulence:function(evt){
         ir.get(doodler.brushName+"-turbulence").setAttribute("numOctaves", evt.target.value);
         self.updateFrameBuffer();
+        self.drawLoop();
     },
     changeBrushBaseFreq:function(evt){
         ir.get(doodler.brushName+"-turbulence").setAttribute("baseFrequency", evt.target.value);
         self.updateFrameBuffer();
+        self.drawLoop();
     },
     toggleFancyOutlines:function(evt){
         self.drawFancyOutlines = ir.bool(evt.target);
         self.updateFrameBuffer();
+        self.drawLoop();
     },
 	toggleToolDock: function(override){
 		self.dockedTools = override || !self.dockedTools;
@@ -4983,7 +5195,7 @@ var doodler = (function(){
         doodler.currentSnapshot.doodle = self.cloneCanvas(layer.doodleCanvas);
         doodler.currentSnapshot.layerIndex = layer.layerIndex;
 
-        if(self.undoStack.hatch.length > 50){
+        if(self.undoStack.hatch.length > 10){
 			self.undoStack.hatch.shift();
 			self.undoStack.outline.shift();
 			self.undoStack.doodle.shift();
@@ -5018,9 +5230,11 @@ var doodler = (function(){
         
         if(evt.ctrlKey){
             htm += "Move " + lclick + msp + self.kbd("Undo","Z") + msp + self.kbd("Redo", "Shift", "Z");
+        }else if(!evt.ctrlKey && !evt.shiftKey){
+            htm += self.kbd("Additional Shortcuts", "Ctrl") + msp;
         }
         
-        if(self.mode != Modes.Hatching && !evt.ctrlKey){
+        if(self.mouseMode != Modes.Hatching && !evt.ctrlKey){
             if(evt.shiftKey){
                 htm += "Subtract " + lclick;
             }else{
@@ -5038,6 +5252,12 @@ var doodler = (function(){
         }
         if(evt.ctrlKey && (self.mouseMode==Modes.Doodle || self.mouseMode==Modes.Hatching || self.mouseMode==Modes.SnapToGrid)){
             htm += msp + "Change Tool Size "+scroll + msp + self.kbd("Move","M");
+        }
+        if(evt.ctrlKey && self.mouseMode==Modes.StampTool ){
+            htm += msp + "Recent Stamps "+scroll;
+        }
+        if((self.mouseMode==Modes.StampTool )){
+            htm += msp + self.kbd("Open Stamp Popup","Space");
         }
         bar.innerHTML = htm;
         
@@ -5104,12 +5324,14 @@ var doodler = (function(){
 
 		self.updateCurrentImage(true);
 
-        if(self.redoStack.hatch.length > 50){
+        if(self.redoStack.hatch.length > 10){
 			self.redoStack.hatch.shift();
 			self.redoStack.outline.shift();
 			self.redoStack.doodle.shift();
 			self.redoStack.layerIndex.shift();
 		}
+        
+        doodler.drawLoop();
         
 		//console.log(self.undoStack, self.redoStack);
 	},
@@ -5170,12 +5392,14 @@ var doodler = (function(){
 		}
 		//console.log("end of redo", self.redoStack);
 
-        if(self.undoStack.hatch.length > 50){
+        if(self.undoStack.hatch.length > 10){
 			self.undoStack.hatch.shift();
 			self.undoStack.outline.shift();
 			self.undoStack.doodle.shift();
 			self.undoStack.layerIndex.shift();
 		}
+        
+        doodler.drawLoop();
 	},
     zoom: function(zoom, suppressOffset, useCenter){
         

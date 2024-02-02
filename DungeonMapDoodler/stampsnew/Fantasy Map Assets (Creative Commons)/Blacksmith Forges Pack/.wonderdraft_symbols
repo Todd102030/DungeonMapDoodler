@@ -1,0 +1,231 @@
+{
+    "forgevintage_sample_01": {
+        "name": "forgevintage_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_02": {
+        "name": "forgevintage_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_03": {
+        "name": "forgevintage_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_04": {
+        "name": "forgevintage_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_05": {
+        "name": "forgevintage_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_06": {
+        "name": "forgevintage_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_07": {
+        "name": "forgevintage_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_08": {
+        "name": "forgevintage_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "forgevintage_sample_09": {
+        "name": "forgevintage_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+
+  
+    
+    
+    
+   
+    
+  
+
+
+
+
+
+
+    
+  
+    "forgevintage_custom_01": {
+        "name": "forgevintage_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "forgevintage_custom_02": {
+        "name": "forgevintage_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_03": {
+        "name": "forgevintage_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_04": {
+        "name": "forgevintage_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_05": {
+        "name": "forgevintage_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_06": {
+        "name": "forgevintage_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_07": {
+        "name": "forgevintage_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_08": {
+        "name": "forgevintage_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "forgevintage_custom_09": {
+        "name": "forgevintage_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+
+    
+    
+
+
+
+
+
+
+
+
+
+    "forgevintage_normal_01": {
+        "name": "forgevintage_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_02": {
+        "name": "forgevintage_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_03": {
+        "name": "forgevintage_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_04": {
+        "name": "forgevintage_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_05": {
+        "name": "forgevintage_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_06": {
+        "name": "forgevintage_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_07": {
+        "name": "forgevintage_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_08": {
+        "name": "forgevintage_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "forgevintage_normal_09": {
+        "name": "forgevintage_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+  
+    
+    
+ 
+}

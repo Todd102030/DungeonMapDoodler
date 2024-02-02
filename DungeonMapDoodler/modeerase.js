@@ -22,12 +22,14 @@ var Erase = (function(){
 				self.outlineColor = evt.target.value;
 			}
 			ir.set("eraseSizeLabel", self.size);
+            doodler.drawLoop();
 		},
 		changeErases: function(){
 			self.eraseHatch = ir.v("eraseHatch");
 			self.eraseOutline = ir.v("eraseOutline");
 			self.eraseRoom = ir.v("eraseRoom");	
 			self.eraseStamps = ir.v("eraseStamps");	
+            doodler.drawLoop();
 		},
 		changeSize: function(evt, fromInput){
 			self.size = parseInt(evt.target.value);
@@ -36,6 +38,7 @@ var Erase = (function(){
 			}else{
 				ir.set("eraseSize", self.size);
 			}
+            doodler.drawLoop();
 		},
 		changeBorderSize: function(evt, fromInput){
 			self.borderSize = parseInt(evt.target.value);
@@ -44,6 +47,7 @@ var Erase = (function(){
 			}else{
 				ir.set("eraseBorderSize", self.borderSize);
 			}
+            doodler.drawLoop();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -52,12 +56,15 @@ var Erase = (function(){
 			}else{
 				ir.set("eraseHatchSize", self.hatchSize);
 			}
+            doodler.drawLoop();
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
+            doodler.drawLoop();
 		},
 		changeSnap: function(){
 			self.isSnapping = ir.v("eraseSnapToGrid");
+            doodler.drawLoop();
 		},
 		draw: function(xpos, ypos, data){
             var wh = doodler;

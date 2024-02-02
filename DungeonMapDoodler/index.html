@@ -171,8 +171,15 @@
 		Andy Meneely	http://www.se.rit.edu/~andy/<br>
 		Irongamer	http://ecesisllc.wix.com/home<br>
 		John Colburn	http://ninmunanmu.com<br>
-        
-        
+        <br>
+		<br>
+		<a href='https://fantasymapassets.com/'>Fantasy Map Assets</a><br><br>
+        K.M. Alexander<br>
+        <a href='https://kmalexander.com/free-stuff/fantasy-map-brushes/'>Moronobu Japanese Cartography Packs</a><br><br>
+        CoMiGo<br>
+        <a href='https://comigo.itch.io/fantasy-icons-ink'>Fantasy Icons</a><br><br>
+        Mark Gosbell<br>
+        <a href='https://markgosbell.itch.io'>Classic Dungeon Map Symbols</a>
         </div>
     <div class='popupFooter' style='padding-top: 8px;text-align: center'>
         <button type="button" class="canvBtn" onclick="doodler.unpop('aboutPopup');doodler.popupShowing = false;">Cancel</button>
@@ -219,7 +226,7 @@
     </div>
 </div>
 
-<div id='stampPopup' class='popupPanel' style='text-align: center'>
+<div id='stampPopup' class='popupPanel' style='text-align: center;min-width: 600px;'>
     <input type='text' style='padding:6px;font-size: 16pt;width:100%;' id='stampSearch' placeholder="Search by stamp name" oninput="Modes.StampTool.searchStamp(event)">
     <div id="stampPopupList" style="max-height: calc( 100% - 100px ); overflow: auto;"></div>
     <div class='popupFooter' style='padding-top: 8px'>
@@ -269,34 +276,61 @@
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass1")'><img id='grass1' src='floortiles/grass1.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass2")'><img id='grass2' src='floortiles/grass2.png'></div>
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("grass3")'><img id='grass3' src='floortiles/grass3.png'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f1")'><img id='f1' src='hatches/f1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f2")'><img id='f2' src='hatches/f2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f3")'><img id='f3' src='hatches/f3.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f4")'><img id='f4' src='hatches/f4.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f5")'><img id='f5' src='hatches/f5.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f6")'><img id='f6' src='hatches/f6.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d1")'><img id='d1' src='hatches/d1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d2")'><img id='d2' src='hatches/d2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d3")'><img id='d3' src='hatches/d3.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d4")'><img id='d4' src='hatches/d4.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w1")'><img id='w1' src='hatches/w1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w2")'><img id='w2' src='hatches/w2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w3")'><img id='w3' src='hatches/w3.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w4")'><img id='w4' src='hatches/w4.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn1")'><img id='sn1' src='hatches/sn1.jpg'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn2")'><img id='sn2' src='hatches/sn2.jpg'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di1")'><img id='di1' src='hatches/di1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di2")'><img id='di2' src='hatches/di2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr1")'><img id='gr1' src='hatches/gr1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr2")'><img id='gr2' src='hatches/gr2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr3")'><img id='gr3' src='hatches/gr3.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r1")'><img id='r1' src='hatches/r1.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r2")'><img id='r2' src='hatches/r2.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r3")'><img id='r3' src='hatches/r3.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r4")'><img id='r4' src='hatches/r4.JPG'></div>
-        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r5")'><img id='r5' src='hatches/r5.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f1")'><img loading="lazy" id='f1' src='hatches/f1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f2")'><img loading="lazy" id='f2' src='hatches/f2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f3")'><img loading="lazy" id='f3' src='hatches/f3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f4")'><img loading="lazy" id='f4' src='hatches/f4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f5")'><img loading="lazy" id='f5' src='hatches/f5.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("f6")'><img loading="lazy" id='f6' src='hatches/f6.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d1")'><img loading="lazy" id='d1' src='hatches/d1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d2")'><img loading="lazy" id='d2' src='hatches/d2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d3")'><img loading="lazy" id='d3' src='hatches/d3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("d4")'><img loading="lazy" id='d4' src='hatches/d4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w1")'><img loading="lazy" id='w1' src='hatches/w1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w2")'><img loading="lazy" id='w2' src='hatches/w2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w3")'><img loading="lazy" id='w3' src='hatches/w3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("w4")'><img loading="lazy" id='w4' src='hatches/w4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn1")'><img loading="lazy" id='sn1' src='hatches/sn1.jpg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("sn2")'><img loading="lazy" id='sn2' src='hatches/sn2.jpg'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di1")'><img loading="lazy" id='di1' src='hatches/di1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("di2")'><img loading="lazy" id='di2' src='hatches/di2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr1")'><img loading="lazy" id='gr1' src='hatches/gr1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr2")'><img loading="lazy" id='gr2' src='hatches/gr2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("gr3")'><img loading="lazy" id='gr3' src='hatches/gr3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r1")'><img loading="lazy" id='r1' src='hatches/r1.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r2")'><img loading="lazy" id='r2' src='hatches/r2.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r3")'><img loading="lazy" id='r3' src='hatches/r3.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r4")'><img loading="lazy" id='r4' src='hatches/r4.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("r5")'><img loading="lazy" id='r5' src='hatches/r5.JPG'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma1")'><img loading="lazy" id='fma1' src='hatches/Artistic_doublesized_antique_01.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma2")'><img loading="lazy" id='fma2' src='hatches/Artistic_doublesized_antique_02.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma3")'><img loading="lazy" id='fma3' src='hatches/Artistic_doublesized_antique_03.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma4")'><img loading="lazy" id='fma4' src='hatches/Artistic_doublesized_antique_04.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma5")'><img loading="lazy" id='fma5' src='hatches/Artistic_doublesized_antique_05.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma6")'><img loading="lazy" id='fma6' src='hatches/Artistic_doublesized_antique_06.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma7")'><img loading="lazy" id='fma7' src='hatches/Artistic_doublesized_antique_07.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma8")'><img loading="lazy" id='fma8' src='hatches/Artistic_doublesized_antique_08.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma9")'><img loading="lazy" id='fma9' src='hatches/Artistic_doublesized_antique_09.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma10")'><img loading="lazy" id='fma10' src='hatches/Artistic_doublesized_antique_10.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fma11")'><img loading="lazy" id='fma11' src='hatches/Artistic_doublesized_antique_11.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag1")'><img loading="lazy" id='fmag1' src='hatches/Artistic_antique_ground01.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag2")'><img loading="lazy" id='fmag2' src='hatches/Artistic_antique_ground02.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag3")'><img loading="lazy" id='fmag3' src='hatches/Artistic_antique_ground03.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag4")'><img loading="lazy" id='fmag4' src='hatches/Artistic_antique_ground04.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag5")'><img loading="lazy" id='fmag5' src='hatches/Artistic_antique_ground05.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag6")'><img loading="lazy" id='fmag6' src='hatches/Artistic_antique_ground06.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag7")'><img loading="lazy" id='fmag7' src='hatches/Artistic_antique_ground07.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag8")'><img loading="lazy" id='fmag8' src='hatches/Artistic_antique_ground08.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag9")'><img loading="lazy" id='fmag9' src='hatches/Artistic_antique_ground09.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag10")'><img loading="lazy" id='fmag10' src='hatches/Artistic_antique_ground10.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag11")'><img loading="lazy" id='fmag11' src='hatches/Artistic_antique_ground11.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag12")'><img loading="lazy" id='fmag12' src='hatches/Artistic_antique_ground12.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag13")'><img loading="lazy" id='fmag13' src='hatches/Artistic_antique_ground13.png'></div>
+        <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag14")'><img loading="lazy" id='fmag14' src='hatches/Artistic_antique_ground14.png'></div>
     
     </div>
+	<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="0.125" max="4" step='0.125' value='1' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
+						
     <div class='popupFooter' style='padding-top: 8px'>
         <button type="button" class="canvBtn" onclick="doodler.unpop('hatchPopup');doodler.popupShowing = false;">Cancel</button>
     </div>
@@ -320,9 +354,9 @@
         <tr>
 			<td class='tdr'>Justification:</td>
 			<td class='tdl'>
-				<input type="radio" id="textPopupLeft" checked='checked' name="textPopupJustify" value="left" >
+				<input type="radio" id="textPopupLeft" name="textPopupJustify" value="left" >
 				<label for="textPopupLeft">Left</label>
-				<input type="radio" id="textPopupCenter" name="textPopupJustify" value="center" >
+				<input type="radio" id="textPopupCenter" checked='checked' name="textPopupJustify" value="center" >
 				<label for="textPopupCenter">Center</label>
 				<input type="radio" id="textPopupRight" name="textPopupJustify" value="right" >
 				<label for="textPopupRight">Right</label>
@@ -352,31 +386,39 @@
 				<option value='Rune'>Rune</option>
 				</select></td>
 		</tr>
+		<tr>
+			<td class='tdr'>Draw Curved:</td>
+			<td class='tdl'><input type="checkbox" id="textPopupCurvedText" >Draw Curved</td>
+		</tr>
+		<tr>
+			<td class='tdr'>Curve Intensity:</td>
+			<td class='tdl'><input type="range" style="scale:1;" id="textPopupCurveIntensity" min="-10" max="10" value="0"></td>
+		</tr>
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.applyTextPopup()">Okay</button>
 	<button type="button" class="canvBtn" onclick="doodler.cancelTextPopup();doodler.popupShowing=false;">Cancel</button>
 </div>
 
-<div id='textEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
+<div id='textEditPopup' class='popupPanelText' style="text-align:center;" >
 	<table>
 		<tr>
 			<td class='tdr'>Text:</td>
-			<td class='tdl'><textarea style='font-size:18pt;' rows='2' id='textEditVal' placeholder='Write your text here'></textarea></td>
+			<td class='tdl'><textarea style='font-size:18pt;width:250px' oninput='Modes.TextTool.updateCurrentText(event)' rows='2' id='textEditVal' placeholder='Write your text here'></textarea></td>
 		</tr>
-		<tr>
+		<tr style="display:none">
 			<td class='tdr'>Vertical Text:</td>
 			<td class='tdl'><input type="checkbox" id="textEditVert" >Draw text vertically</td>
 		</tr>
 		<tr>
 			<td class='tdr'>Font Size</td>
-			<td class='tdl'><input type='number' value=14 id='textEditFontSize'/></td>
+			<td class='tdl'><input type='number' value=14 id='textEditFontSize' onchange="doodler.applyEditTextPopup()"/></td>
 		</tr>
-        <tr>
+        <tr style="display:none">
 			<td class='tdr'>Justification:</td>
 			<td class='tdl'>
-				<input type="radio" id="textEditLeft" checked='checked' name="textEditJustify" value="left" >
+				<input type="radio" id="textEditLeft" name="textEditJustify" value="left" >
 				<label for="textEditLeft">Left</label>
-				<input type="radio" id="textEditCenter" name="textEditJustify" value="center" >
+				<input type="radio" id="textEditCenter" checked='checked' name="textEditJustify" value="center" >
 				<label for="textEditCenter">Center</label>
 				<input type="radio" id="textEditRight" name="textEditJustify" value="right" >
 				<label for="textEditRight">Right</label>
@@ -384,7 +426,7 @@
 		</tr>
 		<tr>
 			<td class='tdr'>Font</td>
-			<td class='tdl'><select id="textEditFont" onchange="Modes.TextTool.changeFontPopup(event, 'textEditVal')">
+			<td class='tdl'><select id="textEditFont" onchange="Modes.TextTool.changeFontPopup(event, 'textEditVal');doodler.applyEditTextPopup()">
 				<option value='Times New Roman'>Times New Roman</option>
 				<option value='Arial'>Arial</option>
 				<option value='Helvetica'>Helvetica</option>
@@ -406,11 +448,22 @@
 				<option value='Rune'>Rune</option>
 				</select></td>
 		</tr>
+		<tr>
+			<td class='tdr'>Draw Curved:</td>
+			<td class='tdl'><input type="checkbox" id="textEditCurvedText" onchange="Modes.TextTool.changeDoCurve(event)"></td>
+		</tr>
+		<tr>
+			<td class='tdr'>Curve Intensity:</td>
+			<td class='tdl'><input type="range" style="scale:1;" id="textEditCurveIntensity" min="-10" max="10" value="0" step="0.01" oninput="Modes.TextTool.changeCurveIntensity(event)" onchange="Modes.TextTool.changeCurveIntensity(event)"></td>
+		</tr>
 	</table>
 	<input type='number' value=0 id='textEditId' style="display:none"/>
-	<button type="button" class="canvBtn" onclick="doodler.applyEditTextPopup()">Okay</button>
-	<button type="button" class="canvBtn" onclick="doodler.applyDeleteTextPopup()">Delete</button>
-	<button type="button" class="canvBtn" onclick="doodler.applyCancelTextPopup()">Cancel</button>
+	<div class='popupFooter' style='padding-top: 8px'>
+		<button type="button" class="canvBtn" onclick="doodler.applyEditTextPopup();doodler.unpop('textEditPopup', true);TextTool.textBeingEdited=null;">Okay</button>
+		<button type="button" class="canvBtn" onclick="doodler.applyDeleteTextPopup();doodler.unpop('textEditPopup', true);TextTool.textBeingEdited=null;">Delete</button>
+		<button type="button" class="canvBtn" onclick="doodler.unpop('textEditPopup', true);TextTool.textBeingEdited=null;">Cancel</button>
+	
+	</div>
 </div>
 
 <div id='wallEditPopup' style='border-style:double;background-color:#fff;display:none;z-index:10000;width:auto;height:auto;position:fixed;left:35%; top:20%'>
@@ -485,6 +538,16 @@
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm()">Save</button>
 	<button type="button" class="canvBtn" onclick="doodler.saveImageConfirm(true)">Print</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('imageSavePopup');doodler.popupShowing=false;">Cancel</button>
+	<br><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7216039414672061"
+     crossorigin="anonymous"></script>
+	<!-- DMD New Map -->
+	<ins class="adsbygoogle"
+		style="display:inline-block;width:425px;height:60px"
+		data-ad-client="ca-pub-7216039414672061"
+		data-ad-slot="2861177109"></ins>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 </div>
     
 <div id='imageExportPopup' class='popupPanel' style='text-align: center'>
@@ -611,6 +674,12 @@
                         <td class='tdr'>Exponent:</td>
                         <td class='tdl'>
                             <input type="number" id="worldGenExponent" value='1.4' min="0" max="10" step="0.1"  onchange="doodler.previewWorld()">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='tdr'>Generate Height Map (Experimental):</td>
+                        <td class='tdl'>
+                            <input type="checkbox" id="worldGenHeightMap" onclick="doodler.previewWorld()">
                         </td>
                     </tr>
                     <tr>
@@ -747,8 +816,21 @@
         <tr><td colspan='2' id='dimensionSize' style="font-size: 135%;"></td></tr>
         <tr id='newMapWarn'><td colspan='2'>Warning: this will clear out any doodles you currently have, <br>be sure to save</td></tr>
 	</table>
+	<br>
+	Looking for the old Dungeon Map Doodler? Check out <a href="/classic" >Dungeon Map Doodler Classic</a><br><br>
+	
 	<button type="button" class="canvBtn" onclick="doodler.applyDimensions()">Okay</button>
 	<button type="button" class="canvBtn" onclick="ir.hide('dimensionPopup');doodler.popupShowing=false;">Cancel</button>
+	<br><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7216039414672061"
+     crossorigin="anonymous"></script>
+	<!-- DMD New Map -->
+	<ins class="adsbygoogle"
+		style="display:inline-block;width:425px;height:60px"
+		data-ad-client="ca-pub-7216039414672061"
+		data-ad-slot="2861177109"></ins>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 </div>
 
 <div id='layerNamePop' class='newPopupPanel' style='display:none;text-align: center'>
@@ -845,7 +927,7 @@
     <hr>
     <div class="tooltipParent">
         Grid Snapping Size:
-        <select class="bigSelect" onchange='Modes.SnapToGrid.changeScale(event)'>
+        <select class="bigSelect" id="gridScale" onchange='Modes.SnapToGrid.changeScale(event)'>
         <option value='1'>1 (Full Grid)</option>
         <option value='0.5'>1/2</option>
         <option value='0.333333'>1/3</option>
@@ -913,7 +995,7 @@
 			<option name='Saturation' value='saturation'>Saturation</option>
 			<option name='Colour' value='color'>Colour</option>
 			<option name='Luminosity' value='luminosity'>Luminosity</option>
-            </select>
+            </select><br>
 			<div class='paramTitle'><label for='drawRoughCheck'>Rougher Lines</label></div><input type='checkbox' id='drawRoughCheck' onchange='doodler.checkRough(event);'>
 			<div class='paramTitle'>Background Colour</div><input type='color' id='backgroundColor' onchange='doodler.changeBackgroundColor(event)'>
         </details>
@@ -1361,6 +1443,7 @@
 	
 <script src='alea.js'></script>
 <script src='simplex-noise.js'></script>
+<script src='stampsnew/stampdirectory.js'></script>
 <script src='irutil.js'></script>
 <script src='irstore.js'></script>
 <script src='keyedarray.js'></script>

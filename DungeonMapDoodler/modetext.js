@@ -44,6 +44,20 @@ var TextTool = (function(){
 		changeSnapping: function(evt){
 			self.isSnapping = ir.bool("textIsSnapping");
 		},
+		changeDoCurve: function(evt){
+			var text = doodler.textFields[ir.vn("textEditId")];
+			
+			text.doCurve = ir.bool("textEditCurvedText");
+			text.curveIntensity = ir.vn("textEditCurveIntensity");
+			doodler.drawLoop();
+		},
+		changeCurveIntensity: function(evt){
+			var text = doodler.textFields[ir.vn("textEditId")];
+			
+			text.doCurve = ir.bool("textEditCurvedText");
+			text.curveIntensity = ir.vn("textEditCurveIntensity");
+			doodler.drawLoop();
+		},
 		changeSize: function(evt){
 			self.size = parseInt(evt.target.value);
 			ir.set("stampSizeLabel", self.size);
@@ -126,6 +140,129 @@ var TextTool = (function(){
 			}
 			*/
 		},
+		updateCurrentText: function(evt){
+			var field = self.textBeingEdited;
+			field.text = ir.v("textEditVal")
+
+			doodler.drawLoop();
+		},
+		getCurveTextRadius: function(intensity){
+			return (11.001-Math.abs(intensity)) * 100 * doodler.zoomLevel;
+		},
+		drawTextAlongArc: function(context, textField, str, centerX, centerY, intensity) {
+			//Use like: 
+			//drawTextAlongArc(doodler.ctx, "Hello Curved World", 500, 500, 150, Math.PI*0.8, true) 
+			//need values from user input - radius, angle, doinside, bool curvedText
+			//better to have one slider value of curve upwards to curve downwards, maybe -10 to 10 scale
+			//  if negative value, set doinside to true
+			//  closer to flat means bigger radius with smaller angle, closer to -10/10 means smaller radius with bigger value
+
+			//applyTextPopup and applyEditTextPopup need new value added to them
+
+			var radius = self.getCurveTextRadius(intensity);
+			var angle = Math.PI * 0.3 * Math.abs(intensity+0.01);
+			var doInside = intensity < 0;
+			context.fontKerning = "none";
+			doodler.setFont(textField.f * doodler.zoomLevel, textField.font, context, "left");
+
+			var len = str.length,
+			  s;
+			var totalSize = context.measureText(str).width;
+			var lastCharWidth = 0;
+			context.save();
+			if(!doInside){
+				
+				centerY += radius;
+				context.translate(centerX, centerY);
+				context.rotate(-1 * totalSize/radius / 2);
+				//context.rotate(-1 * (angle / len) / 2);
+				for (var n = 0; n < len; n++) {
+					//doodler.setFont(textField.f * doodler.zoomLevel*50, textField.font, context, textField.justify);
+					var width = context.measureText(str[n]).width;
+					//doodler.setFont(textField.f * doodler.zoomLevel, textField.font, context, textField.justify);
+					context.rotate(lastCharWidth/radius);
+					context.save();
+					context.translate(0, -1 * radius);
+					s = str[n];
+					context.fillText(s, 0, 0);
+					//context.strokeRect(0,-60,width, 60)
+					context.restore();
+					lastCharWidth = width;
+				}
+			}
+			else{
+				angle *= -1;
+				centerY -= radius
+				context.translate(centerX, centerY);
+				context.rotate(totalSize/radius / 2);
+				//context.rotate(-1 * (angle / len) / 2);
+				for (var n = 0; n < len; n++) {
+					var width = context.measureText(str[n]).width;
+					context.rotate(-1*lastCharWidth/radius);
+					context.save();
+					context.translate(0, radius);
+					s = str[n];
+					context.fillText(s, 0, 0);
+					context.restore();
+					lastCharWidth = width;
+				}
+			}
+			context.restore();
+		},
+		drawTextAlongArcOld: function(context, textField, str, centerX, centerY, intensity) {
+			//Use like: 
+			//drawTextAlongArc(doodler.ctx, "Hello Curved World", 500, 500, 150, Math.PI*0.8, true) 
+			//need values from user input - radius, angle, doinside, bool curvedText
+			//better to have one slider value of curve upwards to curve downwards, maybe -10 to 10 scale
+			//  if negative value, set doinside to true
+			//  closer to flat means bigger radius with smaller angle, closer to -10/10 means smaller radius with bigger value
+
+			//applyTextPopup and applyEditTextPopup need new value added to them
+
+			var radius = (11-Math.abs(intensity)) * 30;
+			var angle = Math.PI * 0.3 * Math.abs(intensity+0.01);
+			var doInside = intensity < 0;
+
+			//I don't think the angle should change based on intensity but it definitely needs to change per individual character size
+
+			var len = str.length,
+			  s;
+			var totalSize = context.measureText(str).width
+			context.save();
+			if(!doInside){
+				
+				centerY += radius
+				context.translate(centerX, centerY);
+				context.rotate(-1 * angle / 2);
+				context.rotate(-1 * (angle / len) / 2);
+				for (var n = 0; n < len; n++) {
+					context.rotate(angle / len);
+					context.save();
+					context.translate(0, -1 * radius);
+					s = str[n];
+					context.fillText(s, 0, 0);
+					context.restore();
+				}
+			}
+			else{
+				angle *= -1;
+				centerY -= radius
+				context.translate(centerX, centerY);
+				context.rotate(-1 * angle / 2);
+				context.rotate(-1 * (angle / len) / 2);
+				for (var n = 0; n < len; n++) {
+					var width = context.measureText(str[n]).width;
+					context.rotate(angle/len);
+					context.save();
+					context.translate(0, radius);
+					s = str[n];
+					console.log(s, width);
+					context.fillText(s, 0, 0);
+					context.restore();
+				}
+			}
+			context.restore();
+		},
 		drawCursor : function(ctx, xpos, ypos, data){
 			if(self.chosenStampImg==null){
 				self.chosenStampImg = new Image();
@@ -137,16 +274,20 @@ var TextTool = (function(){
             var zoom = doodler.zoomLevel;
 			var offX = doodler.globalOffsetX;
 			var offY = doodler.globalOffsetY;
-			self.textMoveHit = doodler.hitTestText({x:(xpos-offX)/zoom,y:(ypos-offY)/zoom,w:1,h:1});
+			self.textMoveHit = doodler.hitTestText({x:xpos,y:ypos,w:1,h:1});
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.beginPath();
-			if(self.textMoveHit == null && !self.isMovingText){
+			if(self.textBeingEdited != null){
+				doodler.canvas.style.cursor='default';
+				self.drawMoveHighlight(doodler.ctx,xpos, ypos,data, self.textBeingEdited, true);
+			}
+			else if(self.textMoveHit == null && !self.isMovingText){
                 ctx.fillStyle = "#000";
-                
-                var msg = "Click to place text";
-                var size = ctx.measureText(msg);
-                doodler.setFont(16, "Arial", ctx, "center");
-                ctx.fillText(msg, xpos, ypos);
+                doodler.canvas.style.cursor = 'text';
+                //var msg = "Click to place text";
+                //var size = ctx.measureText(msg);
+                //doodler.setFont(16, "Arial", ctx, "center");
+                //ctx.fillText(msg, xpos, ypos);
 				if(self.isSnapping){
 					var gridxy = getGridXY2(xpos, ypos);
 					if(self.stampRatio<1){
@@ -171,10 +312,12 @@ var TextTool = (function(){
 				
 			}
 			else if(self.textMoveHit != null){
+				doodler.canvas.style.cursor='default';
 				self.drawMoveHighlight(doodler.ctx,xpos, ypos,data, doodler.textFields[self.textMoveHit]);
 			}
             
             if(self.stampSelected != null){
+				doodler.canvas.style.cursor='default';
                 self.drawMoveHighlight(doodler.ctx,xpos, ypos,data, doodler.textFields[self.stampSelected]);
                 self.drawResizeMarkers(doodler.ctx,xpos, ypos,data, doodler.textFields[self.stampSelected]);
                 
@@ -183,11 +326,11 @@ var TextTool = (function(){
 			ctx.stroke();
 			
 		},
-		drawMoveHighlight : function(ctx, xpos, ypos, data, text){
+		drawMoveHighlight : function(ctx, xpos, ypos, data, text, isEditHighlight){
             if(text == null){
                 return;
             }
-			if(self.textMoveHit == null){
+			if((self.textMoveHit == null && isEditHighlight==null ) || (isEditHighlight && self.textBeingEdited==null)){
 				return;
 			}
 			
@@ -205,13 +348,17 @@ var TextTool = (function(){
 			
 			ctx.strokeStyle = "rgb(60,200,200)";
 			ctx.fillStyle = "rgba(60,200,200,0.3)";
+			if(isEditHighlight){
+				ctx.strokeStyle = "rgb(200,60,60)";
+				ctx.fillStyle = "rgba(200,60,60,0.1)";
+			}
 			ctx.beginPath();
             
 			
 			//ctx.fillRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
 			//ctx.strokeRect(wh.globalOffsetX + ((st.x) * wh.zoomLevel*(1/sX)),wh.globalOffsetY + ((st.y) * wh.zoomLevel*(1/sY)), st.w * wh.zoomLevel*(1/sX), st.h * wh.zoomLevel*(1/sY));	
-			ctx.fillRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel, rect.h * wh.zoomLevel);	
-			ctx.strokeRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel, rect.h * wh.zoomLevel);	
+			ctx.fillRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel+4, rect.h * wh.zoomLevel+4);	
+			ctx.strokeRect(wh.globalOffsetX +rect.x * zoom, wh.globalOffsetY + rect.y * zoom, rect.w * wh.zoomLevel+4, rect.h * wh.zoomLevel+4);	
 			
 			ctx.stroke();
 		},

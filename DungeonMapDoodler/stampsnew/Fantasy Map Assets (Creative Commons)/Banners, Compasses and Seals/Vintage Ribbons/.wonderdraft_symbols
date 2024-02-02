@@ -1,0 +1,448 @@
+{
+    "vintageribbon_sample_01": {
+        "name": "vintageribbon_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_02": {
+        "name": "vintageribbon_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_03": {
+        "name": "vintageribbon_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_04": {
+        "name": "vintageribbon_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_05": {
+        "name": "vintageribbon_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_06": {
+        "name": "vintageribbon_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_07": {
+        "name": "vintageribbon_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_08": {
+        "name": "vintageribbon_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_09": {
+        "name": "vintageribbon_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_10": {
+        "name": "vintageribbon_sample_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_11": {
+        "name": "vintageribbon_sample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_12": {
+        "name": "vintageribbon_sample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_13": {
+        "name": "vintageribbon_sample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_14": {
+        "name": "vintageribbon_sample_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_15": {
+        "name": "vintageribbon_sample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_16": {
+        "name": "vintageribbon_sample_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintageribbon_sample_17": {
+        "name": "vintageribbon_sample_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+       "vintageribbon_sample_18": {
+        "name": "vintageribbon_sample_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+    "vintageribbon_sample_19": {
+        "name": "vintageribbon_sample_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+    "vintageribbon_sample_20": {
+        "name": "vintageribbon_sample_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+   
+    
+   
+    
+
+
+
+
+  
+
+
+ "vintageribbon_custom_01": {
+        "name": "vintageribbon_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_02": {
+        "name": "vintageribbon_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_03": {
+        "name": "vintageribbon_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_04": {
+        "name": "vintageribbon_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_05": {
+        "name": "vintageribbon_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_06": {
+        "name": "vintageribbon_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_07": {
+        "name": "vintageribbon_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_08": {
+        "name": "vintageribbon_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_09": {
+        "name": "vintageribbon_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_10": {
+        "name": "vintageribbon_custom_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_11": {
+        "name": "vintageribbon_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_12": {
+        "name": "vintageribbon_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_13": {
+        "name": "vintageribbon_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_14": {
+        "name": "vintageribbon_custom_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_15": {
+        "name": "vintageribbon_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_16": {
+        "name": "vintageribbon_custom_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_17": {
+        "name": "vintageribbon_custom_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_18": {
+        "name": "vintageribbon_custom_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_19": {
+        "name": "vintageribbon_custom_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintageribbon_custom_20": {
+        "name": "vintageribbon_custom_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ 
+
+
+
+
+
+    "vintageribbon_normal_01": {
+        "name": "vintageribbon_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_02": {
+        "name": "vintageribbon_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_03": {
+        "name": "vintageribbon_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_04": {
+        "name": "vintageribbon_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_05": {
+        "name": "vintageribbon_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_06": {
+        "name": "vintageribbon_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_07": {
+        "name": "vintageribbon_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_08": {
+        "name": "vintageribbon_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_09": {
+        "name": "vintageribbon_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_10": {
+        "name": "vintageribbon_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_11": {
+        "name": "vintageribbon_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_12": {
+        "name": "vintageribbon_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_13": {
+        "name": "vintageribbon_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_14": {
+        "name": "vintageribbon_normal_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_15": {
+        "name": "vintageribbon_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_16": {
+        "name": "vintageribbon_normal_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_17": {
+        "name": "vintageribbon_normal_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_18": {
+        "name": "vintageribbon_normal_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_19": {
+        "name": "vintageribbon_normal_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintageribbon_normal_20": {
+        "name": "vintageribbon_normal_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+    
+       
+  
+    
+    
+ 
+}

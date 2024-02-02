@@ -1,0 +1,782 @@
+{
+    "asian_settlements_aty_sample_01": {
+        "name": "asian_settlements_aty_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_02": {
+        "name": "asian_settlements_aty_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_03": {
+        "name": "asian_settlements_aty_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_04": {
+        "name": "asian_settlements_aty_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_05": {
+        "name": "asian_settlements_aty_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_06": {
+        "name": "asian_settlements_aty_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_07": {
+        "name": "asian_settlements_aty_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_08": {
+        "name": "asian_settlements_aty_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_09": {
+        "name": "asian_settlements_aty_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_10": {
+        "name": "asian_settlements_aty_sample_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_11": {
+        "name": "asian_settlements_aty_sample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_12": {
+        "name": "asian_settlements_aty_sample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_13": {
+        "name": "asian_settlements_aty_sample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_14": {
+        "name": "asian_settlements_aty_sample_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_15": {
+        "name": "asian_settlements_aty_sample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_16": {
+        "name": "asian_settlements_aty_sample_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_17": {
+        "name": "asian_settlements_aty_sample_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_18": {
+        "name": "asian_settlements_aty_sample_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_19": {
+        "name": "asian_settlements_aty_sample_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_20": {
+        "name": "asian_settlements_aty_sample_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_21": {
+        "name": "asian_settlements_aty_sample_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_22": {
+        "name": "asian_settlements_aty_sample_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_23": {
+        "name": "asian_settlements_aty_sample_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_24": {
+        "name": "asian_settlements_aty_sample_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_25": {
+        "name": "asian_settlements_aty_sample_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_26": {
+        "name": "asian_settlements_aty_sample_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_27": {
+        "name": "asian_settlements_aty_sample_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_28": {
+        "name": "asian_settlements_aty_sample_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_29": {
+        "name": "asian_settlements_aty_sample_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_30": {
+        "name": "asian_settlements_aty_sample_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_31": {
+        "name": "asian_settlements_aty_sample_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_32": {
+        "name": "asian_settlements_aty_sample_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_33": {
+        "name": "asian_settlements_aty_sample_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_34": {
+        "name": "asian_settlements_aty_sample_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_35": {
+        "name": "asian_settlements_aty_sample_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_settlements_aty_sample_36": {
+        "name": "asian_settlements_aty_sample_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+   
+   
+   
+   
+   
+
+
+
+
+    
+  
+    "asian_settlements_aty_custom_01": {
+        "name": "asian_settlements_aty_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_02": {
+        "name": "asian_settlements_aty_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_03": {
+        "name": "asian_settlements_aty_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_04": {
+        "name": "asian_settlements_aty_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_05": {
+        "name": "asian_settlements_aty_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_06": {
+        "name": "asian_settlements_aty_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_07": {
+        "name": "asian_settlements_aty_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_08": {
+        "name": "asian_settlements_aty_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_09": {
+        "name": "asian_settlements_aty_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_10": {
+        "name": "asian_settlements_aty_custom_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_11": {
+        "name": "asian_settlements_aty_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_12": {
+        "name": "asian_settlements_aty_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_13": {
+        "name": "asian_settlements_aty_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_14": {
+        "name": "asian_settlements_aty_custom_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_15": {
+        "name": "asian_settlements_aty_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_16": {
+        "name": "asian_settlements_aty_custom_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_17": {
+        "name": "asian_settlements_aty_custom_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_18": {
+        "name": "asian_settlements_aty_custom_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_19": {
+        "name": "asian_settlements_aty_custom_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_20": {
+        "name": "asian_settlements_aty_custom_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_21": {
+        "name": "asian_settlements_aty_custom_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_22": {
+        "name": "asian_settlements_aty_custom_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_23": {
+        "name": "asian_settlements_aty_custom_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_24": {
+        "name": "asian_settlements_aty_custom_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_25": {
+        "name": "asian_settlements_aty_custom_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_26": {
+        "name": "asian_settlements_aty_custom_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_27": {
+        "name": "asian_settlements_aty_custom_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_28": {
+        "name": "asian_settlements_aty_custom_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_29": {
+        "name": "asian_settlements_aty_custom_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_30": {
+        "name": "asian_settlements_aty_custom_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_31": {
+        "name": "asian_settlements_aty_custom_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_32": {
+        "name": "asian_settlements_aty_custom_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_33": {
+        "name": "asian_settlements_aty_custom_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_34": {
+        "name": "asian_settlements_aty_custom_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_35": {
+        "name": "asian_settlements_aty_custom_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_settlements_aty_custom_36": {
+        "name": "asian_settlements_aty_custom_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+  
+  
+
+
+
+
+
+    "asian_settlements_aty_normal_01": {
+        "name": "asian_settlements_aty_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_02": {
+        "name": "asian_settlements_aty_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_03": {
+        "name": "asian_settlements_aty_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_04": {
+        "name": "asian_settlements_aty_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_05": {
+        "name": "asian_settlements_aty_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_06": {
+        "name": "asian_settlements_aty_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_07": {
+        "name": "asian_settlements_aty_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_08": {
+        "name": "asian_settlements_aty_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_09": {
+        "name": "asian_settlements_aty_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_10": {
+        "name": "asian_settlements_aty_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_11": {
+        "name": "asian_settlements_aty_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_12": {
+        "name": "asian_settlements_aty_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_13": {
+        "name": "asian_settlements_aty_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_14": {
+        "name": "asian_settlements_aty_normal_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_15": {
+        "name": "asian_settlements_aty_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_16": {
+        "name": "asian_settlements_aty_normal_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_17": {
+        "name": "asian_settlements_aty_normal_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_18": {
+        "name": "asian_settlements_aty_normal_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_19": {
+        "name": "asian_settlements_aty_normal_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_20": {
+        "name": "asian_settlements_aty_normal_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_21": {
+        "name": "asian_settlements_aty_normal_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_22": {
+        "name": "asian_settlements_aty_normal_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_23": {
+        "name": "asian_settlements_aty_normal_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_24": {
+        "name": "asian_settlements_aty_normal_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_25": {
+        "name": "asian_settlements_aty_normal_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_26": {
+        "name": "asian_settlements_aty_normal_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_27": {
+        "name": "asian_settlements_aty_normal_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_28": {
+        "name": "asian_settlements_aty_normal_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_29": {
+        "name": "asian_settlements_aty_normal_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_30": {
+        "name": "asian_settlements_aty_normal_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_31": {
+        "name": "asian_settlements_aty_normal_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_32": {
+        "name": "asian_settlements_aty_normal_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_33": {
+        "name": "asian_settlements_aty_normal_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_34": {
+        "name": "asian_settlements_aty_normal_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_35": {
+        "name": "asian_settlements_aty_normal_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_settlements_aty_normal_36": {
+        "name": "asian_settlements_aty_normal_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    }
+  
+   
+   
+ 
+    
+ 
+}

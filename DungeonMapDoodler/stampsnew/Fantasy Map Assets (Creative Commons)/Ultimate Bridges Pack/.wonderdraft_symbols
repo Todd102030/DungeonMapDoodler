@@ -1,0 +1,319 @@
+{
+    "bridges_vintage_sample_01": {
+        "name": "bridges_vintage_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_02": {
+        "name": "bridges_vintage_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_03": {
+        "name": "bridges_vintage_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_04": {
+        "name": "bridges_vintage_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_05": {
+        "name": "bridges_vintage_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_06": {
+        "name": "bridges_vintage_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_07": {
+        "name": "bridges_vintage_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_08": {
+        "name": "bridges_vintage_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_09": {
+        "name": "bridges_vintage_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_11": {
+        "name": "bridges_vintage_sample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_12": {
+        "name": "bridges_vintage_sample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_13": {
+        "name": "bridges_vintage_sample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "bridges_vintage_sample_15": {
+        "name": "bridges_vintage_sample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+    
+  
+
+
+
+
+
+
+    
+  
+    "bridges_vintage_custom_01": {
+        "name": "bridges_vintage_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_02": {
+        "name": "bridges_vintage_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_03": {
+        "name": "bridges_vintage_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_04": {
+        "name": "bridges_vintage_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_05": {
+        "name": "bridges_vintage_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_06": {
+        "name": "bridges_vintage_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_07": {
+        "name": "bridges_vintage_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_08": {
+        "name": "bridges_vintage_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_09": {
+        "name": "bridges_vintage_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "bridges_vintage_custom_11": {
+        "name": "bridges_vintage_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_12": {
+        "name": "bridges_vintage_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "bridges_vintage_custom_13": {
+        "name": "bridges_vintage_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+    "bridges_vintage_custom_15": {
+        "name": "bridges_vintage_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+
+    
+
+
+
+
+
+
+
+
+
+    "bridges_vintage_normal_01": {
+        "name": "bridges_vintage_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "bridges_vintage_normal_02": {
+        "name": "bridges_vintage_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_03": {
+        "name": "bridges_vintage_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_04": {
+        "name": "bridges_vintage_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_05": {
+        "name": "bridges_vintage_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_06": {
+        "name": "bridges_vintage_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_07": {
+        "name": "bridges_vintage_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_08": {
+        "name": "bridges_vintage_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_09": {
+        "name": "bridges_vintage_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+   
+    "bridges_vintage_normal_11": {
+        "name": "bridges_vintage_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_12": {
+        "name": "bridges_vintage_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+    "bridges_vintage_normal_13": {
+        "name": "bridges_vintage_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+   
+    "bridges_vintage_normal_15": {
+        "name": "bridges_vintage_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+   
+   
+    
+ 
+}

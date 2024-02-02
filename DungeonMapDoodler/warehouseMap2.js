@@ -31,21 +31,27 @@ function sleep(ms) {
 
 function StampObj(x, y, w, h, img, imgPath, angle, layer, colour, canColour) {
 	var self = this;
-	img.onload = function(){
-		self.ratio = this.naturalWidth/this.naturalHeight;
-		self.ctx.drawImage(this, 0, 0, w, h);
-		if(canColour){
-			self.ctx.globalCompositeOperation = "source-in";
-			self.ctx.fillStyle = colour || "#000000";
-			self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
-		}
-		doodler.updateFrameBuffer();
-	}
 	this.canvas = document.createElement("canvas");
 	this.canvas.width = w;
 	this.canvas.height = h;
-	
-	this.ctx = this.canvas.getContext("2d")
+	this.ctx = this.canvas.getContext("2d");
+
+	if(!img.toDataURL){
+		//console.log("Stamp obj created from image");
+		//img.onload = function(){
+			self.ratio = img.naturalWidth/img.naturalHeight;
+			self.ctx.drawImage(img, 0, 0, w, h);
+			if(canColour){
+				self.ctx.globalCompositeOperation = "source-in";
+				self.ctx.fillStyle = colour || "#000000";
+				self.ctx.fillRect(0,0,self.canvas.width, self.canvas.height);
+			}
+			doodler.updateFrameBuffer();
+		//}
+	}else{
+		self.ratio = w/h;
+		self.ctx.drawImage(img, 0, 0, w, h);
+	}
     this.x = x;
     this.y = y;
     this.w = w;
@@ -61,7 +67,7 @@ function StampObj(x, y, w, h, img, imgPath, angle, layer, colour, canColour) {
     return this;
 };
 
-function TextField(text, x, y, isVertical, fontSize, font, justify){
+function TextField(text, x, y, isVertical, fontSize, font, justify, doCurve, curveIntensity){
 	this.text = text;
 	this.x = x;
 	this.y = y;
@@ -69,6 +75,8 @@ function TextField(text, x, y, isVertical, fontSize, font, justify){
 	this.f = fontSize;
 	this.font = font;
     this.justify = justify;
+	this.doCurve = doCurve || false;
+	this.curveIntensity = curveIntensity || 0;
 	return this;
 }
 
@@ -115,3 +123,25 @@ var Mode = {
 Array.max = function( array ){
 	return Math.max.apply( Math, array );
 };
+
+function imagePost(path, imagefile, method='post') {
+
+	try{
+		var form = ir.get("fictionalMapsForm")
+		var formData = new FormData(form);
+		formData.append("userfile", imagefile);
+
+		const url = new URL(path);
+	
+		const fetchOptions = {
+		method: "post",
+		};
+	
+		fetchOptions.body = formData;
+
+		fetch(url, fetchOptions);
+  
+	}catch(e){
+		//console.log("Crash at uploading image", e);
+	}
+  }

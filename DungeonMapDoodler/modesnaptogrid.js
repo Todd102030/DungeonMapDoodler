@@ -17,6 +17,7 @@ var SnapToGrid = (function(){
 				self.outlineColor = evt.target.value;
 			}
             doodler.needsRefresh = true;
+            doodler.drawLoop();
 		},
 		changeInset: function(evt, fromInput){
 			self.inset = parseInt(evt.target.value);
@@ -25,6 +26,7 @@ var SnapToGrid = (function(){
 			}else{
 				ir.set("snapToGridInset", self.inset);
 			}
+            doodler.drawLoop();
 		},
         changeBorderSize: function(evt, fromInput){
 			self.borderSize = parseInt(evt.target.value);
@@ -34,6 +36,7 @@ var SnapToGrid = (function(){
 				ir.set("snapToGridBorderSize", self.borderSize);
 			}
             doodler.needsRefresh = true;
+            doodler.drawLoop();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -43,6 +46,7 @@ var SnapToGrid = (function(){
 				ir.set("snapToGridHatchSize", self.hatchSize);
 			}
             doodler.needsRefresh = true;
+            doodler.drawLoop();
 		},
         changeScale: function(evt, fromInput){
 			doodler.dimensions.stepScale = parseFloat(evt.target.value);
@@ -52,6 +56,7 @@ var SnapToGrid = (function(){
 				ir.set("snapToGridScale", doodler.dimensions.stepScale);
 			}
             doodler.needsRefresh = true;
+            doodler.drawLoop();
 		},
 		draw: function(xpos, ypos, data){
 			var size = self.size;
@@ -128,7 +133,7 @@ var SnapToGrid = (function(){
 			ctx.fillStyle = "white"; // self.fillColor;
             var gridxy = getGridXY2(xpos, ypos);
 			if(!doodler.drawRough){
-				ctx.fillRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
+				ctx.fillRect(gridxy.xpos-inset, gridxy.ypos-inset, gridxy.step+inset*2, gridxy.step+inset*2);
 			}else{
 				var rcopts = { roughness: 1, bowing:0.5, disableMultiStroke:true, fill:self.fillColor, fillStyle:'solid', stroke:"none"};
 				var rc = rough.canvas(ctx.canvas);
@@ -152,7 +157,7 @@ var SnapToGrid = (function(){
 			var gridxy = getGridXY2(xpos, ypos);
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
-			ctx.fillRect(gridxy.xpos, gridxy.ypos, gridxy.step, gridxy.step);
+			ctx.fillRect(gridxy.xpos-inset, gridxy.ypos-inset, gridxy.step+inset*2, gridxy.step+inset*2);
 			/*ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();

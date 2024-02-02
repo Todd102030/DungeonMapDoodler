@@ -1,0 +1,201 @@
+{
+    "asian_misc_aty_sample_01": {
+        "name": "asian_misc_aty_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_02": {
+        "name": "asian_misc_aty_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_03": {
+        "name": "asian_misc_aty_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_04": {
+        "name": "asian_misc_aty_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_05": {
+        "name": "asian_misc_aty_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_06": {
+        "name": "asian_misc_aty_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+    "asian_misc_aty_sample_07": {
+        "name": "asian_misc_aty_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "sample_color"
+    },
+   
+   
+   
+   
+   
+
+
+
+
+    
+  
+    "asian_misc_aty_custom_01": {
+        "name": "asian_misc_aty_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_02": {
+        "name": "asian_misc_aty_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_03": {
+        "name": "asian_misc_aty_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_04": {
+        "name": "asian_misc_aty_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_05": {
+        "name": "asian_misc_aty_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_06": {
+        "name": "asian_misc_aty_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+    "asian_misc_aty_custom_07": {
+        "name": "asian_misc_aty_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "custom_colors_2"
+    },
+  
+  
+
+
+
+
+
+    "asian_misc_aty_normal_01": {
+        "name": "asian_misc_aty_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_02": {
+        "name": "asian_misc_aty_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_03": {
+        "name": "asian_misc_aty_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_04": {
+        "name": "asian_misc_aty_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_05": {
+        "name": "asian_misc_aty_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_06": {
+        "name": "asian_misc_aty_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_07": {
+        "name": "asian_misc_aty_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_08": {
+        "name": "asian_misc_aty_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_09": {
+        "name": "asian_misc_aty_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_10": {
+        "name": "asian_misc_aty_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    },
+    "asian_misc_aty_normal_11": {
+        "name": "asian_misc_aty_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -20,
+        "draw_mode": "normal"
+    }
+  
+   
+   
+ 
+    
+ 
+}

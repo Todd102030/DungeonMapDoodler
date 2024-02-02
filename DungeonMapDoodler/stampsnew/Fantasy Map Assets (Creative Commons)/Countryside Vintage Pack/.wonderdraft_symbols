@@ -1,0 +1,223 @@
+{
+    "countrysidevintage_sample_01": {
+        "name": "countrysidevintage_ample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_02": {
+        "name": "countrysidevintage_ample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_03": {
+        "name": "countrysidevintage_ample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_04": {
+        "name": "countrysidevintage_ample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_05": {
+        "name": "countrysidevintage_ample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_06": {
+        "name": "countrysidevintage_ample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_07": {
+        "name": "countrysidevintage_ample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_08": {
+        "name": "countrysidevintage_ample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "countrysidevintage_sample_09": {
+        "name": "countrysidevintage_ample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    
+    
+   
+    
+  
+
+
+
+
+
+
+    
+  
+    "countrysidevintage_custom_01": {
+        "name": "countrysidevintage_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_02": {
+        "name": "countrysidevintage_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_03": {
+        "name": "countrysidevintage_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_04": {
+        "name": "countrysidevintage_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_05": {
+        "name": "countrysidevintage_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_06": {
+        "name": "countrysidevintage_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_07": {
+        "name": "countrysidevintage_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_08": {
+        "name": "countrysidevintage_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "countrysidevintage_custom_09": {
+        "name": "countrysidevintage_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    
+    
+    
+
+
+
+
+
+
+
+
+
+    "countrysidevintage_normal_01": {
+        "name": "countrysidevintage_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_02": {
+        "name": "countrysidevintage_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_03": {
+        "name": "countrysidevintage_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_04": {
+        "name": "countrysidevintage_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_05": {
+        "name": "countrysidevintage_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_06": {
+        "name": "countrysidevintage_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_07": {
+        "name": "countrysidevintage_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_08": {
+        "name": "countrysidevintage_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "countrysidevintage_normal_09": {
+        "name": "countrysidevintage_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+
+   
+   
+   
+    
+ 
+}

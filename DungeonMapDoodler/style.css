@@ -183,7 +183,7 @@ table{
 
 .floatingModes{
 	position: fixed;
-	left: calc( 100vw - 250px );
+	left: calc( 100vw - 200px );
 	top:41px;
 	background-color: ghostwhite;
 	width:auto;
@@ -197,7 +197,7 @@ table{
 	overflow-y:auto;
 	/*max-height: calc(100vh - 200px);*/
     height: calc(100vh - 108px);
-	width: 250px;
+	width: 200px;
 }
 
 .floatingBtns {
@@ -244,8 +244,8 @@ table{
 	display: flex;
 	flex-direction: row;
 	justify-content: left;
-	align-content: center;
-	align-items: center;
+	align-content: stretch;
+	align-items:center;
 }
 
 .layerSelected{
@@ -349,6 +349,23 @@ table{
     font-size: 130%;
     border-radius: 10px;
 }
+.popupPanelText {
+    /*border-style:double;*/
+    background-color:#fff;
+    z-index:10000;
+    max-width:94%;
+    overflow: auto;
+    max-width: 1000px;
+    height:auto;
+    position:fixed;
+    left: 50%;
+    transform: translateX(-50%) translateY(100vh);
+    top:20%;
+	box-shadow: 0px 5px 20px;
+	border-radius: 15px;
+    transition: transform 0.3s;
+    /*min-width: 50%;*/
+}
 
 .popupPanel {
     /*border-style:double;*/
@@ -384,6 +401,7 @@ table{
 	box-shadow: 0px 5px 20px;
 	border-radius: 15px;
     /*min-width: 50%;*/
+    width: 427px;
     max-width: 600px;
 }
 

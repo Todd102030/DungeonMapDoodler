@@ -1,0 +1,155 @@
+{
+    "vintagescrollparchment_sample_01": {
+        "name": "vintagescrollparchment_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagescrollparchment_sample_02": {
+        "name": "vintagescrollparchment_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagescrollparchment_sample_03": {
+        "name": "vintagescrollparchment_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagescrollparchment_sample_04": {
+        "name": "vintagescrollparchment_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagescrollparchment_sample_05": {
+        "name": "vintagescrollparchment_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagescrollparchment_sample_06": {
+        "name": "vintagescrollparchment_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+
+
+   
+   
+    
+   
+    
+
+
+
+
+  
+
+
+ "vintagescrollparchment_custom_01": {
+        "name": "vintagescrollparchment_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagescrollparchment_custom_02": {
+        "name": "vintagescrollparchment_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagescrollparchment_custom_03": {
+        "name": "vintagescrollparchment_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagescrollparchment_custom_04": {
+        "name": "vintagescrollparchment_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagescrollparchment_custom_05": {
+        "name": "vintagescrollparchment_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagescrollparchment_custom_06": {
+        "name": "vintagescrollparchment_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+
+
+
+
+
+    "vintagescrollparchment_normal_01": {
+        "name": "vintagescrollparchment_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagescrollparchment_normal_02": {
+        "name": "vintagescrollparchment_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagescrollparchment_normal_03": {
+        "name": "vintagescrollparchment_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagescrollparchment_normal_04": {
+        "name": "vintagescrollparchment_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagescrollparchment_normal_05": {
+        "name": "vintagescrollparchment_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagescrollparchment_normal_06": {
+        "name": "vintagescrollparchment_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+   
+    
+       
+  
+    
+    
+ 
+}

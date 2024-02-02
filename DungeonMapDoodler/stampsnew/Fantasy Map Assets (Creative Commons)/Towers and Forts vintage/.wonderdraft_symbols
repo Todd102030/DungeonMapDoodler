@@ -1,0 +1,434 @@
+{
+    "towervintage_sample_01": {
+        "name": "towervintage_ample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "towervintage_sample_02": {
+        "name": "towervintage_ample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_03": {
+        "name": "towervintage_ample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_04": {
+        "name": "towervintage_ample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_05": {
+        "name": "towervintage_ample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_06": {
+        "name": "towervintage_ample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_07": {
+        "name": "towervintage_ample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_08": {
+        "name": "towervintage_ample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_09": {
+        "name": "towervintage_ample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_10": {
+        "name": "towervintage_ample_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_11": {
+        "name": "towervintage_ample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_12": {
+        "name": "towervintage_ample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_13": {
+        "name": "towervintage_ample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_14": {
+        "name": "towervintage_ample_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_15": {
+        "name": "towervintage_ample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_16": {
+        "name": "towervintage_ample_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    "towervintage_sample_17": {
+        "name": "towervintage_ample_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    
+    
+   
+    
+  
+
+
+
+
+
+
+    
+  
+    "towervintage_custom_01": {
+        "name": "towervintage_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_02": {
+        "name": "towervintage_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_03": {
+        "name": "towervintage_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_04": {
+        "name": "towervintage_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_05": {
+        "name": "towervintage_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_06": {
+        "name": "towervintage_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_07": {
+        "name": "towervintage_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_08": {
+        "name": "towervintage_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_09": {
+        "name": "towervintage_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_10": {
+        "name": "towervintage_custom_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_11": {
+        "name": "towervintage_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_12": {
+        "name": "towervintage_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_13": {
+        "name": "towervintage_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_14": {
+        "name": "towervintage_custom_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_15": {
+        "name": "towervintage_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_16": {
+        "name": "towervintage_custom_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    "towervintage_custom_17": {
+        "name": "towervintage_custom_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+    
+    
+
+
+
+
+
+
+
+
+
+    "towervintage_normal_01": {
+        "name": "towervintage_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+
+    "towervintage_normal_02": {
+        "name": "towervintage_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_03": {
+        "name": "towervintage_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_04": {
+        "name": "towervintage_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_05": {
+        "name": "towervintage_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_06": {
+        "name": "towervintage_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_07": {
+        "name": "towervintage_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_08": {
+        "name": "towervintage_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_09": {
+        "name": "towervintage_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_10": {
+        "name": "towervintage_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_11": {
+        "name": "towervintage_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_12": {
+        "name": "towervintage_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_13": {
+        "name": "towervintage_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_14": {
+        "name": "towervintage_normal_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_15": {
+        "name": "towervintage_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_16": {
+        "name": "towervintage_normal_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+   
+
+    "towervintage_normal_17": {
+        "name": "towervintage_normal_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+   
+   
+   
+    
+ 
+}

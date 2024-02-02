@@ -16,6 +16,7 @@ var Doodle = (function(){
 			}else{
 				self.outlineColor = evt.target.value;
 			}
+            doodler.drawLoop();
 		},
 		changeSize: function(evt, fromInput){
 			self.size = parseInt(evt.target.value);
@@ -24,6 +25,7 @@ var Doodle = (function(){
 			}else{
 				ir.set("doodleSize", self.size);
 			}
+            doodler.drawLoop();
 		},
 		changeBorderSize: function(evt, fromInput){
 			self.borderSize = parseInt(evt.target.value);
@@ -32,6 +34,7 @@ var Doodle = (function(){
 			}else{
 				ir.set("doodleBorderSize", self.borderSize);
 			}
+            doodler.drawLoop();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -40,9 +43,11 @@ var Doodle = (function(){
 			}else{
 				ir.set("doodleHatchSize", self.hatchSize);
 			}
+            doodler.drawLoop();
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
+            doodler.drawLoop();
 		},
 		draw: function(xpos, ypos, data){
             var wh = doodler;
@@ -160,21 +165,7 @@ var Doodle = (function(){
 			var expos = self.doodleEndX;
 			var eypos = self.doodleEndY;
 			
-			// Radii of the white glow.
-			var innerRadius = self.size * 0.15;
-			var outerRadius = self.size/2+hatchSize;
-			// Radius of the entire circle.
-			var radius = self.size/2+hatchSize;
 			
-
-			//var gradient = ctx.createRadialGradient(xpos, ypos, innerRadius, xpos, ypos, outerRadius);
-			//gradient.addColorStop(0, 'black');
-			//gradient.addColorStop(1, 'transparent');
-
-			//ctx.arc(xpos, ypos, radius, 0, 2 * Math.PI);
-            
-			//ctx.fillStyle = gradient;
-			//ctx.fill();
 			if(self.shape == Shape.Circle){
 				//Connecting lines
 				//Path Drawing

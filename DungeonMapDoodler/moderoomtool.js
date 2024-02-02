@@ -19,6 +19,7 @@ var RoomTool = (function(){
 			}else{
 				self.outlineColor = evt.target.value;
 			}
+            doodler.drawLoop();
 		},
 		changeInset: function(evt, fromInput){
 			self.inset = parseInt(evt.target.value);
@@ -27,6 +28,7 @@ var RoomTool = (function(){
 			}else{
 				ir.set("roomToolInset", self.inset);
 			}
+            doodler.drawLoop();
 		},
         changeBorderSize: function(evt, fromInput){
 			self.borderSize = parseInt(evt.target.value);
@@ -35,6 +37,7 @@ var RoomTool = (function(){
 			}else{
 				ir.set("roomToolBorderSize", self.borderSize);
 			}
+            doodler.drawLoop();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -43,15 +46,19 @@ var RoomTool = (function(){
 			}else{
 				ir.set("roomToolHatchSize", self.hatchSize);
 			}
+            doodler.drawLoop();
 		},
 		changeShape: function(evt){
 			self.shape = Shape[evt.target.value];
+            doodler.drawLoop();
 		},
 		changeSnapping: function(evt){
 			self.isSnapping = ir.bool("roomToolIsSnapping");
+            doodler.drawLoop();
 		},
 		changeSubtractive: function(evt){
 			self.isSubtractive = ir.bool("roomToolIsSubtractive");
+            doodler.drawLoop();
 		},
 		draw: function(xpos, ypos, data){
 			//TODO: Add square/circle funcitonality

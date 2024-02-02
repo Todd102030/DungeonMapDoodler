@@ -1,0 +1,1036 @@
+{
+    "vintagecamps_sample_01": {
+        "name": "vintagecamps_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_02": {
+        "name": "vintagecamps_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_03": {
+        "name": "vintagecamps_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_04": {
+        "name": "vintagecamps_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_05": {
+        "name": "vintagecamps_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_06": {
+        "name": "vintagecamps_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_07": {
+        "name": "vintagecamps_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_08": {
+        "name": "vintagecamps_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_09": {
+        "name": "vintagecamps_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_10": {
+        "name": "vintagecamps_sample_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_11": {
+        "name": "vintagecamps_sample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_12": {
+        "name": "vintagecamps_sample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_13": {
+        "name": "vintagecamps_sample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_14": {
+        "name": "vintagecamps_sample_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_15": {
+        "name": "vintagecamps_sample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_16": {
+        "name": "vintagecamps_sample_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_17": {
+        "name": "vintagecamps_sample_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_18": {
+        "name": "vintagecamps_sample_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_19": {
+        "name": "vintagecamps_sample_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_20": {
+        "name": "vintagecamps_sample_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_21": {
+        "name": "vintagecamps_sample_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_22": {
+        "name": "vintagecamps_sample_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_23": {
+        "name": "vintagecamps_sample_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_24": {
+        "name": "vintagecamps_sample_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_25": {
+        "name": "vintagecamps_sample_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_26": {
+        "name": "vintagecamps_sample_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_27": {
+        "name": "vintagecamps_sample_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_28": {
+        "name": "vintagecamps_sample_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_29": {
+        "name": "vintagecamps_sample_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_30": {
+        "name": "vintagecamps_sample_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_31": {
+        "name": "vintagecamps_sample_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_32": {
+        "name": "vintagecamps_sample_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_33": {
+        "name": "vintagecamps_sample_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_34": {
+        "name": "vintagecamps_sample_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_35": {
+        "name": "vintagecamps_sample_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_36": {
+        "name": "vintagecamps_sample_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_37": {
+        "name": "vintagecamps_sample_37",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_38": {
+        "name": "vintagecamps_sample_38",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_39": {
+        "name": "vintagecamps_sample_39",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_40": {
+        "name": "vintagecamps_sample_40",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_41": {
+        "name": "vintagecamps_sample_41",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_42": {
+        "name": "vintagecamps_sample_42",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_43": {
+        "name": "vintagecamps_sample_43",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_44": {
+        "name": "vintagecamps_sample_44",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_45": {
+        "name": "vintagecamps_sample_45",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_46": {
+        "name": "vintagecamps_sample_46",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_47": {
+        "name": "vintagecamps_sample_47",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecamps_sample_48": {
+        "name": "vintagecamps_sample_48",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+   
+    
+   
+    
+
+
+
+
+  
+
+
+ "vintagecamps_custom_01": {
+        "name": "vintagecamps_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_02": {
+        "name": "vintagecamps_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_03": {
+        "name": "vintagecamps_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_04": {
+        "name": "vintagecamps_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_05": {
+        "name": "vintagecamps_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_06": {
+        "name": "vintagecamps_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_07": {
+        "name": "vintagecamps_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_08": {
+        "name": "vintagecamps_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_09": {
+        "name": "vintagecamps_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_10": {
+        "name": "vintagecamps_custom_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_11": {
+        "name": "vintagecamps_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_12": {
+        "name": "vintagecamps_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_13": {
+        "name": "vintagecamps_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_14": {
+        "name": "vintagecamps_custom_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_15": {
+        "name": "vintagecamps_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_16": {
+        "name": "vintagecamps_custom_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_17": {
+        "name": "vintagecamps_custom_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_18": {
+        "name": "vintagecamps_custom_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_19": {
+        "name": "vintagecamps_custom_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_20": {
+        "name": "vintagecamps_custom_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_21": {
+        "name": "vintagecamps_custom_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_22": {
+        "name": "vintagecamps_custom_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_23": {
+        "name": "vintagecamps_custom_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_24": {
+        "name": "vintagecamps_custom_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_25": {
+        "name": "vintagecamps_custom_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_26": {
+        "name": "vintagecamps_custom_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_27": {
+        "name": "vintagecamps_custom_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_28": {
+        "name": "vintagecamps_custom_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_29": {
+        "name": "vintagecamps_custom_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_30": {
+        "name": "vintagecamps_custom_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_31": {
+        "name": "vintagecamps_custom_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_32": {
+        "name": "vintagecamps_custom_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_33": {
+        "name": "vintagecamps_custom_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_34": {
+        "name": "vintagecamps_custom_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_35": {
+        "name": "vintagecamps_custom_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_36": {
+        "name": "vintagecamps_custom_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_37": {
+        "name": "vintagecamps_custom_37",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_38": {
+        "name": "vintagecamps_custom_38",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_39": {
+        "name": "vintagecamps_custom_39",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_40": {
+        "name": "vintagecamps_custom_40",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_41": {
+        "name": "vintagecamps_custom_41",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_42": {
+        "name": "vintagecamps_custom_42",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_43": {
+        "name": "vintagecamps_custom_43",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_44": {
+        "name": "vintagecamps_custom_44",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_45": {
+        "name": "vintagecamps_custom_45",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_46": {
+        "name": "vintagecamps_custom_46",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_47": {
+        "name": "vintagecamps_custom_47",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ "vintagecamps_custom_48": {
+        "name": "vintagecamps_custom_48",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+ 
+
+
+
+
+
+
+
+
+
+    "vintagecamps_normal_01": {
+        "name": "vintagecamps_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_02": {
+        "name": "vintagecamps_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_03": {
+        "name": "vintagecamps_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_04": {
+        "name": "vintagecamps_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_05": {
+        "name": "vintagecamps_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_06": {
+        "name": "vintagecamps_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_07": {
+        "name": "vintagecamps_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_08": {
+        "name": "vintagecamps_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_09": {
+        "name": "vintagecamps_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_10": {
+        "name": "vintagecamps_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_11": {
+        "name": "vintagecamps_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_12": {
+        "name": "vintagecamps_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_13": {
+        "name": "vintagecamps_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_14": {
+        "name": "vintagecamps_normal_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_15": {
+        "name": "vintagecamps_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_16": {
+        "name": "vintagecamps_normal_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_17": {
+        "name": "vintagecamps_normal_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_18": {
+        "name": "vintagecamps_normal_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_19": {
+        "name": "vintagecamps_normal_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_20": {
+        "name": "vintagecamps_normal_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_21": {
+        "name": "vintagecamps_normal_21",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_22": {
+        "name": "vintagecamps_normal_22",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_23": {
+        "name": "vintagecamps_normal_23",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_24": {
+        "name": "vintagecamps_normal_24",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_25": {
+        "name": "vintagecamps_normal_25",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_26": {
+        "name": "vintagecamps_normal_26",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_27": {
+        "name": "vintagecamps_normal_27",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_28": {
+        "name": "vintagecamps_normal_28",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_29": {
+        "name": "vintagecamps_normal_29",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_30": {
+        "name": "vintagecamps_normal_30",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_31": {
+        "name": "vintagecamps_normal_31",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_32": {
+        "name": "vintagecamps_normal_32",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_33": {
+        "name": "vintagecamps_normal_33",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_34": {
+        "name": "vintagecamps_normal_34",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_35": {
+        "name": "vintagecamps_normal_35",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_36": {
+        "name": "vintagecamps_normal_36",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_37": {
+        "name": "vintagecamps_normal_37",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_38": {
+        "name": "vintagecamps_normal_38",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_39": {
+        "name": "vintagecamps_normal_39",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_40": {
+        "name": "vintagecamps_normal_40",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_41": {
+        "name": "vintagecamps_normal_41",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_42": {
+        "name": "vintagecamps_normal_42",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_43": {
+        "name": "vintagecamps_normal_43",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_44": {
+        "name": "vintagecamps_normal_44",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_45": {
+        "name": "vintagecamps_normal_45",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_46": {
+        "name": "vintagecamps_normal_46",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_47": {
+        "name": "vintagecamps_normal_47",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecamps_normal_48": {
+        "name": "vintagecamps_normal_48",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+       
+  
+    
+    
+ 
+}

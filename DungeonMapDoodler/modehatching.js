@@ -23,13 +23,10 @@ var Hatching = (function(){
 		},
 		changeImageStyle: async function(evt){
             //only gets set if clicked from texture images, null otherwise. Overrides the drawFGBG value;
-			var doBackground = doodler.doBackground;
+			var doBg = doodler.doBackground;
             
 			var layer = doodler.layers[doodler.currentLayer];
-            var doBg = ir.vn("drawFGBG")
-            if(doBackground != null && doBackground>0){
-                doBg = doBackground == 1;
-            }
+            
             if(doBg == 1){
                 self.imageStyle = evt.target.value;// ir.v("hatchImageStyle");
                 doodler.hatchStyleImage = self.imageStyle;
@@ -66,8 +63,15 @@ var Hatching = (function(){
             var step = dim.stepSize * dim.footPixel;
             var stepX = xfeet/dim.stepSize;
             var stepY = yfeet/dim.stepSize;
-            img.src = ir.get(layer.floorStyle).src;
-            console.log("Generating floor style from " + layer.floorStyle);
+            
+            if(doBg){
+                img.src = ir.get(layer.hatchStyle).src;
+                console.log("Generating background style from " + layer.hatchStyle);
+            }else{
+                img.src = ir.get(layer.floorStyle).src;
+                console.log("Generating foreground style from " + layer.floorStyle);
+            }
+            
             /// draw the image to be clipped
             //ctx.drawImage(img, 0, 0, 500, 500);
             //////
@@ -78,7 +82,11 @@ var Hatching = (function(){
                 var yplus = ih*(1/sY);//*self.zoomLevel;
 
 
-                layer.floorGenerated = true;
+                if(doBg){
+                    layer.hatchGenerated = true;
+                }else{
+                    layer.floorGenerated = true;
+                }
                 var canv2 = document.createElement("canvas");
                 //By foot count
                 canv2.width = xfeet*dim.footPixel+1;
@@ -100,11 +108,14 @@ var Hatching = (function(){
                     img2.height = canv2.height;
                     if(doBg){
                         layer.hatchImg = img2;
+                        console.log("Setting background image");
                     }else{
                         layer.floorImg = img2;
+                        console.log("Setting foreground image");
                     }
                     
                     doodler.updateFrameBuffer();
+                    doodler.drawLoop();
                 };
                 img2.src = dataurl;
                 if(doBg){
@@ -171,10 +182,12 @@ var Hatching = (function(){
 			layer.floorImg = null;
 			layer.floorGenerated = false;
             doodler.updateFrameBuffer();
+            doodler.drawLoop();
 		},
         changeFullHatch: function(){
 			self.fullHatch = ir.v("hatchingFullHatch");
             doodler.updateFrameBuffer();
+            doodler.drawLoop();
 		},
 		changeHatchSize: function(evt, fromInput){
 			self.hatchSize = parseInt(evt.target.value);
@@ -183,6 +196,7 @@ var Hatching = (function(){
 			}else{
 				ir.set("hatchingHatchSize", self.hatchSize);
 			}
+            doodler.drawLoop();
 		},
 		changeScale: function(evt, fromInput){
 			self.renderScale = parseFloat(evt.target.value);
@@ -191,6 +205,7 @@ var Hatching = (function(){
 			}else{
 				ir.set("hatchingScale", self.renderScale);
 			}
+            doodler.drawLoop();
 		},
 		changeScaleAndRender: function(evt){
 			self.changeScale(evt);
@@ -396,10 +411,9 @@ var Hatching = (function(){
 						<div class='paramTitle'>Hatch Size: </div><input type='number' style='width:60px' id='hatchingHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Hatching.changeHatchSize(event, true)' oninput='Modes.Hatching.changeHatchSize(event, true)'><br>
 						<input style='width:100px' type="range" id="hatchingHatchSize" name="hatchingHatchSize" min="1" max="200"  value='${self.hatchSize}' onchange='Modes.Hatching.changeHatchSize(event)' oninput='Modes.Hatching.changeHatchSize(event)'><br>
 						<div class='paramTitle'>Scale: </div><input type='number' min='0.125' max='4' step='0.125' style='width:60px' id='hatchingScaleLabel' value="${self.renderScale}" onchange='Modes.Hatching.changeScaleAndRender(event, true)' oninput='Modes.Hatching.changeScale(event, true)'><br>
-						<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="1" max="4" step='0.125' value='${self.renderScale}' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						
                         `;
-            htm += `<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>`
+            //htm += `<button type="button" class="canvBtn" onclick="doodler.pop('hatchPopup');doodler.popupShowing = true;">Select Texture</button>`
             /*htm +=`<div class="tooltipParent">
                 <div class="toggle">
                     <input type="radio" name="drawFGBG" value="0" id="drawFG" checked="checked" />

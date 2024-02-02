@@ -1,0 +1,7 @@
+{
+    "name":"Mines Caves mountains",
+    "radius":120,
+    "offset_x":0,
+    "offset_y":-30,
+     "draw_mode":"sample_color"
+}

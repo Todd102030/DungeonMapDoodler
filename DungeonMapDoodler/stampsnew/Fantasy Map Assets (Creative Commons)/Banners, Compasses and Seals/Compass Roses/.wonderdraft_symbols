@@ -1,0 +1,445 @@
+{
+    "vintagecompassroses_sample_01": {
+        "name": "vintagecompassroses_sample_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_02": {
+        "name": "vintagecompassroses_sample_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_03": {
+        "name": "vintagecompassroses_sample_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_04": {
+        "name": "vintagecompassroses_sample_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_05": {
+        "name": "vintagecompassroses_sample_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_06": {
+        "name": "vintagecompassroses_sample_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_07": {
+        "name": "vintagecompassroses_sample_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_08": {
+        "name": "vintagecompassroses_sample_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_09": {
+        "name": "vintagecompassroses_sample_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_10": {
+        "name": "vintagecompassroses_sample_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_11": {
+        "name": "vintagecompassroses_sample_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_12": {
+        "name": "vintagecompassroses_sample_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_13": {
+        "name": "vintagecompassroses_sample_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_14": {
+        "name": "vintagecompassroses_sample_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_15": {
+        "name": "vintagecompassroses_sample_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_16": {
+        "name": "vintagecompassroses_sample_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_17": {
+        "name": "vintagecompassroses_sample_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_18": {
+        "name": "vintagecompassroses_sample_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_19": {
+        "name": "vintagecompassroses_sample_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+    "vintagecompassroses_sample_20": {
+        "name": "vintagecompassroses_sample_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "sample_color"
+    },
+  
+    
+   
+    
+
+
+
+"vintagecompassroses_custom_01": {
+        "name": "vintagecompassroses_custom_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_02": {
+        "name": "vintagecompassroses_custom_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_03": {
+        "name": "vintagecompassroses_custom_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_04": {
+        "name": "vintagecompassroses_custom_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_05": {
+        "name": "vintagecompassroses_custom_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_06": {
+        "name": "vintagecompassroses_custom_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_07": {
+        "name": "vintagecompassroses_custom_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_08": {
+        "name": "vintagecompassroses_custom_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_09": {
+        "name": "vintagecompassroses_custom_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_10": {
+        "name": "vintagecompassroses_custom_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_11": {
+        "name": "vintagecompassroses_custom_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_12": {
+        "name": "vintagecompassroses_custom_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_13": {
+        "name": "vintagecompassroses_custom_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_14": {
+        "name": "vintagecompassroses_custom_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_15": {
+        "name": "vintagecompassroses_custom_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_16": {
+        "name": "vintagecompassroses_custom_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_17": {
+        "name": "vintagecompassroses_custom_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_18": {
+        "name": "vintagecompassroses_custom_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_19": {
+        "name": "vintagecompassroses_custom_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+"vintagecompassroses_custom_20": {
+        "name": "vintagecompassroses_custom_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "custom_colors_2"
+    },
+
+
+
+
+ 
+
+
+
+
+    "vintagecompassroses_normal_01": {
+        "name": "vintagecompassroses_normal_01",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_02": {
+        "name": "vintagecompassroses_normal_02",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_03": {
+        "name": "vintagecompassroses_normal_03",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_04": {
+        "name": "vintagecompassroses_normal_04",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_05": {
+        "name": "vintagecompassroses_normal_05",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_06": {
+        "name": "vintagecompassroses_normal_06",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_07": {
+        "name": "vintagecompassroses_normal_07",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_08": {
+        "name": "vintagecompassroses_normal_08",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_09": {
+        "name": "vintagecompassroses_normal_09",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_10": {
+        "name": "vintagecompassroses_normal_10",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_11": {
+        "name": "vintagecompassroses_normal_11",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_12": {
+        "name": "vintagecompassroses_normal_12",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_13": {
+        "name": "vintagecompassroses_normal_13",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_14": {
+        "name": "vintagecompassroses_normal_14",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_15": {
+        "name": "vintagecompassroses_normal_15",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_16": {
+        "name": "vintagecompassroses_normal_16",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_17": {
+        "name": "vintagecompassroses_normal_17",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_18": {
+        "name": "vintagecompassroses_normal_18",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_19": {
+        "name": "vintagecompassroses_normal_19",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    },
+    "vintagecompassroses_normal_20": {
+        "name": "vintagecompassroses_normal_20",
+        "radius": 70,
+        "offset_x": 0,
+        "offset_y": -30,
+        "draw_mode": "normal"
+    }
+  
+    
+       
+  
+    
+    
+ 
+}
