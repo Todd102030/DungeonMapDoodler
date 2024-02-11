@@ -1,4 +1,18 @@
 
+Feb 11 and beyond
+Make a select/copy/paste tool, add onto new layer? Not sure how to handle 
+  unless we just have a special single floating layer like gimp
+Add colour and drop shadows to text tool
+Change paint tool to use same drawing logic as doodle tool
+
+Feb 10, 2024:
+Fixed bug when painting on foreground, would use transparency of background texture
+Added texture on drawing preview for all tools
+Changed outlines to use svg filters rather than css filters, adds potential for new outline options
+
+Feb 7 2024:
+Deployed to beta and public
+
 Feb 2 2024:
 Added toggle to only apply overlay to background layer and not foreground
 Fix - added fill color back to snap to grid

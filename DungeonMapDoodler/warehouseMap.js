@@ -1126,7 +1126,14 @@ var doodler = (function(){
         self.drawLoop();
     },
     setOutlineSize: function(){
-      self.outlineSize = ir.vn("outlineRange");
+        self.outlineSize = ir.vn("outlineRange");
+        if(self.outlineSize>=0){
+            ir.get("outlineFilterSize").setAttribute("radius", self.outlineSize);
+        }
+        else{
+            ir.get("offsetOutlineSize").setAttribute("dx", self.outlineSize);
+            ir.get("offsetOutlineSize").setAttribute("dy", self.outlineSize);
+        }
         self.updateFrameBuffer();
         self.drawLoop();
     },
@@ -1164,14 +1171,23 @@ var doodler = (function(){
 
 
                             //New outline border
-                            ctx.filter = filter + 'drop-shadow('+oSize+'px '+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
+                            if(doodler.outlineSize<0){
+                                ctx.filter = filter + " url('#offsetOutline')";
+                                ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            }
+                            else{
+                                ctx.filter = filter + " url('#dilateOutline')";
+                                ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            }
+                            
+                           /* ctx.filter = filter + 'drop-shadow('+oSize+'px '+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
                             ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
                             ctx.filter = filter + 'drop-shadow(-'+oSize+'px '+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
                             ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
                             ctx.filter = filter + 'drop-shadow('+oSize+'px -'+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
                             ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
                             ctx.filter = filter + ' drop-shadow(-'+oSize+'px -'+oSize+'px '+Modes.SnapToGrid.outlineColor+')';
-                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);
+                            ctx.drawImage(layer.doodleCanvas, 0, 0, layer.doodleCanvas.width, layer.doodleCanvas.height);*/
                         }
                     //}
                     //Actual doodle map
@@ -1492,6 +1508,9 @@ var doodler = (function(){
                 if(ir.bool("drawFGBG")){
                     if(layer.hatchImg != null){
                         doodler.overlayCtx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                        doodler.overlayCtx.globalCompositeOperation = "destination-out";
+                        doodler.overlayCtx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+                        doodler.overlayCtx.globalCompositeOperation = "source-over";
                     }
                 }else{
                     if(layer.floorImg != null){

@@ -264,6 +264,20 @@ var ShapeTool = (function(){
                 }
                 ctx.fill();
                 ctx.filter = "none";
+				//Draw current texture onto cursor
+				var dobg = ir.bool("drawFGBG");
+				var layer = doodler.layers[doodler.currentLayer];
+				ctx.globalCompositeOperation = "source-atop";
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}
+				ctx.globalCompositeOperation = "source-over"
 			}
 		},
 		drawOutlineBox: function(ctx, xpos, ypos, data){
@@ -307,7 +321,24 @@ var ShapeTool = (function(){
 			  ctx.lineTo (Xcenter + size * Math.cos(i * 2 * Math.PI / numberOfSides+angleRad), Ycenter + size * Math.sin(i * 2 * Math.PI / numberOfSides+angleRad));
 			}
 			ctx.fill();
-			
+			ctx.filter = "none";
+			//Draw current texture onto cursor
+			var dobg = ir.bool("drawFGBG");
+			var layer = doodler.layers[doodler.currentLayer];
+			ctx.globalCompositeOperation = "source-atop";
+			if(dobg){
+				if(layer.hatchImg != null){
+					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					ctx.globalCompositeOperation = "destination-out";
+					ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					ctx.globalCompositeOperation = "source-over";
+				}
+			}else{
+				if(layer.floorImg != null){
+					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				}
+			}
+			ctx.globalCompositeOperation = "source-over"
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained

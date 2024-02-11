@@ -16,6 +16,8 @@ var SnapToGrid = (function(){
 			}else{
 				self.outlineColor = evt.target.value;
 			}
+			ir.get("outlineFilterColor").setAttribute("flood-color", evt.target.value);
+			ir.get("offsetFilterColor").setAttribute("flood-color", evt.target.value);
             doodler.needsRefresh = true;
             doodler.drawLoop();
 		},
@@ -158,11 +160,27 @@ var SnapToGrid = (function(){
 			var inset = self.inset;
 			//ctx.strokeRect(xgridtop-inset, ygridtop-inset, step*zoom+inset*2, step*zoom+inset*2);
 			ctx.fillRect(gridxy.xpos-inset, gridxy.ypos-inset, gridxy.step+inset*2, gridxy.step+inset*2);
+
+			//Draw current texture onto cursor
+			var dobg = ir.bool("drawFGBG");
+			var layer = doodler.layers[doodler.currentLayer];
+			ctx.globalCompositeOperation = "source-atop";
+			if(dobg){
+				if(layer.hatchImg != null){
+					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				}
+			}else{
+				if(layer.floorImg != null){
+					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				}
+			}
+			ctx.globalCompositeOperation = "source-over";
 			/*ctx.strokeStyle = "rgb(60,200,200)";
 			var radius = self.size*2.1+self.hatchSize;
 			ctx.beginPath();
 			ctx.arc(xpos, ypos, radius*doodler.zoomLevel, 0, 2 * Math.PI);
 			ctx.stroke();*/
+
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained

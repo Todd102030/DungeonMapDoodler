@@ -245,7 +245,7 @@
     
 <div id='hatchPopup' class='popupPanel' style='text-align: center'>
     <h2>Choose Texture</h2>
-    <div id="hatchPopupList" style="max-height: calc( 100% - 130px ); overflow: auto;">
+    <div id="hatchPopupList" style="max-height: calc( 100% - 178px ); overflow: auto;">
     
         <div class='hatchImgWrap' style='display: none' onclick='doodler.selectHatchTexture("squarefuzzImg")'><img id='squarefuzzImg' src='images/squarefuzz.png'></div>
         <div class='hatchImgWrap' style='display: none' onclick='doodler.selectHatchTexture("circlefuzzImg")'><img id='circlefuzzImg' src='images/circlefuzz.png'></div>
@@ -329,6 +329,7 @@
         <div class='hatchImgWrap' onclick='doodler.selectHatchTexture("fmag14")'><img loading="lazy" id='fmag14' src='hatches/Artistic_antique_ground14.png'></div>
     
     </div>
+	Texture Density (Lower is smaller)<br>
 	<input style='width:100px' type="range" id="hatchingScale" name="hatchingScale" min="0.125" max="4" step='0.125' value='1' oninput='Modes.Hatching.changeScale(event)' onchange='Modes.Hatching.changeScaleAndRender(event)'><br>
 						
     <div class='popupFooter' style='padding-top: 8px'>
@@ -629,6 +630,16 @@
 	</table>
 	<button type="button" class="canvBtn" onclick="doodler.generateDungeon()">Generate Dungeon</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('randomGenPopup');doodler.popupShowing=false;">Cancel</button>
+	<br><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7216039414672061"
+     crossorigin="anonymous"></script>
+	<!-- Dungeon Gen -->
+	<ins class="adsbygoogle"
+		style="display:inline-block;width:427px;height:60px"
+		data-ad-client="ca-pub-7216039414672061"
+		data-ad-slot="5712528466"></ins>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 </div>
 
     <div id='worldGenPopup' class='popupPanel' style='text-align: center'>
@@ -702,6 +713,17 @@
         <div style='width:100%'><div id="worldWait" class="loader" style="display:none;"></div></div>
 	<button type="button" class="canvBtn" onclick="doodler.generateWorld()">Generate World</button>
 	<button type="button" class="canvBtn" onclick="doodler.unpop('worldGenPopup');doodler.popupShowing=false;">Cancel</button>
+	<br>
+	<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7216039414672061"
+     crossorigin="anonymous"></script>
+	<!-- World Gen -->
+	<ins class="adsbygoogle"
+		style="display:inline-block;width:427px;height:60px"
+		data-ad-client="ca-pub-7216039414672061"
+		data-ad-slot="9953658823"></ins>
+	<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
 </div>
     
 <div id='donJonPopup' class='popupPanel' style='text-align: center'>
@@ -806,7 +828,7 @@
 			<td class='tdr'>Box Size in Pixels:</td>
 			<td class='tdl'><input type="number" value='5' id="dimensionPopupBoxSize"  oninput='doodler.recalcSize()'></td>
 		</tr>
-		<tr>
+		<tr style="display:none;">
 			<td class='tdr'>Rough Grid Lines:</td>
 			<td class='tdl'><input type="checkbox" id="dimensionPopupBoxIsRough" ></td>
 		</tr>
@@ -814,7 +836,7 @@
     </details>
     <table>
         <tr><td colspan='2' id='dimensionSize' style="font-size: 135%;"></td></tr>
-        <tr id='newMapWarn'><td colspan='2'>Warning: this will clear out any doodles you currently have, <br>be sure to save</td></tr>
+        <tr id='newMapWarn'><td colspan='2'>Warning: this will clear out any doodles you currently have, be sure to save</td></tr>
 	</table>
 	<br>
 	Looking for the old Dungeon Map Doodler? Check out <a href="/classic" >Dungeon Map Doodler Classic</a><br><br>
@@ -1054,9 +1076,29 @@
     
 <svg id="svgfilters" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<defs>
+			<filter id="dilateOutline">
+				<feMorphology id="outlineFilterSize" in="SourceAlpha" result="DILATED" operator="dilate" radius="4"></feMorphology>
+				<feFlood id="outlineFilterColor" flood-color="#000" flood-opacity="1" result="PINK"></feFlood>
+				<feComposite in="PINK" in2="DILATED" operator="in" result="OUTLINE"></feComposite>
+
+				<feMerge>
+					<feMergeNode in="OUTLINE" />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			  </filter>
+			<filter id="offsetOutline">
+				<feOffset id="offsetOutlineSize" in="SourceAlpha" dx="-20" dy="-20" result="OFFSET" />
+				<feFlood id="offsetFilterColor" flood-color="#000" flood-opacity="1" result="PINK"></feFlood>
+				<feComposite in="PINK" in2="OFFSET" operator="in" result="OUTLINE"></feComposite>
+
+				<feMerge>
+					<feMergeNode in="OUTLINE" />
+					<feMergeNode in="SourceGraphic" />
+				</feMerge>
+			  </filter>
             <filter id="blur">
-          <feGaussianBlur stdDeviation="15"/>
-        </filter>
+        		<feGaussianBlur stdDeviation="15"/>
+        	</filter>
 
 			<filter id="teal-white" x="-10%" y="-10%" width="120%" height="120%" filterUnits="objectBoundingBox" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 				<feColorMatrix type="matrix" values=".33 .33 .33 0 0

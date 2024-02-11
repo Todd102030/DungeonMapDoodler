@@ -313,7 +313,7 @@ var Hatching = (function(){
                 doodler.tmpCtx.fill();
                 //doodler.tmpCtx.drawImage(ir.get("circlefuzzImg"), xpos-radius, ypos-radius, radius*2, radius*2);
                 doodler.tmpCtx.globalCompositeOperation = "source-in";
-                doodler.tmpCtx.drawImage(data.hatchImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
+                doodler.tmpCtx.drawImage(data.floorImg,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
                 doodler.tmpCtx.filter = "none";
                 //THESE GUYS NEED TO GO SOMEWHERE ELSE, BUT DON'T KNOW WHERE. CAUSES WEIRD BLEEDING FROM TRANSPARENT TEXTURES
                 doodler.tmpCtx.drawImage(data.doodleCanvas,0,0,data.doodleCanvas.width, data.doodleCanvas.height)
@@ -366,6 +366,21 @@ var Hatching = (function(){
 			//	ctx.strokeRect(xpos-(self.size/2)*zoom,ypos-(self.size/2)*zoom,self.size*zoom,self.size*zoom)
 			//}
             ctx.filter = "none";
+
+            //Draw current texture onto cursor
+			var dobg = ir.bool("drawFGBG");
+			var layer = doodler.layers[doodler.currentLayer];
+			ctx.globalCompositeOperation = "source-atop";
+			if(dobg){
+				if(layer.hatchImg != null){
+					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				}
+			}else{
+				if(layer.floorImg != null){
+					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				}
+			}
+			ctx.globalCompositeOperation = "source-over"
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained
