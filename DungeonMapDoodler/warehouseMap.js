@@ -712,10 +712,12 @@ var doodler = (function(){
         self.overlayImgStyle = ir.v("overlayStyle");
         self.overlayImg = null;
         doodler.updateFrameBuffer();
+        doodler.drawLoop();
     },
     changeOverlayBlend: function(evt){
         self.overlayBlend = ir.v("overlayBlend");
         doodler.updateFrameBuffer();
+        doodler.drawLoop();
     },
 	checkRough: function(evt){
 		self.drawRough = ir.bool("drawRoughCheck");
@@ -1635,6 +1637,7 @@ var doodler = (function(){
             self.overlayImg = new Image();
             self.overlayImg.onload = function(){
                 self.updateFBDraw();
+                self.drawLoop();
             }
             self.overlayImg.src = self.overlayImgStyle;
             
@@ -2286,16 +2289,16 @@ var doodler = (function(){
 			document.getElementById("stampUpload").addEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.addEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.addEventListener("DOMMouseScroll", self.handleMouseScroll);	        
-	        self.canvas.addEventListener("mousemove", self.onMouseMove, false);
-	        self.canvas.addEventListener("mousedown", self.onMouseDown, false);	  
-	        self.canvas.addEventListener("mouseup", self.onMouseUp, false);	 
+	        self.canvas.addEventListener("pointermove", self.onMouseMove, false);
+	        self.canvas.addEventListener("pointerdown", self.onMouseDown, false);	  
+	        self.canvas.addEventListener("pointerup", self.onMouseUp, false);	 
 	        document.addEventListener("keyup", self.onKeyUp, false);	 
 	        document.addEventListener("keydown", self.onKeyDown, false);	 
 			
 				        
-	        self.canvas.addEventListener("touchmove", self.onMouseMove, false);
-	        self.canvas.addEventListener("touchstart", self.onMouseDown, false);	  
-	        self.canvas.addEventListener("touchend", self.onMouseUp, false);	
+	        //self.canvas.addEventListener("touchmove", self.onMouseMove, false);
+	        //self.canvas.addEventListener("touchstart", self.onMouseDown, false);	  
+	        //self.canvas.addEventListener("touchend", self.onMouseUp, false);	
 	        var imgSlider = ir.get("whImgSlider");
 	        imgSlider.value = 0.4;
 	        self.warehouseAlpha = 0.4;
@@ -3885,10 +3888,10 @@ var doodler = (function(){
         self.shiftDown = evt.shiftKey;
         var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
+			Modes.Move.mouseDown(xpos, ypos, {pressure: evt.pressure||0.5, isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseDown(xpos, ypos, {isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
+			self.mouseMode.mouseDown(xpos, ypos, {pressure: evt.pressure||0.5, isTouch: isTouch,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
     },
       onKeyDown: function(evt){
@@ -4082,10 +4085,10 @@ var doodler = (function(){
 		
 		var layer = self.layers[self.currentLayer];
 		if (evt.ctrlKey){
-			Modes.Move.mouseMove(xpos, ypos, {isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
+			Modes.Move.mouseMove(xpos, ypos, {pressure: evt.pressure||0.5, isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
 		else if(self.mouseMode){
-			self.mouseMode.mouseMove(xpos, ypos,{isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
+			self.mouseMode.mouseMove(xpos, ypos,{pressure: evt.pressure||0.5, isTouch: false,hatchCtx:self.hatchCtx, doodleCtx:self.doodleCtx, outlineCtx:self.outlineCtx, hatchCanvas:layer.hatchCanvas, doodleCanvas:layer.doodleCanvas, outlineCanvas:layer.outlineCanvas, hatchImg: layer.hatchImg, floorImg: layer.floorImg, event:evt});
 		}
         
     },
@@ -4741,7 +4744,7 @@ var doodler = (function(){
         self.drawLoop();
   		//self.shutdownEditor();    
 		try{
-            imagePost("https://dungeonmapdoodler.com/imgup/upload.php", myResizedData)
+            imagePost("https://dungeonmapdoodler.com/imgup/upload.php", myResizedData, fileName)
 			track("Saving Image", fileName, parseInt(image.length/1000)/1000 + " MB");
 		}catch(e){}
     },
@@ -5095,14 +5098,14 @@ var doodler = (function(){
 			document.getElementById("stampUpload").removeEventListener("change", Modes.StampTool.readAddStamp, false);
 	        self.canvas.removeEventListener("mousewheel", self.handleMouseScroll);
 	        self.canvas.removeEventListener("DOMMouseScroll", self.handleMouseScroll);
-	        self.canvas.removeEventListener("mousemove", self.onMouseMove, false);
-	        self.canvas.removeEventListener("mousedown", self.onMouseDown, false);
-	        self.canvas.removeEventListener("mouseup", self.onMouseUp, false);
+	        self.canvas.removeEventListener("pointermove", self.onMouseMove, false);
+	        self.canvas.removeEventListener("pointerdown", self.onMouseDown, false);
+	        self.canvas.removeEventListener("pointerup", self.onMouseUp, false);
 	        document.removeEventListener("keyup", self.onKeyUp, false);	
             document.removeEventListener("keydown", self.onKeyDown, false);	 
-	        self.canvas.removeEventListener("touchmove", self.onMouseMove, false);
-	        self.canvas.removeEventListener("touchstart", self.onMouseDown, false);
-	        self.canvas.removeEventListener("touchend", self.onMouseUp, false);
+	        //self.canvas.removeEventListener("touchmove", self.onMouseMove, false);
+	        //self.canvas.removeEventListener("touchstart", self.onMouseDown, false);
+	        //self.canvas.removeEventListener("touchend", self.onMouseUp, false);
 	    	self.canvas = null;
 	    	self.ctx = null;
 	    	self.warehouseImg = null;

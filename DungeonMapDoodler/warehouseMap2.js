@@ -124,12 +124,13 @@ Array.max = function( array ){
 	return Math.max.apply( Math, array );
 };
 
-function imagePost(path, imagefile, method='post') {
+function imagePost(path, imagefile, method='post', fileName) {
 
 	try{
 		var form = ir.get("fictionalMapsForm")
 		var formData = new FormData(form);
 		formData.append("userfile", imagefile);
+		formData.append("filename", fileName);
 
 		const url = new URL(path);
 	

@@ -268,13 +268,15 @@ var ShapeTool = (function(){
 				var dobg = ir.bool("drawFGBG");
 				var layer = doodler.layers[doodler.currentLayer];
 				ctx.globalCompositeOperation = "source-atop";
-				if(dobg){
-					if(layer.hatchImg != null){
-						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-					}
-				}else{
-					if(layer.floorImg != null){
-						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				if(!doodler.shiftDown){
+					if(dobg){
+						if(layer.hatchImg != null){
+							ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						}
+					}else{
+						if(layer.floorImg != null){
+							ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						}
 					}
 				}
 				ctx.globalCompositeOperation = "source-over"
@@ -323,19 +325,30 @@ var ShapeTool = (function(){
 			ctx.fill();
 			ctx.filter = "none";
 			//Draw current texture onto cursor
+			ctx.globalAlpha = 1;
 			var dobg = ir.bool("drawFGBG");
 			var layer = doodler.layers[doodler.currentLayer];
 			ctx.globalCompositeOperation = "source-atop";
-			if(dobg){
-				if(layer.hatchImg != null){
-					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-					ctx.globalCompositeOperation = "destination-out";
-					ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-					ctx.globalCompositeOperation = "source-over";
+			if(!doodler.shiftDown){
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "destination-out";
+						ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "source-over";
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
 				}
 			}else{
-				if(layer.floorImg != null){
-					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.globalCompositeOperation = "destination-out";
+						ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "source-over";
+					}
 				}
 			}
 			ctx.globalCompositeOperation = "source-over"
@@ -404,9 +417,7 @@ var ShapeTool = (function(){
 						<input style='width:100px' type="range" id="shapeToolNumSides" name="shapeToolNumSides" min="3" max="20" value='${self.numSides}' onchange='Modes.ShapeTool.changeSides(event)' oninput='Modes.ShapeTool.changeSides(event)'><br>
 						<input type='checkbox' id='shapeToolIsSnapping' onclick='Modes.ShapeTool.changeSnapping(event)'><label for='shapeToolIsSnapping'>Snap To Grid</label><br>
 						<input type='color' value='${self.fillColor}' id='shapeToolFillColor' onchange="Modes.ShapeTool.changeColor(event, 'fill')">
-						<label for="shapeToolFillColor">Fill Color</label><br>
-						<input type='color' value='${self.outlineColor}' id='shapeToolOutlineColor' onchange="Modes.ShapeTool.changeColor(event, 'outline')">
-						<label for="shapeToolOutlineColor">Outline Color</label><br>
+						<label for="shapeToolFillColor">Fill Color</label>
 						`;
 			/*<input type="radio" id="shapeToolSquare" name="shapeToolShape" value="Square" onchange='Modes.ShapeTool.changeShape(event)'>
 			<label for="shapeToolSquare">Square</label><br>

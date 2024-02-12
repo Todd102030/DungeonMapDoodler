@@ -165,7 +165,6 @@ var Doodle = (function(){
 			var expos = self.doodleEndX;
 			var eypos = self.doodleEndY;
 			
-			
 			if(self.shape == Shape.Circle){
 				//Connecting lines
 				//Path Drawing
@@ -176,13 +175,13 @@ var Doodle = (function(){
                 ctx.filter = filter;
 				if(!doodler.drawRough){
 					ctx.beginPath();
-					ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+					ctx.arc(xpos, ypos, size/2*data.pressure, 0, 2 * Math.PI);
 					ctx.fill();
 					ctx.beginPath();
-					ctx.arc(expos, eypos, size/2, 0, 2 * Math.PI);
+					ctx.arc(expos, eypos, size/2*data.pressure, 0, 2 * Math.PI);
 					ctx.fill();
 					ctx.beginPath()
-					ctx.lineWidth = size;
+					ctx.lineWidth = size*data.pressure;
 					ctx.moveTo(xpos,ypos);
 					ctx.lineTo(expos,eypos);
 					ctx.stroke();
@@ -234,7 +233,7 @@ var Doodle = (function(){
 			}
 			if(self.shape == Shape.Circle){
                 ctx.beginPath();
-                ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
+                ctx.arc(xpos, ypos, size/2*(self.pressure||0.5), 0, 2 * Math.PI);
                 ctx.fill();
                 
 			}
@@ -246,13 +245,15 @@ var Doodle = (function(){
 			var dobg = ir.bool("drawFGBG");
 			var layer = doodler.layers[doodler.currentLayer];
 			ctx.globalCompositeOperation = "source-atop";
-			if(dobg){
-				if(layer.hatchImg != null){
-					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-				}
-			}else{
-				if(layer.floorImg != null){
-					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+			if(!doodler.shiftDown){
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
 				}
 			}
 			ctx.globalCompositeOperation = "source-over"
@@ -274,6 +275,7 @@ var Doodle = (function(){
 		mouseDown: function(xpos, ypos, data){
 			self.isDoodling = true;
 			console.log("Doodle mousedown");
+			self.pressure = data.pressure;
 			//doodler.updateUndoStack();
             self.doodleStartX = xpos;
             self.doodleStartY = ypos;
@@ -285,6 +287,8 @@ var Doodle = (function(){
 		},
 		mouseMove: function(xpos, ypos, data){
 			if (self.isDoodling){
+				
+				self.pressure = data.pressure;
 				self.doodleEndX = xpos;
 				self.doodleEndY = ypos;
 				//self.draw(self.doodleStartX, self.doodleStartY, data);

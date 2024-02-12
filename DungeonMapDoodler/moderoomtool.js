@@ -187,13 +187,15 @@ var RoomTool = (function(){
 			var dobg = ir.bool("drawFGBG");
 			var layer = doodler.layers[doodler.currentLayer];
 			ctx.globalCompositeOperation = "source-atop";
-			if(dobg){
-				if(layer.hatchImg != null){
-					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-				}
-			}else{
-				if(layer.floorImg != null){
-					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+			if(!doodler.shiftDown){
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
 				}
 			}
 			ctx.globalCompositeOperation = "source-over"
@@ -226,6 +228,35 @@ var RoomTool = (function(){
 				ctx.fillRect((Math.min(self.doodleStartX,self.doodleEndX)), (Math.min(self.doodleStartY,self.doodleEndY)), 
 						   Math.abs(self.doodleStartX-self.doodleEndX), Math.abs(self.doodleStartY-self.doodleEndY));
 			}
+			ctx.filter = "none";
+			//Draw current texture onto cursor
+			ctx.globalAlpha = 1;
+			var dobg = ir.bool("drawFGBG");
+			var layer = doodler.layers[doodler.currentLayer];
+			ctx.globalCompositeOperation = "source-atop";
+			if(!doodler.shiftDown){
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "destination-out";
+						ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "source-over";
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}
+			}else{
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.globalCompositeOperation = "destination-out";
+						ctx.drawImage(layer.doodleCanvas,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+						ctx.globalCompositeOperation = "source-over";
+					}
+				}
+			}
+			ctx.globalCompositeOperation = "source-over"
 		},
 		/**
 		 * Draws a rectangle using given dimensions and clips all drawings contained
@@ -292,11 +323,8 @@ var RoomTool = (function(){
 						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='roomToolBorderSizeLabel' value="${self.borderSize}" onchange='Modes.RoomTool.changeBorderSize(event, true)' oninput='Modes.RoomTool.changeBorderSize(event, true)'><br>
 						<input style='width:100px' type="range" id="roomToolBorderSize" name="roomToolBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.RoomTool.changeBorderSize(event)' oninput='Modes.RoomTool.changeBorderSize(event)'><br>
 						<input type='checkbox' id='roomToolIsSnapping' onclick='Modes.RoomTool.changeSnapping(event)'><label for='roomToolIsSnapping'>Snap To Grid</label><br>
-						<input type='checkbox' id='roomToolIsSubtractive' } onclick='Modes.RoomTool.changeSubtractive(event)'><label for='roomToolIsSubtractive' >Subtractive</label><br>
 						<input type='color' value='${self.fillColor}' id='roomToolFillColor' onchange="Modes.RoomTool.changeColor(event, 'fill')">
-						<label for="roomToolFillColor">Fill Color</label><br>
-						<input type='color' value='${self.outlineColor}' id='roomToolOutlineColor' onchange="Modes.RoomTool.changeColor(event, 'outline')">
-						<label for="roomToolOutlineColor">Outline Color</label><br>
+						<label for="roomToolFillColor">Fill Color</label>
 						`;
 			/*<input type="radio" id="roomToolSquare" name="roomToolShape" value="Square" onchange='Modes.RoomTool.changeShape(event)'>
 			<label for="roomToolSquare">Square</label><br>

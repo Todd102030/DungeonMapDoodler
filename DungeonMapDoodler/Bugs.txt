@@ -5,6 +5,9 @@ Make a select/copy/paste tool, add onto new layer? Not sure how to handle
 Add colour and drop shadows to text tool
 Change paint tool to use same drawing logic as doodle tool
 
+Feb 11 2024:
+Fixed texture previewing when drawing shapes and rooms underneath foreground
+
 Feb 10, 2024:
 Fixed bug when painting on foreground, would use transparency of background texture
 Added texture on drawing preview for all tools

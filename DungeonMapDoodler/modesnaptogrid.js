@@ -15,9 +15,10 @@ var SnapToGrid = (function(){
 				self.fillColor = evt.target.value;
 			}else{
 				self.outlineColor = evt.target.value;
+				ir.get("outlineFilterColor").setAttribute("flood-color", evt.target.value);
+				ir.get("offsetFilterColor").setAttribute("flood-color", evt.target.value);
 			}
-			ir.get("outlineFilterColor").setAttribute("flood-color", evt.target.value);
-			ir.get("offsetFilterColor").setAttribute("flood-color", evt.target.value);
+			
             doodler.needsRefresh = true;
             doodler.drawLoop();
 		},
@@ -165,13 +166,15 @@ var SnapToGrid = (function(){
 			var dobg = ir.bool("drawFGBG");
 			var layer = doodler.layers[doodler.currentLayer];
 			ctx.globalCompositeOperation = "source-atop";
-			if(dobg){
-				if(layer.hatchImg != null){
-					ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
-				}
-			}else{
-				if(layer.floorImg != null){
-					ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+			if(!doodler.shiftDown){
+				if(dobg){
+					if(layer.hatchImg != null){
+						ctx.drawImage(layer.hatchImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
+				}else{
+					if(layer.floorImg != null){
+						ctx.drawImage(layer.floorImg,0,0,layer.doodleCanvas.width, layer.doodleCanvas.height)
+					}
 				}
 			}
 			ctx.globalCompositeOperation = "source-over";

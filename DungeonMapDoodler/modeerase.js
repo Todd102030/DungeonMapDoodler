@@ -26,7 +26,6 @@ var Erase = (function(){
 		},
 		changeErases: function(){
 			self.eraseHatch = ir.v("eraseHatch");
-			self.eraseOutline = ir.v("eraseOutline");
 			self.eraseRoom = ir.v("eraseRoom");	
 			self.eraseStamps = ir.v("eraseStamps");	
             doodler.drawLoop();
@@ -120,17 +119,6 @@ var Erase = (function(){
 					ctx.restore();
 				}
 
-				//Outline Drawing
-				if(self.eraseOutline){
-					ctx = data.outlineCtx;
-					ctx.save();
-					ctx.globalCompositeOperation = "destination-out";
-					ctx.fillStyle = 'black';
-					ctx.fillRect((gridxy.xpos),(gridxy.ypos), gridxy.step,gridxy.step);
-					
-					//ctx.globalCompositeOperation = "source-over";
-					ctx.restore();
-				}
 			}
 			else if(self.shape == Shape.Circle){
 				//Connecting lines
@@ -156,25 +144,6 @@ var Erase = (function(){
 					ctx.restore();
 				}
 
-				//Outline Drawing
-				if(self.eraseOutline){
-					ctx = data.outlineCtx;
-					ctx.save();
-					ctx.globalCompositeOperation = "destination-out";
-					ctx.fillStyle = 'black';
-					ctx.strokeStyle = 'black';
-					ctx.beginPath();
-					ctx.arc(xpos, ypos, size/2, 0, 2 * Math.PI);
-					ctx.arc(expos, eypos, size/2, 0, 2 * Math.PI);
-					ctx.fill();
-					ctx.beginPath();
-					ctx.lineWidth = size;
-					ctx.moveTo(xpos,ypos);
-					ctx.lineTo(expos,eypos);
-					ctx.stroke();
-					//ctx.globalCompositeOperation = "source-over";
-					ctx.restore();
-				}
 			}else{
 				//Path Drawing
 				if(self.eraseRoom){
@@ -187,16 +156,6 @@ var Erase = (function(){
 					ctx.restore();
 				}
 
-				//Outline Drawing
-				if(self.eraseOutline){
-					ctx = data.outlineCtx;
-					ctx.save();
-					ctx.globalCompositeOperation = "destination-out";
-					ctx.fillStyle = 'black';
-					ctx.fillRect(xpos-(self.size/2),ypos-(self.size/2), size,size);
-					//ctx.globalCompositeOperation = "source-over";
-					ctx.restore();
-				}
 			}	
             doodler.updateFrameBuffer();
 			
@@ -271,22 +230,16 @@ var Erase = (function(){
 						<input type='checkbox' id='eraseSnapToGrid' onclick='Modes.Erase.changeSnap()'><label for='eraseSnapToGrid'>Snap To Grid</label><br>
 						<div class='paramTitle'>Size: </div><input type='number' style='width:60px' id='eraseSizeLabel' value="${self.size}" onchange='Modes.Erase.changeSize(event, true)' oninput='Modes.Erase.changeSize(event, true)'><br>
 						<input style='width:100px' type="range" id="eraseSize" name="eraseSize" min="1" max="200" value='${self.size}' onchange='Modes.Erase.changeSize(event)' oninput='Modes.Erase.changeSize(event)'><br>
-						<div class='paramTitle'>Hatch: </div><input type='number' style='width:60px' id='eraseHatchSizeLabel' value="${self.hatchSize}" onchange='Modes.Erase.changeHatchSize(event, true)' oninput='Modes.Erase.changeHatchSize(event, true)'><br>
-						<input style='width:100px' type="range" id="eraseHatchSize" name="eraseHatchSize" min="1" max="150" value='${self.hatchSize}' onchange='Modes.Erase.changeHatchSize(event)' oninput='Modes.Erase.changeHatchSize(event)'><br>
-						<div class='paramTitle'>Wall Thickness: </div><input type='number' style='width:60px' id='eraseBorderSizeLabel' value="${self.borderSize}" onchange='Modes.Erase.changeBorderSize(event, true)' oninput='Modes.Erase.changeBorderSize(event, true)'><br>
-						<input style='width:100px' type="range" id="eraseBorderSize" name="eraseBorderSize" min="0" max="25" value='${self.borderSize}' onchange='Modes.Erase.changeBorderSize(event)' oninput='Modes.Erase.changeBorderSize(event)'><br>
 						<input type="radio" id="eraseSquare" name="eraseShape" value="Square" onchange='Modes.Erase.changeShape(event)'>
 						<label for="eraseSquare">Square</label><br>
 						<input type="radio" id="eraseCircle" name="eraseShape" value="Circle" onchange='Modes.Erase.changeShape(event)'>
 						<label for="eraseCircle">Circle</label><br>
-						<input type='checkbox' id='eraseHatch' onclick='Modes.Erase.changeErases()'><label for='eraseHatch'>Erase Hatching</label><br>
-						<input type='checkbox' id='eraseOutline' onclick='Modes.Erase.changeErases()'><label for='eraseOutline'>Erase Outline</label><br>
-						<input type='checkbox' id='eraseRoom' onclick='Modes.Erase.changeErases()'><label for='eraseRoom'>Erase Rooms</label><br>
+						<input type='checkbox' id='eraseHatch' onclick='Modes.Erase.changeErases()'><label for='eraseHatch'>Erase Background</label><br>
+						<input type='checkbox' id='eraseRoom' onclick='Modes.Erase.changeErases()'><label for='eraseRoom'>Erase Foreground</label><br>
 						<input type='checkbox' id='eraseStamps' onclick='Modes.Erase.changeErases()'><label for='eraseStamps'>Erase Stamps</label><br>
 						`;
 			container.innerHTML = htm;
 			ir.set("eraseHatch", self.eraseHatch);
-			ir.set("eraseOutline", self.eraseOutline);
 			ir.set("eraseRoom", self.eraseRoom);
 			ir.set("eraseSnapToGrid", self.isSnapping);
 			ir.set("eraseStamps", self.eraseStamps);
